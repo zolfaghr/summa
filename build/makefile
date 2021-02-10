@@ -33,7 +33,6 @@ EXE_PATH = $(F_MASTER)/bin
 #========================================================================
 
 # Define directories
-DRIVER_DIR = $(F_KORE_DIR)/driver
 HOOKUP_DIR = $(F_KORE_DIR)/hookup
 NETCDF_DIR = $(F_KORE_DIR)/netcdf
 DSHARE_DIR = $(F_KORE_DIR)/dshare
@@ -173,18 +172,6 @@ COMM_ALL = $(NRUTIL) $(NRPROC) $(HOOKUP) $(DATAMS) $(UTILMS)
 # ... stitch together SUMMA programs
 SUMMA_ALL = $(NETCDF) $(PRELIM) $(MODRUN) $(SOLVER)
 
-# Define the driver routine
-SUMMA_DRIVER= \
-		summa_type.f90 \
-		summa_util.f90 \
-		summa_alarms.f90 \
-		summa_globalData.f90 \
-		summa_defineOutput.f90 \
-		summa_init.f90 \
-		summa_setup.f90 \
-		summa_restart.f90 \
-		summa_forcing.f90 
-DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 
 #========================================================================
 # PART 3: Checks
@@ -227,7 +214,7 @@ compile_comm:
 
 # compile SUMMA routines
 compile_summa: 
-	$(FC_EXE) $(FLAGS_SUMMA) -c $(SUMMA_ALL) $(DRIVER) $(INCLUDES)
+	$(FC_EXE) $(FLAGS_SUMMA) -c $(SUMMA_ALL) $(INCLUDES)
 
 # generate library
 link:   
