@@ -34,7 +34,6 @@ EXE_PATH = $(F_MASTER)/bin
 
 # Define directories
 HOOKUP_DIR = $(F_KORE_DIR)/hookup
-NETCDF_DIR = $(F_KORE_DIR)/netcdf
 DSHARE_DIR = $(F_KORE_DIR)/dshare
 NUMREC_DIR = $(F_KORE_DIR)/numrec
 NOAHMP_DIR = $(F_KORE_DIR)/noah-mp
@@ -118,11 +117,6 @@ SUMMA_PRELIM= \
 		allocspace.f90 \
 		checkStruc.f90 \
 		childStruc.f90 \
-		ffile_info.f90 \
-		read_attrb.f90 \
-		read_pinit.f90 \
-		pOverwrite.f90 \
-		read_param.f90 \
 		paramCheck.f90 \
 		check_icond.f90
 PRELIM = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_PRELIM))
@@ -141,7 +135,6 @@ SUMMA_MODRUN = \
 		getVectorz.f90 \
 		updateVars.f90 \
 		var_derive.f90 \
-		read_force.f90 \
 		derivforce.f90 \
 		snowAlbedo.f90 \
 		canopySnow.f90 \
@@ -153,22 +146,12 @@ SUMMA_MODRUN = \
 		qTimeDelay.f90
 MODRUN = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_MODRUN))
 
-# Define routines for the solver
-SUMMA_MSOLVE = \
-
-# Define NetCDF routines
-SUMMA_NETCDF = \
-		netcdf_util.f90 \
-		def_output.f90 \
-		modelwrite.f90 \
-		read_icond.f90
-NETCDF = $(patsubst %, $(NETCDF_DIR)/%, $(SUMMA_NETCDF))
 
 # ... stitch together common programs
 COMM_ALL = $(NRUTIL) $(NRPROC) $(HOOKUP) $(DATAMS) $(UTILMS)
 
 # ... stitch together SUMMA programs
-SUMMA_ALL = $(NETCDF) $(PRELIM) $(MODRUN) $(SOLVER)
+SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER)
 
 
 #========================================================================
