@@ -154,30 +154,7 @@ SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER)
 
 
 #========================================================================
-# PART 3: Checks
-#======================================================================
-# make sure that the paths are defined. These are just some high level checks
-ifndef F_MASTER
- $(error F_MASTER is undefined)
-endif
-ifndef FC
- $(error FC is undefined: Specify your compiler)
-endif
-ifndef FC_EXE
- $(error FC_EXE is undefined: Specify your compiler executable)
-endif
-ifndef FLAGS_SUMMA
- $(error Specify flags for your compiler: $(FC))
-endif
-ifndef INCLUDES
- $(error INCLUDES is undefined)
-endif
-ifndef LIBRARIES
- $(error LIBRARIES is undefined)
-endif
-
-#========================================================================
-# PART 4: compilation
+# PART 3: compilation
 #======================================================================
 
 # Compile
