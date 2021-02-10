@@ -67,8 +67,7 @@ SUMMA_DATAMS= \
 		globalData.f90 \
 		flxMapping.f90 \
 		get_ixname.f90 \
-		popMetadat.f90 \
-		outpt_stat.f90
+		popMetadat.f90
 DATAMS = $(patsubst %, $(DSHARE_DIR)/%, $(SUMMA_DATAMS))
 
 # utility modules
