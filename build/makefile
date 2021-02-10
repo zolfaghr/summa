@@ -183,9 +183,7 @@ SUMMA_DRIVER= \
 		summa_init.f90 \
 		summa_setup.f90 \
 		summa_restart.f90 \
-		summa_forcing.f90 \
-		summa_modelRun.f90 \
-		summa_writeOutput.f90 
+		summa_forcing.f90 
 DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 
 #========================================================================
