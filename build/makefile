@@ -185,8 +185,7 @@ SUMMA_DRIVER= \
 		summa_restart.f90 \
 		summa_forcing.f90 \
 		summa_modelRun.f90 \
-		summa_writeOutput.f90 \
-		summa_driver.f90
+		summa_writeOutput.f90 
 DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 
 #========================================================================
@@ -231,6 +230,7 @@ compile_comm:
 # compile SUMMA routines
 compile_summa: 
 	$(FC_EXE) $(FLAGS_SUMMA) -c $(SUMMA_ALL) $(DRIVER) $(INCLUDES)
+
 # generate library
 link:   
 	$(FC_EXE) -shared *.o -o libsumma4chm.so  
