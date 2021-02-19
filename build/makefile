@@ -105,7 +105,9 @@ SUMMA_SOLVER= \
 		systemSolv.f90 \
 		varSubstep.f90 \
 		opSplittin.f90 \
-		coupled_em.f90
+		coupled_em.f90 \
+		summaData.f90 \
+		solveCoupledEM.f90
 SOLVER = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_SOLVER))
 
 # Define routines for SUMMA preliminaries
@@ -158,7 +160,9 @@ SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER)
 #======================================================================
 
 # Compile
-all: compile_noah compile_comm compile_summa link clean
+all: lib
+
+lib: compile_noah compile_comm compile_summa link clean
 
 
 # compile Noah-MP routines
@@ -178,9 +182,10 @@ link:
 	$(FC_EXE) -shared *.o -o libsumma4chm.so  
 # Remove object files
 clean:
-	rm -f *.o
-	rm -f *.mod
-	rm -f soil_veg_gen_parm__genmod.f90
+	rm -f *.o *.mod soil_veg_gen_parm__genmod.f90
+	
+clean_lib:
+	rm *.so
 
 
 
