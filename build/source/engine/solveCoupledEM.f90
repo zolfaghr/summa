@@ -41,7 +41,7 @@ contains
     !======= Internals ============
     
     ! get summa data from user-defined data
-    call c_f_pointer(user_data, summa_data)
+    call c_f_pointer(user_data, summa_data) 
     
     
  ! ************************************************************************************************
