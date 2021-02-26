@@ -1,4 +1,7 @@
 module data_type
+
+use, intrinsic :: iso_c_binding
+
   implicit none
   
   type :: var_i
@@ -10,20 +13,19 @@ module data_type
 contains
 
 !**************************************************
-  function get_opaque_handle() result(handle) bind(c, name='get_opaque_handle')
-    use, intrinsic :: iso_c_binding, only: c_ptr, c_loc
+! get C address of the object as an opaque handle.
+  function get_opaque_handle() result(handle) bind(C, name='get_opaque_handle')
     
     type(c_ptr) :: handle
     type(var_i), pointer :: p
     
     allocate(p)    
-    handle = c_loc(p)   ! c address of the object as an opaque handle.
+    handle = c_loc(p)   
     
   end function get_opaque_handle
 
 !**************************************************
-  subroutine free_opaque_handle(handle) bind(c, name='free_opaque_handle')
-    use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer
+  subroutine free_opaque_handle(handle) bind(C, name='free_opaque_handle')
     
     type(c_ptr), intent(in), value :: handle
     type(var_i), pointer :: p
@@ -34,8 +36,7 @@ contains
   end subroutine free_opaque_handle
 
 !**************************************************
-  subroutine set_var_i(handle, array, arr_size) bind(c, name='set_var_i')
-    use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
+  subroutine set_var_i(handle, array, arr_size) bind(C, name='set_var_i')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: arr_size
@@ -56,8 +57,7 @@ contains
   end subroutine set_var_i
 
 !**************************************************
-  subroutine get_var_size(handle, arr_size) bind(c, name='get_var_size')
-    use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_int
+  subroutine get_var_size(handle, arr_size) bind(C, name='get_var_size')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: arr_size
@@ -73,8 +73,7 @@ contains
   end subroutine get_var_size
 
 !**************************************************
-  subroutine get_var_data(handle, array) bind(c, name='get_var_data')
-    use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
+  subroutine get_var_data(handle, array) bind(C, name='get_var_data')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: array(*)
@@ -86,5 +85,7 @@ contains
     end if
     
   end subroutine get_var_data
+
+!=====================================================================
 
 end module data_type
