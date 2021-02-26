@@ -1,8 +1,8 @@
-module simple
+module data_type
   implicit none
   
   type :: var_i
-    integer, allocatable :: b(:)
+    integer, allocatable :: var(:)
   end type var_i
   
 ! pointer-to-opaque-handle technique
@@ -22,7 +22,6 @@ contains
   end function get_opaque_handle
 
 !**************************************************
-  ! if you create objects, you need to be able to destroy them.
   subroutine free_opaque_handle(handle) bind(c, name='free_opaque_handle')
     use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer
     
@@ -44,15 +43,15 @@ contains
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)    
-    if (allocated(p%b)) then
-      if (size(p%b) /= array_size) then
-        deallocate(p%b)
-        allocate(p%b(array_size))
+    if (allocated(p%var)) then
+      if (size(p%var) /= array_size) then
+        deallocate(p%var)
+        allocate(p%var(array_size))
       end if
     else
-      allocate(p%b(array_size))
+      allocate(p%var(array_size))
     end if
-    p%b = array
+    p%var = array
     
   end subroutine SetB
 
@@ -65,8 +64,8 @@ contains
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
-    if (allocated(p%b)) then
-      array_size = size(p%b, kind=c_int)
+    if (allocated(p%var)) then
+      array_size = size(p%var, kind=c_int)
     else
       array_size = 0_c_int
     end if
@@ -82,10 +81,10 @@ contains
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
-    if (allocated(p%b)) then
-      array(:size(p%b)) = p%b
+    if (allocated(p%var)) then
+      array(:size(p%var)) = p%var
     end if
     
   end subroutine QueryBData
 
-end module simple
+end module data_type

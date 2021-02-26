@@ -26,9 +26,9 @@ public:
     free_opaque_handle(handle); 
   }
 
-  void SetB(const std::vector<int>& b)
+  void SetB(const std::vector<int>& var)
   {
-     ::SetB(handle, &b[0], b.size());
+     ::SetB(handle, &var[0], var.size());
   }
 
   std::vector<int> QueryB()
