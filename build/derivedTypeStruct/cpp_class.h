@@ -11,17 +11,17 @@ extern "C" void SetB(void* handle, const int* data, int data_size);
 extern "C" void QueryBSize(void* handle, int* data_size);
 extern "C" void QueryBData(void *handle, int *data);
 
-class SimpleF
+class var_i
 {
 private:
   void *handle;
 public:
-  SimpleF() 
+  var_i() 
   { 
     handle = get_opaque_handle(); 
   }
 
-  ~SimpleF() 
+  ~var_i() 
   { 
     free_opaque_handle(handle); 
   }

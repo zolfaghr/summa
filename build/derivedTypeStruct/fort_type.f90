@@ -1,9 +1,9 @@
 module simple
   implicit none
   
-  type :: simplef
+  type :: var_i
     integer, allocatable :: b(:)
-  end type simplef
+  end type var_i
   
 ! pointer-to-opaque-handle technique
   
@@ -14,7 +14,7 @@ contains
     use, intrinsic :: iso_c_binding, only: c_ptr, c_loc
     
     type(c_ptr) :: handle
-    type(simplef), pointer :: p
+    type(var_i), pointer :: p
     
     allocate(p)    
     handle = c_loc(p)   ! c address of the object as an opaque handle.
@@ -27,7 +27,7 @@ contains
     use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer
     
     type(c_ptr), intent(in), value :: handle
-    type(simplef), pointer :: p
+    type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
     deallocate(p)
@@ -41,7 +41,7 @@ contains
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: data_size
     integer(c_int), intent(in) :: data(data_size)
-    type(simplef), pointer :: p
+    type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)    
     if (allocated(p%b)) then
@@ -62,7 +62,7 @@ contains
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: data_size
-    type(simplef), pointer :: p
+    type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
     if (allocated(p%b)) then
@@ -79,7 +79,7 @@ contains
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: data(*)
-    type(simplef), pointer :: p
+    type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
     if (allocated(p%b)) then

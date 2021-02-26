@@ -4,7 +4,7 @@
 
 int main()
 {
-  SimpleF x;
+  var_i x;
 
   std::vector<int> testvector{2,5};
   x.SetB(testvector);
