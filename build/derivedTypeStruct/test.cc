@@ -8,7 +8,7 @@ int main()
 
   std::vector<int> testvector{2,5};
   x.set_var_i(testvector);
-  std::cout << x.QueryB()[0] << ' ' << x.QueryB()[1] << std::endl;
+  std::cout << x.get_var_data()[0] << ' ' << x.get_var_data()[1] << std::endl;
 
   return 0;
 }

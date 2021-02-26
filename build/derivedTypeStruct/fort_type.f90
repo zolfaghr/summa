@@ -56,7 +56,7 @@ contains
   end subroutine set_var_i
 
 !**************************************************
-  subroutine QueryBSize(handle, arr_size) bind(c, name='QueryBSize')
+  subroutine get_var_size(handle, arr_size) bind(c, name='get_var_size')
     use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
@@ -70,10 +70,10 @@ contains
       arr_size = 0_c_int
     end if
     
-  end subroutine QueryBSize
+  end subroutine get_var_size
 
 !**************************************************
-  subroutine QueryBData(handle, array) bind(c, name='QueryBData')
+  subroutine get_var_data(handle, array) bind(c, name='get_var_data')
     use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
@@ -85,6 +85,6 @@ contains
       array(:size(p%var)) = p%var
     end if
     
-  end subroutine QueryBData
+  end subroutine get_var_data
 
 end module data_type

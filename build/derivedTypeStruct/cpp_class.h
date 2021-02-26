@@ -8,8 +8,8 @@
 extern "C" void* get_opaque_handle();
 extern "C" void free_opaque_handle(void* handle);
 extern "C" void set_var_i(void* handle, const int* array, int size);
-extern "C" void QueryBSize(void* handle, int* size);
-extern "C" void QueryBData(void *handle, int *array);
+extern "C" void get_var_size(void* handle, int* size);
+extern "C" void get_var_data(void *handle, int *array);
 
 class var_i
 {
@@ -31,15 +31,14 @@ public:
      ::set_var_i(handle, &var[0], var.size());
   }
 
-  std::vector<int> QueryB()
+  std::vector<int> get_var_data()
   {
-    // Get the array size, construct a suitable buffer, populate the buffer.
     int size;
-    ::QueryBSize(handle, &size);
+    ::get_var_size(handle, &size);
     if (size == 0) return std::vector<int>();
 
     std::vector<int> array(size);
-    ::QueryBData(handle, &array[0]);
+    ::get_var_data(handle, &array[0]);
     return array;
   }
 };
