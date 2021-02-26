@@ -5,8 +5,8 @@
 #include <vector>
 #include <iostream>
 
-extern "C" void* GetHandle();
-extern "C" void ReleaseHandle(void* handle);
+extern "C" void* get_opaque_handle();
+extern "C" void free_opaque_handle(void* handle);
 extern "C" void SetB(void* handle, const int* data, int data_size);
 extern "C" void QueryBSize(void* handle, int* data_size);
 extern "C" void QueryBData(void *handle, int *data);
@@ -18,12 +18,12 @@ private:
 public:
   SimpleF() 
   { 
-    handle = GetHandle(); 
+    handle = get_opaque_handle(); 
   }
 
   ~SimpleF() 
   { 
-    ReleaseHandle(handle); 
+    free_opaque_handle(handle); 
   }
 
   void SetB(const std::vector<int>& b)

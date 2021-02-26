@@ -5,36 +5,45 @@ module simple
     integer, allocatable :: b(:)
   end type simplef
   
+! pointer-to-opaque-handle technique
+  
 contains
-  function GetHandle() result(handle) bind(c, name='GetHandle')
+
+!**************************************************
+  function get_opaque_handle() result(handle) bind(c, name='get_opaque_handle')
     use, intrinsic :: iso_c_binding, only: c_ptr, c_loc
+    
     type(c_ptr) :: handle
     type(simplef), pointer :: p
-    allocate(p)
-    ! use the c address of the object as an opaque handle.
-    handle = c_loc(p)
-  end function GetHandle
+    
+    allocate(p)    
+    handle = c_loc(p)   ! c address of the object as an opaque handle.
+    
+  end function get_opaque_handle
 
+!**************************************************
   ! if you create objects, you need to be able to destroy them.
-  subroutine ReleaseHandle(handle) bind(c, name='ReleaseHandle')
+  subroutine free_opaque_handle(handle) bind(c, name='free_opaque_handle')
     use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer
+    
     type(c_ptr), intent(in), value :: handle
     type(simplef), pointer :: p
-    !***
+    
     call c_f_pointer(handle, p)
     deallocate(p)
-  end subroutine ReleaseHandle
+    
+  end subroutine free_opaque_handle
 
+!**************************************************
   subroutine SetB(handle, data, data_size) bind(c, name='SetB')
-    use, intrinsic :: iso_c_binding, only:  &
-        c_ptr, c_f_pointer, c_int
+    use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
+    
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: data_size
     integer(c_int), intent(in) :: data(data_size)
     type(simplef), pointer :: p
-    !***
-    call c_f_pointer(handle, p)
     
+    call c_f_pointer(handle, p)    
     if (allocated(p%b)) then
       if (size(p%b) /= data_size) then
         deallocate(p%b)
@@ -44,39 +53,39 @@ contains
       allocate(p%b(data_size))
     end if
     p%b = data
+    
   end subroutine SetB
 
+!**************************************************
   subroutine QueryBSize(handle, data_size) bind(c, name='QueryBSize')
-    use, intrinsic :: iso_c_binding, only:  &
-        c_ptr, c_f_pointer, c_int
+    use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_int
+    
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: data_size
     type(simplef), pointer :: p
-    !***
+    
     call c_f_pointer(handle, p)
-    ! see comments about assumed association status above.
     if (allocated(p%b)) then
       data_size = size(p%b, kind=c_int)
     else
       data_size = 0_c_int
     end if
+    
   end subroutine QueryBSize
 
+!**************************************************
   subroutine QueryBData(handle, data) bind(c, name='QueryBData')
-    use, intrinsic :: iso_c_binding, only:  &
-        c_ptr, c_f_pointer, c_int
+    use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
+    
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: data(*)
     type(simplef), pointer :: p
-    !***
+    
     call c_f_pointer(handle, p)
-    ! see comments about assumed association status above.
     if (allocated(p%b)) then
       data(:size(p%b)) = p%b
-    else
-      ! someone is being silly.
     end if
+    
   end subroutine QueryBData
 
-  ! ...etc...
 end module simple
