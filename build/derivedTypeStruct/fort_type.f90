@@ -35,55 +35,55 @@ contains
   end subroutine free_opaque_handle
 
 !**************************************************
-  subroutine SetB(handle, data, data_size) bind(c, name='SetB')
+  subroutine SetB(handle, array, array_size) bind(c, name='SetB')
     use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(in), value :: data_size
-    integer(c_int), intent(in) :: data(data_size)
+    integer(c_int), intent(in), value :: array_size
+    integer(c_int), intent(in) :: array(array_size)
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)    
     if (allocated(p%b)) then
-      if (size(p%b) /= data_size) then
+      if (size(p%b) /= array_size) then
         deallocate(p%b)
-        allocate(p%b(data_size))
+        allocate(p%b(array_size))
       end if
     else
-      allocate(p%b(data_size))
+      allocate(p%b(array_size))
     end if
-    p%b = data
+    p%b = array
     
   end subroutine SetB
 
 !**************************************************
-  subroutine QueryBSize(handle, data_size) bind(c, name='QueryBSize')
+  subroutine QueryBSize(handle, array_size) bind(c, name='QueryBSize')
     use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: data_size
+    integer(c_int), intent(out) :: array_size
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
     if (allocated(p%b)) then
-      data_size = size(p%b, kind=c_int)
+      array_size = size(p%b, kind=c_int)
     else
-      data_size = 0_c_int
+      array_size = 0_c_int
     end if
     
   end subroutine QueryBSize
 
 !**************************************************
-  subroutine QueryBData(handle, data) bind(c, name='QueryBData')
+  subroutine QueryBData(handle, array) bind(c, name='QueryBData')
     use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: data(*)
+    integer(c_int), intent(out) :: array(*)
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
     if (allocated(p%b)) then
-      data(:size(p%b)) = p%b
+      array(:size(p%b)) = p%b
     end if
     
   end subroutine QueryBData
