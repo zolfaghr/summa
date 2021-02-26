@@ -2,7 +2,7 @@ module simple
   implicit none
   
   type :: simplef
-    integer, pointer :: b(:) => null()
+    integer, allocatable :: b(:)
   end type simplef
   
 contains
@@ -34,12 +34,8 @@ contains
     type(simplef), pointer :: p
     !***
     call c_f_pointer(handle, p)
-    ! allocate p%b to appropriate size.
-    !
-    ! assuming here the pointer association status of p%b is always 
-    ! defined or dissociated, never undefined.  this is much easier 
-    ! with allocatable components.
-    if (associated(p%b)) then
+    
+    if (allocated(p%b)) then
       if (size(p%b) /= data_size) then
         deallocate(p%b)
         allocate(p%b(data_size))
@@ -59,7 +55,7 @@ contains
     !***
     call c_f_pointer(handle, p)
     ! see comments about assumed association status above.
-    if (associated(p%b)) then
+    if (allocated(p%b)) then
       data_size = size(p%b, kind=c_int)
     else
       data_size = 0_c_int
@@ -75,7 +71,7 @@ contains
     !***
     call c_f_pointer(handle, p)
     ! see comments about assumed association status above.
-    if (associated(p%b)) then
+    if (allocated(p%b)) then
       data(:size(p%b)) = p%b
     else
       ! someone is being silly.
