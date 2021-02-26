@@ -34,40 +34,40 @@ contains
   end subroutine free_opaque_handle
 
 !**************************************************
-  subroutine SetB(handle, array, array_size) bind(c, name='SetB')
+  subroutine set_var_i(handle, array, arr_size) bind(c, name='set_var_i')
     use, intrinsic :: iso_c_binding, only:  c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(in), value :: array_size
-    integer(c_int), intent(in) :: array(array_size)
+    integer(c_int), intent(in), value :: arr_size
+    integer(c_int), intent(in) :: array(arr_size)
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)    
     if (allocated(p%var)) then
-      if (size(p%var) /= array_size) then
+      if (size(p%var) /= arr_size) then
         deallocate(p%var)
-        allocate(p%var(array_size))
+        allocate(p%var(arr_size))
       end if
     else
-      allocate(p%var(array_size))
+      allocate(p%var(arr_size))
     end if
     p%var = array
     
-  end subroutine SetB
+  end subroutine set_var_i
 
 !**************************************************
-  subroutine QueryBSize(handle, array_size) bind(c, name='QueryBSize')
+  subroutine QueryBSize(handle, arr_size) bind(c, name='QueryBSize')
     use, intrinsic :: iso_c_binding, only: c_ptr, c_f_pointer, c_int
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: array_size
+    integer(c_int), intent(out) :: arr_size
     type(var_i), pointer :: p
     
     call c_f_pointer(handle, p)
     if (allocated(p%var)) then
-      array_size = size(p%var, kind=c_int)
+      arr_size = size(p%var, kind=c_int)
     else
-      array_size = 0_c_int
+      arr_size = 0_c_int
     end if
     
   end subroutine QueryBSize
