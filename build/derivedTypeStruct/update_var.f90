@@ -9,16 +9,17 @@ public::update_fvar
 public::update_cvar
 
 contains
-
+	!********************************************
 	subroutine update_fvar(v) 
 	implicit none
 
 		type(var_i), intent(inout)  :: v
 
-		v%var(:) = v%var(:) * 2
+		v%var(:) = 1
 
 	end subroutine update_fvar
 	
+	!********************************************	
 	integer(c_int) function update_cvar(user_data)result(ierr) bind(C,name='update_cvar')
 	implicit none
 	
@@ -34,6 +35,7 @@ contains
     	ierr = 0
     	return
     end function update_cvar
-    
+
+!********************************************    
 
 end module module_updateVar

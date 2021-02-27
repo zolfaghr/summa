@@ -9,7 +9,8 @@ extern "C" void* get_opaque_handle();
 extern "C" void  free_opaque_handle(void* handle);
 extern "C" void  set_var_i(void* handle, const int* array, int size);
 extern "C" void  get_var_size(void* handle, int* size);
-extern "C" void  get_var_data(void *handle, int *array);
+extern "C" void  get_var_data(void* handle, int* array);
+
 
 class var_i
 {

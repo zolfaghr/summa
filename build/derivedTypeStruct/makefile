@@ -13,7 +13,7 @@ compile_c:
 	$(CC) -c $(CFILES)
 	
 link:
-	$(CC) -o program fort_type.o test.o -l$(FC)
+	$(CC) -o program fort_type.o update_var.o test.o -l$(FC)
 	
 clean:
 	rm *.o program *.mod
