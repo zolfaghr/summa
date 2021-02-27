@@ -20,21 +20,19 @@ contains
 	end subroutine update_fvar
 	
 	!********************************************	
-	integer(c_int) function update_cvar(user_data)result(ierr) bind(C,name='update_cvar')
+	subroutine update_cvar(user_data) bind(C,name='update_cvar')
 	implicit none
 	
     	type(c_ptr), value      :: user_data     ! user-defined data  
     	! pointers to data 
     	type(var_i), pointer    :: v             ! var_i data
     
-    	! get equations data from user-defined data
+    	! get var_i from user-defined data
     	call c_f_pointer(user_data, v)
     
     	call update_fvar(v)
-    
-    	ierr = 0
-    	return
-    end function update_cvar
+
+    end subroutine update_cvar
 
 !********************************************    
 
