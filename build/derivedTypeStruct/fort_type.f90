@@ -1,3 +1,4 @@
+
 module data_type
 
 use, intrinsic :: iso_c_binding
@@ -13,7 +14,7 @@ use, intrinsic :: iso_c_binding
 contains
 
 !**************************************************
-! get C address of the object as an opaque handle.
+! get C address of the object
   function get_opaque_handle() result(handle) bind(C, name='get_opaque_handle')
     
     type(c_ptr) :: handle
@@ -89,3 +90,5 @@ contains
 !=====================================================================
 
 end module data_type
+
+
