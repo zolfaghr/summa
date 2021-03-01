@@ -14,7 +14,7 @@ extern "C" void  get_var_data(void* handle, int* array);
 
 class var_i
 {
-private:
+public:
   void *handle;
 public:
   var_i() 

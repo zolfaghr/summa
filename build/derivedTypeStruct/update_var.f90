@@ -2,6 +2,7 @@
 module module_updateVar
 use, intrinsic :: iso_c_binding
 use data_type
+use user_type
 
 implicit none
 
@@ -21,16 +22,18 @@ contains
 	
 	!********************************************	
 	subroutine update_cvar(user_data) bind(C,name='update_cvar')
+	use data_type
+	use user_type
 	implicit none
 	
     	type(c_ptr), value      :: user_data     ! user-defined data  
     	! pointers to data 
-    	type(var_i), pointer    :: v             ! var_i data
-    
+    	type(f_user), pointer    :: v             ! user data
+  
     	! get var_i from user-defined data
     	call c_f_pointer(user_data, v)
     
-    	call update_fvar(v)
+    	call update_fvar(v%vf)
 
     end subroutine update_cvar
 
