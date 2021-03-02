@@ -12,8 +12,9 @@ module data_type
   end type var_d
   
   type, public :: dlength
-  	real, allocatable   :: var(:)   
+  	real, allocatable   :: dat(:)   
   end type dlength
+  
 
 end module data_type
 

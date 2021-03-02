@@ -39,7 +39,7 @@ contains
 
 		v_i%var = 40
 		v_d%var = 3.5
-		v_dlength%var = -2.4
+		v_dlength%dat = -2.4
 
 	end subroutine updateSummaData
 

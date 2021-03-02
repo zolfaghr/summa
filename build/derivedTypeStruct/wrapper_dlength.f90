@@ -42,15 +42,15 @@ contains
     type(dlength), pointer :: p
     
     call c_f_pointer(handle, p)    
-    if (allocated(p%var)) then
-      if (size(p%var) /= arr_size) then
-        deallocate(p%var)
-        allocate(p%var(arr_size))
+    if (allocated(p%dat)) then
+      if (size(p%dat) /= arr_size) then
+        deallocate(p%dat)
+        allocate(p%dat(arr_size))
       end if
     else
-      allocate(p%var(arr_size))
+      allocate(p%dat(arr_size))
     end if
-    p%var = array
+    p%dat = array
     
   end subroutine set_data_dlength
 
@@ -62,8 +62,8 @@ contains
     type(dlength), pointer :: p
     
     call c_f_pointer(handle, p)
-    if (allocated(p%var)) then
-      arr_size = size(p%var, kind=c_int)
+    if (allocated(p%dat)) then
+      arr_size = size(p%dat, kind=c_int)
     else
       arr_size = 0_c_int
     end if
@@ -78,8 +78,8 @@ contains
     type(dlength), pointer :: p
     
     call c_f_pointer(handle, p)
-    if (allocated(p%var)) then
-      array(:size(p%var)) = p%var
+    if (allocated(p%dat)) then
+      array(:size(p%dat)) = p%dat
     end if
     
   end subroutine get_data_dlength
