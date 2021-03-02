@@ -7,9 +7,9 @@
 
 extern "C" void* new_opaque_handle();
 extern "C" void  delete_opaque_handle(void* handle);
-extern "C" void  set_var_i(void* handle, const int* array, int size);
-extern "C" void  get_var_size(void* handle, int* size);
-extern "C" void  get_var_data(void* handle, int* array);
+extern "C" void  set_data(void* handle, const int* array, int size);
+extern "C" void  get_size_data(void* handle, int* size);
+extern "C" void  get_data(void* handle, int* array);
 extern "C" void  update_var_i(void* handle);
 
 
@@ -28,9 +28,9 @@ public:
     delete_opaque_handle(handle); 
   }
 
-  void set_var_i(const std::vector<int>& var)
+  void set_data(const std::vector<int>& var)
   {
-     ::set_var_i(handle, &var[0], var.size());
+     ::set_data(handle, &var[0], var.size());
   }
   
   void update_var_i()
@@ -38,14 +38,14 @@ public:
      ::update_var_i(handle);
   }
 
-  std::vector<int> get_var_data()
+  std::vector<int> get_data()
   {
     int size;
-    ::get_var_size(handle, &size);
+    ::get_size_data(handle, &size);
     if (size == 0) return std::vector<int>();
 
     std::vector<int> array(size);
-    ::get_var_data(handle, &array[0]);
+    ::get_data(handle, &array[0]);
     return array;
   }
 };

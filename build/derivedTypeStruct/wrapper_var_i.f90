@@ -35,7 +35,7 @@ contains
   end subroutine delete_opaque_handle
 
 !**************************************************
-  subroutine set_var_i(handle, array, arr_size) bind(C, name='set_var_i')
+  subroutine set_data(handle, array, arr_size) bind(C, name='set_data')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: arr_size
@@ -53,10 +53,10 @@ contains
     end if
     p%var = array
     
-  end subroutine set_var_i
+  end subroutine set_data
 
 !**************************************************
-  subroutine get_var_size(handle, arr_size) bind(C, name='get_var_size')
+  subroutine get_size_data(handle, arr_size) bind(C, name='get_size_data')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: arr_size
@@ -69,10 +69,10 @@ contains
       arr_size = 0_c_int
     end if
     
-  end subroutine get_var_size
+  end subroutine get_size_data
 
 !**************************************************
-  subroutine get_var_data(handle, array) bind(C, name='get_var_data')
+  subroutine get_data(handle, array) bind(C, name='get_data')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: array(*)
@@ -83,7 +83,7 @@ contains
       array(:size(p%var)) = p%var
     end if
     
-  end subroutine get_var_data
+  end subroutine get_data
   
 !********************************************	
   subroutine update_var_i(handle)bind(C,name='update_var_i')
