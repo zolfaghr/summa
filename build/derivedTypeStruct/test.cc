@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "cpp_class.h"
+#include "var_i.h"
 
 int main()
 {
@@ -9,9 +9,8 @@ int main()
   std::vector<int> vec_in{2,5,-3,0};
   x.set_var_i(vec_in);
   
-  // call functions to update x
-  //update_cvar(&x);
-  x.update_vari();
+
+  x.update_var_i();
   
   std::vector<int> vec_out;
   vec_out = x.get_var_data();

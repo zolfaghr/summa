@@ -3,7 +3,7 @@ all: compile_f compile_c link
 FC = gfortran
 CC = g++
 
-FFILES = datatypes.f90 update_var.f90 fort_type.f90 
+FFILES = data_type.f90 update_var_i.f90 wrapper_var_i.f90 
 CFILES = test.cc
 
 compile_f:
@@ -13,7 +13,7 @@ compile_c:
 	$(CC) -c $(CFILES)
 	
 link:
-	$(CC) -o program datatypes.f90 update_var.o fort_type.o test.o -l$(FC)
+	$(CC) -o program data_type.o update_var_i.o wrapper_var_i.o test.o -l$(FC)
 	
 clean:
 	rm *.o program *.mod

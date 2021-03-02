@@ -1,6 +1,6 @@
 
 module module_updateVar
-use datatypes,only: var_i
+use data_type,only: var_i
 
 implicit none
 

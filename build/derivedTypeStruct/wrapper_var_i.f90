@@ -1,8 +1,8 @@
 
-module data_type
+module wrapper_var_i
 
 use, intrinsic :: iso_c_binding
-use datatypes
+use data_type
 use module_updateVar,only:update_fvar
 
   implicit none
@@ -86,7 +86,7 @@ contains
   end subroutine get_var_data
   
 !********************************************	
-  subroutine update_vari(handle)bind(C,name='update_vari')
+  subroutine update_var_i(handle)bind(C,name='update_var_i')
 	
     type(c_ptr), value      :: handle      
     type(var_i), pointer    :: p           
@@ -95,10 +95,10 @@ contains
     
     call update_fvar(p)
 
-  end subroutine update_vari
+  end subroutine update_var_i
 
 !=====================================================================
 
-end module data_type
+end module wrapper_var_i
 
 

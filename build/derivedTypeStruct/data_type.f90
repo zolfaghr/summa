@@ -1,5 +1,5 @@
 
-module datatypes
+module data_type
 
   implicit none
   
@@ -7,6 +7,6 @@ module datatypes
     integer, allocatable :: var(:)
   end type var_i
 
-end module datatypes
+end module data_type
 
 

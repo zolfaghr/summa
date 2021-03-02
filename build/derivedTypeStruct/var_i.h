@@ -1,6 +1,6 @@
 
-#ifndef CPP_CLASS_H_
-#define CPP_CLASS_H_
+#ifndef VAR_I_H_
+#define VAR_I_H_
 
 #include <vector>
 #include <iostream>
@@ -10,7 +10,7 @@ extern "C" void  free_opaque_handle(void* handle);
 extern "C" void  set_var_i(void* handle, const int* array, int size);
 extern "C" void  get_var_size(void* handle, int* size);
 extern "C" void  get_var_data(void* handle, int* array);
-extern "C" void  update_vari(void* handle);
+extern "C" void  update_var_i(void* handle);
 
 
 class var_i
@@ -33,9 +33,9 @@ public:
      ::set_var_i(handle, &var[0], var.size());
   }
   
-  void update_vari()
+  void update_var_i()
   {
-     ::update_vari(handle);
+     ::update_var_i(handle);
   }
 
   std::vector<int> get_var_data()
