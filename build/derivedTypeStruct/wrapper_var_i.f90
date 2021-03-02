@@ -5,7 +5,7 @@ use, intrinsic :: iso_c_binding
 use data_type
 use updateVar,only:updateVar_i
 
-  implicit none
+implicit none
   
 ! pointer-to-opaque-handle technique
   
@@ -13,7 +13,7 @@ contains
 
 !**************************************************
 ! get C address of the object
-  function get_opaque_handle() result(handle) bind(C, name='get_opaque_handle')
+  function new_opaque_handle() result(handle) bind(C, name='new_opaque_handle')
     
     type(c_ptr) :: handle
     type(var_i), pointer :: p
@@ -21,10 +21,10 @@ contains
     allocate(p)    
     handle = c_loc(p)   
     
-  end function get_opaque_handle
+  end function new_opaque_handle
 
 !**************************************************
-  subroutine free_opaque_handle(handle) bind(C, name='free_opaque_handle')
+  subroutine delete_opaque_handle(handle) bind(C, name='delete_opaque_handle')
     
     type(c_ptr), intent(in), value :: handle
     type(var_i), pointer :: p
@@ -32,7 +32,7 @@ contains
     call c_f_pointer(handle, p)
     deallocate(p)
     
-  end subroutine free_opaque_handle
+  end subroutine delete_opaque_handle
 
 !**************************************************
   subroutine set_var_i(handle, array, arr_size) bind(C, name='set_var_i')

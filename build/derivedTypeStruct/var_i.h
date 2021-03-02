@@ -5,8 +5,8 @@
 #include <vector>
 #include <iostream>
 
-extern "C" void* get_opaque_handle();
-extern "C" void  free_opaque_handle(void* handle);
+extern "C" void* new_opaque_handle();
+extern "C" void  delete_opaque_handle(void* handle);
 extern "C" void  set_var_i(void* handle, const int* array, int size);
 extern "C" void  get_var_size(void* handle, int* size);
 extern "C" void  get_var_data(void* handle, int* array);
@@ -20,12 +20,12 @@ private:
 public:
   var_i() 
   { 
-    handle = get_opaque_handle(); 
+    handle = new_opaque_handle(); 
   }
 
   ~var_i() 
   { 
-    free_opaque_handle(handle); 
+    delete_opaque_handle(handle); 
   }
 
   void set_var_i(const std::vector<int>& var)
