@@ -21,7 +21,7 @@ int main()  {
   std::cout << std::endl;
   
   
-  x.update_var_i();
+  x.update();
   
   std::cout << "after update" << std::endl;
   vec_out = x.get_data();

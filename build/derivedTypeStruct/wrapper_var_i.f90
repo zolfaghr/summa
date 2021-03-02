@@ -13,7 +13,7 @@ contains
 
 !**************************************************
 ! get C address of the object
-  function new_opaque_handle() result(handle) bind(C, name='new_opaque_handle')
+  function new_handle_var_i() result(handle) bind(C, name='new_handle_var_i')
     
     type(c_ptr) :: handle
     type(var_i), pointer :: p
@@ -21,10 +21,10 @@ contains
     allocate(p)    
     handle = c_loc(p)   
     
-  end function new_opaque_handle
+  end function new_handle_var_i
 
 !**************************************************
-  subroutine delete_opaque_handle(handle) bind(C, name='delete_opaque_handle')
+  subroutine delete_handle_var_i(handle) bind(C, name='delete_handle_var_i')
     
     type(c_ptr), intent(in), value :: handle
     type(var_i), pointer :: p
@@ -32,10 +32,10 @@ contains
     call c_f_pointer(handle, p)
     deallocate(p)
     
-  end subroutine delete_opaque_handle
+  end subroutine delete_handle_var_i
 
 !**************************************************
-  subroutine set_data(handle, array, arr_size) bind(C, name='set_data')
+  subroutine set_data_var_i(handle, array, arr_size) bind(C, name='set_data_var_i')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: arr_size
@@ -53,10 +53,10 @@ contains
     end if
     p%var = array
     
-  end subroutine set_data
+  end subroutine set_data_var_i
 
 !**************************************************
-  subroutine get_size_data(handle, arr_size) bind(C, name='get_size_data')
+  subroutine get_size_data_var_i(handle, arr_size) bind(C, name='get_size_data_var_i')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: arr_size
@@ -69,10 +69,10 @@ contains
       arr_size = 0_c_int
     end if
     
-  end subroutine get_size_data
+  end subroutine get_size_data_var_i
 
 !**************************************************
-  subroutine get_data(handle, array) bind(C, name='get_data')
+  subroutine get_data_var_i(handle, array) bind(C, name='get_data_var_i')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: array(*)
@@ -83,7 +83,7 @@ contains
       array(:size(p%var)) = p%var
     end if
     
-  end subroutine get_data
+  end subroutine get_data_var_i
   
 !********************************************	
   subroutine update_var_i(handle)bind(C,name='update_var_i')
