@@ -3,7 +3,7 @@ module wrapper_var_i
 
 use, intrinsic :: iso_c_binding
 use data_type
-use module_updateVar,only:update_fvar
+use updateVar,only:updateVar_i
 
   implicit none
   
@@ -93,7 +93,7 @@ contains
     	
     call c_f_pointer(handle, p)
     
-    call update_fvar(p)
+    call updateVar_i(p)
 
   end subroutine update_var_i
 

@@ -1,22 +1,22 @@
 
-module module_updateVar
+module updateVar
 use data_type,only: var_i
 
 implicit none
 
-public::update_fvar
+public::updateVar_i
 
 contains
 	!********************************************
-	subroutine update_fvar(v) 
+	subroutine updateVar_i(v) 
 	implicit none
 
 		type(var_i), intent(inout)  :: v
 
 		v%var = 200
 
-	end subroutine update_fvar
+	end subroutine updateVar_i
 
 !********************************************    
 
-end module module_updateVar
+end module updateVar
