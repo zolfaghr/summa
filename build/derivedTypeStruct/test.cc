@@ -9,22 +9,24 @@ extern "C" void  update_cvar(udata* user_data);
 
 int main()
 {
-  var_i x;
+  var_i x, *y;
 
   std::vector<int> vec_in{2,5,-3,0};
   x.set_var_i(vec_in);
   
-  cout << "main 1" << endl;
   udata *user = new udata(&x);
-  cout << "main 2" << endl;
-  // call functions to update x
-  update_cvar(user);
   
+  y = user->get_var_i();
+
   std::vector<int> vec_out;
-  vec_out = x.get_var_data();
+  vec_out = y->get_var_data();
   for(size_t i=0; i<vec_out.size(); i++)
   	std::cout << vec_out[i] << "   ";
-  std::cout << std::endl;
+  	
+   
+
+  // call functions to update x
+  update_cvar(user);
 
   return 0;
 }

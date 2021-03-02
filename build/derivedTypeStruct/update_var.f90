@@ -16,7 +16,7 @@ contains
 
 		type(var_i), intent(inout)  :: v
 
-		v%var(:) = 1
+        print *, ' in update_fvar doing nothing'
 
 	end subroutine update_fvar
 	
@@ -27,11 +27,11 @@ contains
 	implicit none
 	
     	type(c_ptr), value      :: user_data     ! user-defined data  
-    	! pointers to data 
     	type(f_user), pointer    :: v             ! user data
   
-    	! get var_i from user-defined data
     	call c_f_pointer(user_data, v)
+    	
+    	print *, 'var(:) in update_cvar before updating = ',  v%vf%var(1)
     
     	call update_fvar(v%vf)
 
