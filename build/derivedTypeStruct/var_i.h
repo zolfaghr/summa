@@ -13,33 +13,25 @@ extern "C" void  get_data(void* handle, int* array);
 extern "C" void  update_var_i(void* handle);
 
 
-class var_i
-{
+class var_i  {
 private:
   void *handle;
 public:
-  var_i() 
-  { 
-    handle = new_opaque_handle(); 
-  }
-
-  ~var_i() 
-  { 
-    delete_opaque_handle(handle); 
-  }
-
-  void set_data(const std::vector<int>& var)
-  {
-     ::set_data(handle, &var[0], var.size());
+  // constructors
+  var_i()  { handle = new_opaque_handle(); }
+  
+  var_i(const std::vector<int> &arr) {
+  	handle = new_opaque_handle();
+    ::set_data(handle, &arr[0], arr.size());
   }
   
-  void update_var_i()
-  {
-     ::update_var_i(handle);
+  
+  // methods
+  void set_data(const std::vector<int>& arr) {
+       ::set_data(handle, &arr[0], arr.size());
   }
 
-  std::vector<int> get_data()
-  {
+  std::vector<int> get_data() {
     int size;
     ::get_size_data(handle, &size);
     if (size == 0) return std::vector<int>();
@@ -48,6 +40,11 @@ public:
     ::get_data(handle, &array[0]);
     return array;
   }
+  
+   void update_var_i() { ::update_var_i(handle); }
+  
+  // Destructor 
+  ~var_i() { delete_opaque_handle(handle); }
 };
 
 #endif
