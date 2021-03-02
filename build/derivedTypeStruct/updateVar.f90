@@ -30,14 +30,16 @@ contains
 	end subroutine updateVar_d
 
 !********************************************   
-	subroutine updateSummaData(v_i, v_d) 
+	subroutine updateSummaData(v_i, v_d, v_dlength) 
 	implicit none
 	
 		type(var_i), intent(inout)  :: v_i
 		type(var_d), intent(inout)  :: v_d
+		type(dlength), intent(inout):: v_dlength
 
 		v_i%var = 40
 		v_d%var = 3.5
+		v_dlength%var = -2.4
 
 	end subroutine updateSummaData
 

@@ -10,6 +10,10 @@ module data_type
   type, public :: var_d
     real, allocatable :: var(:)
   end type var_d
+  
+  type, public :: dlength
+  	real, allocatable   :: var(:)   
+  end type dlength
 
 end module data_type
 
