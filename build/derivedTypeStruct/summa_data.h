@@ -10,15 +10,15 @@ extern "C" void  delete_handle_var_i(void* handle);
 extern "C" void  set_data_var_i(void* handle, const int* array, int size);
 extern "C" void  get_size_data_var_i(void* handle, int* size);
 extern "C" void  get_data_var_i(void* handle, int* array);
-extern "C" void  update_var_i(void* handle);
-
 
 extern "C" void* new_handle_var_d();
 extern "C" void  delete_handle_var_d(void* handle);
 extern "C" void  set_data_var_d(void* handle, const double* array, int size);
 extern "C" void  get_size_data_var_d(void* handle, int* size);
 extern "C" void  get_data_var_d(void* handle, double* array);
-extern "C" void  update_var_d(void* handle);
+
+
+extern "C" void  update_summa_data(void* handle1, void* handle2);
 
 
 
@@ -70,8 +70,7 @@ public:
   }
   
    void update() {
-    ::update_var_i(handle_var_i);
-    ::update_var_d(handle_var_d);
+    ::update_summa_data(handle_var_i, handle_var_d);
    }
   
   // destructor 

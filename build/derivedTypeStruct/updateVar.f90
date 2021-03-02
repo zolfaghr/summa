@@ -6,6 +6,7 @@ implicit none
 
 public::updateVar_i
 public::updateVar_d
+public::updateSummaData
 
 contains
 !********************************************
@@ -28,6 +29,18 @@ contains
 
 	end subroutine updateVar_d
 
-!********************************************     
+!********************************************   
+	subroutine updateSummaData(v_i, v_d) 
+	implicit none
+	
+		type(var_i), intent(inout)  :: v_i
+		type(var_d), intent(inout)  :: v_d
+
+		v_i%var = 40
+		v_d%var = 3.5
+
+	end subroutine updateSummaData
+
+!********************************************   
 
 end module updateVar
