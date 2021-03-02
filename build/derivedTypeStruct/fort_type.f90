@@ -2,12 +2,10 @@
 module data_type
 
 use, intrinsic :: iso_c_binding
+use datatypes
+use module_updateVar,only:update_fvar
 
   implicit none
-  
-  type :: var_i
-    integer, allocatable :: var(:)
-  end type var_i
   
 ! pointer-to-opaque-handle technique
   
@@ -86,6 +84,18 @@ contains
     end if
     
   end subroutine get_var_data
+  
+!********************************************	
+  subroutine update_vari(handle)bind(C,name='update_vari')
+	
+    type(c_ptr), value      :: handle      
+    type(var_i), pointer    :: p           
+    	
+    call c_f_pointer(handle, p)
+    
+    call update_fvar(p)
+
+  end subroutine update_vari
 
 !=====================================================================
 

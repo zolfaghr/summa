@@ -10,11 +10,12 @@ extern "C" void  free_opaque_handle(void* handle);
 extern "C" void  set_var_i(void* handle, const int* array, int size);
 extern "C" void  get_var_size(void* handle, int* size);
 extern "C" void  get_var_data(void* handle, int* array);
+extern "C" void  update_vari(void* handle);
 
 
 class var_i
 {
-public:
+private:
   void *handle;
 public:
   var_i() 
@@ -30,6 +31,11 @@ public:
   void set_var_i(const std::vector<int>& var)
   {
      ::set_var_i(handle, &var[0], var.size());
+  }
+  
+  void update_vari()
+  {
+     ::update_vari(handle);
   }
 
   std::vector<int> get_var_data()
