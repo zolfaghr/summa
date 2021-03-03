@@ -54,6 +54,13 @@ extern "C" void  set_data_var_ilength(void* handle, const int* array, int num_ro
 extern "C" void  get_size_data_var_ilength(void* handle, int* num_var, int* num_dat);
 extern "C" void  get_data_var_ilength(void* handle, int* array);
 
+// var_i8length
+extern "C" void* new_handle_var_i8length();
+extern "C" void  delete_handle_var_i8length(void* handle);
+extern "C" void  set_data_var_i8length(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+extern "C" void  get_size_data_var_i8length(void* handle, int* num_var, int* num_dat);
+extern "C" void  get_data_var_i8length(void* handle, int* array);
+
 // var_dlength
 extern "C" void* new_handle_var_dlength();
 extern "C" void  delete_handle_var_dlength(void* handle);
@@ -76,6 +83,7 @@ private:
   void *handle_i8length;
   void *handle_dlength;
   void *handle_var_ilength;
+  void *handle_var_i8length;
   void *handle_var_dlength;
 public:
   // ************* CONSTRUCTOR *************
@@ -87,6 +95,7 @@ public:
   	handle_ilength = new_handle_ilength();
   	handle_dlength = new_handle_dlength();
   	handle_var_ilength = new_handle_var_ilength();
+  	handle_var_i8length = new_handle_var_i8length();
   	handle_var_dlength = new_handle_var_dlength();
   }
   
@@ -132,6 +141,23 @@ public:
   	   }
   	    
        ::set_data_var_ilength(handle_var_ilength, &array[0], num_row, &num_col[0], num_elements);
+  }
+  
+  void set_var_i8length(const std::vector<std::vector<int>> &mat) {
+  
+  	   size_t num_row = mat.size();
+  	   std::vector<int> num_col( num_row );
+  	   std::vector<int> array;
+  	   
+  	   int num_elements = 0;
+  	   for(size_t i=0; i<num_row; i++) {
+  	   	  num_col[i] = mat[i].size();
+  	   	  for(size_t j=0; j<num_col[i]; j++)
+  	   	  	array.push_back(mat[i][j]);
+  	   	  num_elements += num_col[i];
+  	   }
+  	    
+       ::set_data_var_i8length(handle_var_i8length, &array[0], num_row, &num_col[0], num_elements);
   }
   
   void set_var_dlength(const std::vector<std::vector<double>> &mat) {
@@ -242,6 +268,35 @@ public:
     return mat;
   }
   
+  std::vector<std::vector<int>> get_data_var_i8length() {
+    int num_row;
+    std::vector<int> num_col(num_row);
+    ::get_size_data_var_i8length(handle_var_i8length, &num_row, &num_col[0]);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
+    int num_elem = 0;
+    for(int i=0; i<num_row; i++)
+    	num_elem += num_col[i];   	
+
+    std::vector<int> array(num_elem);
+
+    ::get_data_var_i8length(handle_var_i8length, &array[0]);
+    
+    std::vector<std::vector<int>> mat(num_row);
+    for(size_t i=0; i<num_row; i++)
+    	mat[i] = std::vector<int>(num_col[i]);
+
+    num_elem = 0;
+    for(size_t i=0; i<num_row; i++){
+    	for(size_t j=0; j<num_col[i]; j++)
+    		mat[i][j] = array[num_elem + j];
+    	num_elem += num_col[i];    		
+    }
+    
+    
+    return mat;
+  }
+  
   std::vector<std::vector<double>> get_data_var_dlength() {
     int num_row;
     std::vector<int> num_col(num_row);
@@ -286,6 +341,7 @@ public:
   	delete_handle_i8length(handle_i8length);
   	delete_handle_dlength(handle_dlength);
   	delete_handle_var_ilength(handle_var_ilength);
+  	delete_handle_var_i8length(handle_var_i8length);
   	delete_handle_var_dlength(handle_var_dlength);
    }
 };

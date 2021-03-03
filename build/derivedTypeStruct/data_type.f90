@@ -31,6 +31,10 @@ use nrtype
  type, public :: var_ilength
   type(ilength), allocatable           :: var(:)  
  end type var_ilength
+ 
+ type, public :: var_i8length
+  type(i8length),allocatable          :: var(:)
+ end type var_i8length
    
   type, public :: var_dlength
   	type(dlength), allocatable	 :: var(:)
