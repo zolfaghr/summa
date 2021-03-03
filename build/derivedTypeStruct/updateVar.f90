@@ -12,7 +12,7 @@ contains
 	subroutine updateSummaData(v) 
 	implicit none
 	
-		type(ilength), intent(inout):: v
+		type(i8length), intent(inout):: v
 		integer :: i
  
         do i=1,size(v%dat)

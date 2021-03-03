@@ -15,7 +15,7 @@ contains
   subroutine update_summa_data(handle_ilength)bind(C,name='update_summa_data')
 	
     type(c_ptr), value      :: handle_ilength         
-    type(ilength), pointer  :: ptr_ilength
+    type(i8length), pointer  :: ptr_ilength
                    	
     call c_f_pointer(handle_ilength, ptr_ilength)
     
