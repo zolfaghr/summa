@@ -15,6 +15,10 @@ use nrtype
  type, public :: ilength
   integer(i4b), allocatable            :: dat(:)    
  end type ilength
+ 
+ type, public :: i8length
+  integer(8),allocatable              :: dat(:)    
+ end type i8length
    
   type, public :: dlength
   	real(dp), allocatable   :: dat(:)   

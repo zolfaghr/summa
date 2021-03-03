@@ -26,6 +26,13 @@ extern "C" void  set_data_ilength(void* handle, const int* array, int size);
 extern "C" void  get_size_data_ilength(void* handle, int* size);
 extern "C" void  get_data_ilength(void* handle, int* array);
 
+// i8length
+extern "C" void* new_handle_i8length();
+extern "C" void  delete_handle_i8length(void* handle);
+extern "C" void  set_data_i8length(void* handle, const int* array, int size);
+extern "C" void  get_size_data_i8length(void* handle, int* size);
+extern "C" void  get_data_i8length(void* handle, int* array);
+
 // dlength
 extern "C" void* new_handle_dlength();
 extern "C" void  delete_handle_dlength(void* handle);
@@ -51,6 +58,7 @@ private:
   void *handle_var_i;
   void *handle_var_d;
   void *handle_ilength;
+  void *handle_i8length;
   void *handle_dlength;
   void *handle_var_dlength;
 public:
@@ -58,6 +66,7 @@ public:
   Summa()  { 
   	handle_var_i = new_handle_var_i();
   	handle_var_d = new_handle_var_d();
+  	handle_i8length = new_handle_i8length();
   	handle_ilength = new_handle_ilength();
   	handle_dlength = new_handle_dlength();
   	handle_var_dlength = new_handle_var_dlength();
@@ -72,6 +81,10 @@ public:
   
   void set_var_d(const std::vector<double> &arr_d) {
        ::set_data_var_d(handle_var_d, &arr_d[0], arr_d.size());
+  }
+  
+  void set_i8length(const std::vector<int> &arr_i8length) {
+       ::set_data_i8length(handle_i8length, &arr_i8length[0], arr_i8length.size());
   }
   
   void set_ilength(const std::vector<int> &arr_ilength) {
@@ -118,6 +131,16 @@ public:
 
     std::vector<double> array(size);
     ::get_data_var_d(handle_var_d, &array[0]);
+    return array;
+  }
+  
+  std::vector<int> get_data_i8length() {
+    int size;
+    ::get_size_data_i8length(handle_i8length, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    ::get_data_i8length(handle_i8length, &array[0]);
     return array;
   }
   
@@ -181,6 +204,7 @@ public:
   	delete_handle_var_i(handle_var_i);
   	delete_handle_var_d(handle_var_d);
   	delete_handle_ilength(handle_ilength);
+  	delete_handle_i8length(handle_i8length);
   	delete_handle_dlength(handle_dlength);
   	delete_handle_var_dlength(handle_var_dlength);
    }
