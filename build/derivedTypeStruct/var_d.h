@@ -10,7 +10,6 @@ extern "C" void  delete_handle_var_d(void* handle);
 extern "C" void  set_data_var_d(void* handle, const double* array, int size);
 extern "C" void  get_size_data_var_d(void* handle, int* size);
 extern "C" void  get_data_var_d(void* handle, double* array);
-extern "C" void  update_var_d(void* handle);
 
 
 class var_d  {
@@ -40,8 +39,6 @@ public:
     ::get_data_var_d(handle, &array[0]);
     return array;
   }
-  
-   void update() { ::update_var_d(handle); }
   
   // Destructor 
   ~var_d() { delete_handle_var_d(handle); }

@@ -46,7 +46,7 @@ private:
   void *handle_dlength;
   void *handle_var_dlength;
 public:
-  // constructors
+  // ************* CONSTRUCTOR *************
   summa_data()  { 
   	handle_var_i = new_handle_var_i();
   	handle_var_d = new_handle_var_d();
@@ -54,31 +54,9 @@ public:
   	handle_var_dlength = new_handle_var_dlength();
   }
   
-  summa_data(const std::vector<int> &arr_i,
-             const std::vector<double> &arr_d,
-             const std::vector<double> &arr_dlength
-            ) {
-  	handle_var_i = new_handle_var_i();
-    ::set_data_var_i(handle_var_i, &arr_i[0], arr_i.size());
-
-  	handle_var_d = new_handle_var_d();
-    ::set_data_var_d(handle_var_d, &arr_d[0], arr_d.size());
-    
-  	handle_dlength = new_handle_dlength();
-    ::set_data_dlength(handle_dlength, &arr_dlength[0], arr_dlength.size());
-  }
   
-  
-  // methods
-  void set_data(const std::vector<int>& arr_i,
-  			    const std::vector<double> &arr_d,
-  			    const std::vector<double> &arr_dlength
-  			    ) {
-       ::set_data_var_i(handle_var_i, &arr_i[0], arr_i.size());
-       ::set_data_var_d(handle_var_d, &arr_d[0], arr_d.size());
-       ::set_data_dlength(handle_dlength, &arr_d[0], arr_dlength.size());
-  }
-  
+  // ************* METHODS *************
+  // set data
   void set_var_i(const std::vector<int>& arr_i) {
        ::set_data_var_i(handle_var_i, &arr_i[0], arr_i.size());
   }
@@ -107,7 +85,9 @@ public:
   	    
        ::set_data_var_dlength(handle_var_dlength, &array[0], num_row, &num_col[0], num_elements);
   }
-
+  
+  
+  // get data
   std::vector<int> get_data_var_i() {
     int size;
     ::get_size_data_var_i(handle_var_i, &size);
@@ -167,11 +147,13 @@ public:
     return mat;
   }
   
+  // ************* SUMMA SUBROUTINES *************
+  
    void update() {
     ::update_summa_data(handle_var_i, handle_var_d, handle_dlength, handle_var_dlength);
    }
   
-  // destructor 
+  // ************* DESTRUCTOR *************
   ~summa_data() { 
   	delete_handle_var_i(handle_var_i);
   	delete_handle_var_d(handle_var_d);

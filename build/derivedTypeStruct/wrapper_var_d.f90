@@ -3,7 +3,6 @@ module wrapper_var_d
 
 use, intrinsic :: iso_c_binding
 use data_type
-use updateVar,only:updateVar_d
 
 implicit none
   
@@ -84,18 +83,6 @@ contains
     end if
     
   end subroutine get_data_var_d
-  
-!********************************************	
-  subroutine update_var_d(handle)bind(C,name='update_var_d')
-	
-    type(c_ptr), value      :: handle      
-    type(var_d), pointer    :: p           
-    	
-    call c_f_pointer(handle, p)
-    
-    call updateVar_d(p)
-
-  end subroutine update_var_d
 
 !=====================================================================
 
