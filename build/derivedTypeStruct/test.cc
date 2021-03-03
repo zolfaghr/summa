@@ -11,12 +11,12 @@ int main()  {
 
   Summa S;
 
-  S.set_var_ilength(mat_in);
+  S.set_var_i8length(mat_in);
   
  // update data
   S.update();
    
-  mat_out = S.get_data_var_ilength();  
+  mat_out = S.get_data_var_i8length();  
    
   for(size_t i=0; i<mat_out.size(); i++) {
   	for(size_t j=0; j<mat_out[i].size(); j++)
