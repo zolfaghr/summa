@@ -10,6 +10,7 @@ int main()  {
   std::vector<double> vec_in_d{2.4,5.12,-3.1,0.8}, vec_out_d;
   std::vector<double> vec_in_dlength{2.0,1}, vec_out_dlength;
   std::vector<std::vector<double>> vec_in_vardlength{ { 11, 12 }, { 21, 22, 23 }, {31} };
+  //std::vector<std::vector<double>> vec_in_vardlength{ { 11, 12, 21, 22, 23 }};
   
   
   summa_data S;

@@ -92,15 +92,18 @@ public:
   void set_var_dlength(const std::vector<std::vector<double>> &mat) {
   
   	   size_t num_row = mat.size();
-  	   int num_elements = 0;
   	   std::vector<int> num_col( num_row );
+  	   std::vector<double> array;
   	   
+  	   int num_elements = 0;
   	   for(size_t i=0; i<num_row; i++) {
   	   	  num_col[i] = mat[i].size();
+  	   	  for(size_t j=0; j<num_col[i]; j++)
+  	   	  	array.push_back(mat[i][j]);
   	   	  num_elements += num_col[i];
   	   }
- 	   
-       ::set_data_var_dlength(handle_var_dlength, &mat[0][0], num_row, &num_col[0], num_elements);
+  	    
+       ::set_data_var_dlength(handle_var_dlength, &array[0], num_row, &num_col[0], num_elements);
   }
 
   std::vector<int> get_data_var_i() {
@@ -142,6 +145,7 @@ public:
   	delete_handle_var_i(handle_var_i);
   	delete_handle_var_d(handle_var_d);
   	delete_handle_dlength(handle_dlength);
+  	delete_handle_var_dlength(handle_var_dlength);
    }
 };
 

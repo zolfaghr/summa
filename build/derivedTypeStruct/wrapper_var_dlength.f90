@@ -74,6 +74,12 @@ contains
     
     print *, 'sum_elem = ', sum_elem
     
+     do i=1,num_row
+    	do j=1,num_col(i)
+    		print *, p%var(i)%dat(j)
+    	end do
+    end do
+    
   end subroutine set_data_var_dlength
 
 !=====================================================================
