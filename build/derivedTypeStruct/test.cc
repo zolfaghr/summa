@@ -9,7 +9,7 @@ int main()  {
   std::vector<int> vec_in_i{2,5,-3,0}, vec_out_i;
   std::vector<double> vec_in_d{2.4,5.12,-3.1,0.8}, vec_out_d;
   std::vector<double> vec_in_dlength{2.0,1}, vec_out_dlength;
-//  std::vector<std::vector<double>> vec_in_vardlength{ { 11, 12, 13 }, { 21, 22, 23 } };
+  std::vector<std::vector<double>> vec_in_vardlength{ { 11, 12 }, { 21, 22, 23 }, {31} };
   
   
   summa_data S;
@@ -17,7 +17,7 @@ int main()  {
   S.set_var_i(vec_in_i);
   S.set_var_d(vec_in_d);
   S.set_dlength(vec_in_dlength);
-//  S.set_var_dlength(vec_in_vardlength);
+  S.set_var_dlength(vec_in_vardlength);
   
   // or 
   // summa_data S(vec_in_i, vec_in_d, vec_in_dlength);

@@ -34,14 +34,19 @@ contains
   end subroutine delete_handle_var_dlength
 
 !**************************************************
-  subroutine set_data_var_dlength(handle, array, num_row, num_col) bind(C, name='set_data_var_dlength')
+  subroutine set_data_var_dlength(handle, array, num_row, num_col, num_elements) bind(C, name='set_data_var_dlength')
     
     type(c_ptr), intent(in), value    :: handle
     integer(c_int), intent(in), value :: num_row
+    integer(c_int), intent(in), value :: num_elements
     integer(c_int), intent(in)   	  :: num_col(num_row) 
-    real(c_double), intent(in)        :: array(:,:)
+    real(c_double), intent(in)        :: array(num_elements)
     type(var_dlength), pointer :: p
-    integer(c_int)  :: i,j
+    integer(c_int)  :: i,j,sum_elem
+    
+    print *, 'num_row = ', num_row
+    print *, 'num_col = ', num_col
+    print *, 'num_elem = ', num_elements
     
     call c_f_pointer(handle, p)    
     if (allocated(p%var)) then
@@ -59,11 +64,16 @@ contains
         end do
     end if
     
+    sum_elem = 0
     do i=1,num_row
     	do j=1,num_col(i)
-    		p%var(i)%dat(j) = array(i,j)
+    		p%var(i)%dat(j) = array(sum_elem + j)
     	end do
+    	sum_elem = sum_elem + num_col(i)
     end do
+    
+    print *, 'sum_elem = ', sum_elem
+    
   end subroutine set_data_var_dlength
 
 !=====================================================================
