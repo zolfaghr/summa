@@ -37,8 +37,8 @@ contains
   subroutine set_data_var_dlength(handle, array, num_row, num_col) bind(C, name='set_data_var_dlength')
     
     type(c_ptr), intent(in), value    :: handle
-    integer(c_int), intent(in)  	  :: num_row
-    integer(c_int), intent(in)   	  :: num_col(:) 
+    integer(c_int), intent(in), value :: num_row
+    integer(c_int), intent(in)   	  :: num_col(num_row) 
     real(c_double), intent(in)        :: array(:,:)
     type(var_dlength), pointer :: p
     integer(c_int)  :: i,j
