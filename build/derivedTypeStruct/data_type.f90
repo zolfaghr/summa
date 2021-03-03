@@ -8,6 +8,10 @@ use nrtype
     integer(i4b), allocatable :: var(:)
   end type var_i
   
+ type, public :: var_i8
+  integer(8),allocatable              :: var(:) 
+ endtype var_i8
+  
   type, public :: var_d
     real(dp), allocatable :: var(:)
   end type var_d
