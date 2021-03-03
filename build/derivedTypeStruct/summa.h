@@ -41,7 +41,7 @@ extern "C" void  get_size_data_var_dlength(void* handle, int* num_var, int* num_
 extern "C" void  get_data_var_dlength(void* handle, double* array);
 
 
-extern "C" void  update_summa_data(void* handle1, void* handle2, void* handle3, void* handle4);
+extern "C" void  update_summa_data(void* handle);
 
 
 
@@ -173,7 +173,7 @@ public:
   // ************* SUMMA SUBROUTINES *************
   
    void update() {
-    ::update_summa_data(handle_var_i, handle_var_d, handle_dlength, handle_var_dlength);
+    ::update_summa_data(handle_ilength);
    }
   
   // ************* DESTRUCTOR *************

@@ -9,20 +9,14 @@ public::updateSummaData
 contains
 
 !********************************************   
-	subroutine updateSummaData(v_i, v_d, v_dlength, v_vardlength) 
+	subroutine updateSummaData(v) 
 	implicit none
 	
-		type(var_i), intent(inout)  :: v_i
-		type(var_d), intent(inout)  :: v_d
-		type(dlength), intent(inout):: v_dlength
-		type(var_dlength), intent(inout):: v_vardlength
-		integer  :: i
-
-		v_i%var = 40
-		v_d%var = 3.5
-		v_dlength%dat = -2.4
-		do i=1,size(v_vardlength%var)
-			v_vardlength%var(i)%dat = i*10 + 0.1
+		type(ilength), intent(inout):: v
+		integer :: i
+ 
+        do i=1,size(v%dat)
+		  v%dat(i) = v%dat(i) * 2
 		end do
 
 	end subroutine updateSummaData
