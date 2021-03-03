@@ -11,7 +11,11 @@ use nrtype
   type, public :: var_d
     real(dp), allocatable :: var(:)
   end type var_d
-  
+
+ type, public :: ilength
+  integer(i4b), allocatable            :: dat(:)    
+ end type ilength
+   
   type, public :: dlength
   	real(dp), allocatable   :: dat(:)   
   end type dlength
