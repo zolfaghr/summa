@@ -30,6 +30,8 @@ extern "C" void  get_data_dlength(void* handle, double* array);
 extern "C" void* new_handle_var_dlength();
 extern "C" void  delete_handle_var_dlength(void* handle);
 extern "C" void  set_data_var_dlength(void* handle, const double* array, int num_row, const int* num_col, int num_elements);
+extern "C" void  get_size_data_var_dlength(void* handle, int* num_var, int* num_dat);
+extern "C" void  get_data_var_dlength(void* handle, double* array);
 
 
 extern "C" void  update_summa_data(void* handle1, void* handle2, void* handle3);
@@ -134,6 +136,35 @@ public:
     std::vector<double> array(size);
     ::get_data_dlength(handle_dlength, &array[0]);
     return array;
+  }
+  
+  std::vector<std::vector<double>> get_data_var_dlength() {
+    int num_row;
+    std::vector<int> num_col(num_row);
+    ::get_size_data_var_dlength(handle_var_dlength, &num_row, &num_col[0]);
+    if (num_row == 0) return std::vector<std::vector<double>>();
+    
+    int num_elem = 0;
+    for(int i=0; i<num_row; i++)
+    	num_elem += num_col[i];   	
+
+    std::vector<double> array(num_elem);
+
+    ::get_data_var_dlength(handle_var_dlength, &array[0]);
+    
+    std::vector<std::vector<double>> mat(num_row);
+    for(size_t i=0; i<num_row; i++)
+    	mat[i] = std::vector<double>(num_col[i]);
+
+    num_elem = 0;
+    for(size_t i=0; i<num_row; i++){
+    	for(size_t j=0; j<num_col[i]; j++)
+    		mat[i][j] = array[num_elem + j];
+    	num_elem += num_col[i];    		
+    }
+    
+    
+    return mat;
   }
   
    void update() {
