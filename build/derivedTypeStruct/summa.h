@@ -274,7 +274,7 @@ public:
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
    void update() {
-    ::update_summa_data(handle_var_i8);
+    ::update_summa_data(handle_var_ilength);
    }
   
   // ************* DESTRUCTOR *************

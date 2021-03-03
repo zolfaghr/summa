@@ -12,11 +12,13 @@ contains
 	subroutine updateSummaData(v) 
 	implicit none
 	
-		type(var_i8), intent(inout):: v
-		integer :: i
+		type(var_ilength), intent(inout):: v
+		integer :: i,j
  
         do i=1,size(v%var)
-		  v%var(i) = v%var(i) * 3
+        	do j=1,size(v%var(i)%dat)
+		  		v%var(i)%dat(j) = v%var(i)%dat(j) * 2
+		  	end do
 		end do
 
 	end subroutine updateSummaData

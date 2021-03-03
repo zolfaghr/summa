@@ -12,12 +12,12 @@ implicit none
 contains
   
 !********************************************	
-  subroutine update_summa_data(handle_ilength)bind(C,name='update_summa_data')
+  subroutine update_summa_data(handle)bind(C,name='update_summa_data')
 	
-    type(c_ptr), value      :: handle_ilength         
-    type(var_i8), pointer  :: ptr
+    type(c_ptr), value      :: handle         
+    type(var_ilength), pointer  :: ptr
                    	
-    call c_f_pointer(handle_ilength, ptr)
+    call c_f_pointer(handle, ptr)
     
     call updateSummaData(ptr)
 
