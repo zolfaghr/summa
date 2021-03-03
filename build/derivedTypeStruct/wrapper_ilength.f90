@@ -38,7 +38,7 @@ contains
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: arr_size
-    real(c_double), intent(in) :: array(arr_size)
+    integer(c_int), intent(in) :: array(arr_size)
     type(ilength), pointer :: p
     
     call c_f_pointer(handle, p)    
@@ -74,7 +74,7 @@ contains
   subroutine get_data_ilength(handle, array) bind(C, name='get_data_ilength')
     
     type(c_ptr), intent(in), value :: handle
-    real(c_double), intent(out) :: array(*)
+    integer(c_int), intent(out) :: array(*)
     type(ilength), pointer :: p
     
     call c_f_pointer(handle, p)
