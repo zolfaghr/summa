@@ -219,7 +219,7 @@ public:
   // ************* SUMMA SUBROUTINES *************
   
    void update() {
-    ::update_summa_data(handle_i8length);
+    ::update_summa_data(handle_var_i8);
    }
   
   // ************* DESTRUCTOR *************

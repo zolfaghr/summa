@@ -15,11 +15,11 @@ contains
   subroutine update_summa_data(handle_ilength)bind(C,name='update_summa_data')
 	
     type(c_ptr), value      :: handle_ilength         
-    type(i8length), pointer  :: ptr_ilength
+    type(var_i8), pointer  :: ptr
                    	
-    call c_f_pointer(handle_ilength, ptr_ilength)
+    call c_f_pointer(handle_ilength, ptr)
     
-    call updateSummaData(ptr_ilength)
+    call updateSummaData(ptr)
 
   end subroutine update_summa_data
 

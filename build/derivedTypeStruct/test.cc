@@ -10,12 +10,12 @@ int main()  {
 
   Summa S;
 
-  S.set_i8length(vec_in);
+  S.set_var_i8(vec_in);
   
  // update data
   S.update();
    
-  vec_out = S.get_data_i8length();  
+  vec_out = S.get_data_var_i8();  
    
   for(size_t i=0; i<vec_out.size(); i++)
   	std::cout << vec_out[i] << "   ";
