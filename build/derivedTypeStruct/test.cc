@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "summa_data.h"
+#include "summa.h"
 
 
 int main()  {
@@ -13,7 +13,7 @@ int main()  {
 
   
   
-  summa_data S;
+  Summa S;
   
   S.set_var_i(vec_in_i);
   S.set_var_d(vec_in_d);

@@ -1,6 +1,6 @@
 
-#ifndef SUMMA_DATA_H_
-#define SUMMA_DATA_H_
+#ifndef SUMMA_H_
+#define SUMMA_H_
 
 #include <vector>
 #include <iostream>
@@ -46,7 +46,7 @@ extern "C" void  update_summa_data(void* handle1, void* handle2, void* handle3, 
 
 
 
-class summa_data  {
+class Summa  {
 private:
   void *handle_var_i;
   void *handle_var_d;
@@ -55,7 +55,7 @@ private:
   void *handle_var_dlength;
 public:
   // ************* CONSTRUCTOR *************
-  summa_data()  { 
+  Summa()  { 
   	handle_var_i = new_handle_var_i();
   	handle_var_d = new_handle_var_d();
   	handle_ilength = new_handle_ilength();
@@ -177,7 +177,7 @@ public:
    }
   
   // ************* DESTRUCTOR *************
-  ~summa_data() { 
+  ~Summa() { 
   	delete_handle_var_i(handle_var_i);
   	delete_handle_var_d(handle_var_d);
   	delete_handle_ilength(handle_ilength);
