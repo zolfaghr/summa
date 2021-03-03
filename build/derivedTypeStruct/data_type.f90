@@ -9,7 +9,7 @@ use nrtype
   end type var_i
   
  type, public :: var_i8
-  integer(8),allocatable              :: var(:) 
+  integer(8), allocatable              :: var(:) 
  endtype var_i8
   
   type, public :: var_d
@@ -21,13 +21,17 @@ use nrtype
  end type ilength
  
  type, public :: i8length
-  integer(8),allocatable              :: dat(:)    
+  integer(8), allocatable              :: dat(:)    
  end type i8length
    
   type, public :: dlength
   	real(dp), allocatable   :: dat(:)   
   end type dlength
-  
+
+ type, public :: var_ilength
+  type(ilength), allocatable           :: var(:)  
+ end type var_ilength
+   
   type, public :: var_dlength
   	type(dlength), allocatable	 :: var(:)
   end type var_dlength
