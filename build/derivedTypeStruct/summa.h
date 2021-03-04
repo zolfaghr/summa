@@ -408,7 +408,7 @@ public:
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
    void update() {
-    ::update_summa_data(handle_flagVec);
+    ::update_summa_data(handle_var_flagVec);
    }
   
   // ************* DESTRUCTOR *************

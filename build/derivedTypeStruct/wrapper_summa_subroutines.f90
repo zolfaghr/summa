@@ -15,7 +15,7 @@ contains
   subroutine update_summa_data(handle)bind(C,name='update_summa_data')
 	
     type(c_ptr), value      :: handle         
-    type(flagVec), pointer  :: ptr
+    type(var_flagVec), pointer  :: ptr
                    	
     call c_f_pointer(handle, ptr)
     
