@@ -90,6 +90,10 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
        set_data_flagVec(handle, &arr_i[0], arr_i.size());
   }
   
+  void set_var_i(const std::vector<int>& arr_i, void* handle) {
+       set_data_var_i(handle, &arr_i[0], arr_i.size());
+  }
+  
   void set_var_i8(const std::vector<int>& arr_i, void* handle) {
        ::set_data_var_i8(handle, &arr_i[0], arr_i.size());
   }
@@ -364,18 +368,20 @@ private:
 public:
   // ************* CONSTRUCTOR *************
   Summa()  { 
-    handle_flagVec = new_handle_flagVec();
+    
   	handle_type_ = new_handle_var_i();
-  	handle_var_i8 = new_handle_var_i8();
   	handle_attr_ = new_handle_var_d();
   	handle_forc_ = new_handle_var_d();
+  	handle_mpar_ = new_handle_var_dlength();
+  	
+  	handle_flagVec = new_handle_flagVec();
+  	handle_var_i8 = new_handle_var_i8();
   	handle_i8length = new_handle_i8length();
   	handle_ilength = new_handle_ilength();
   	handle_dlength = new_handle_dlength();
   	handle_var_flagVec = new_handle_var_flagVec();
   	handle_var_ilength = new_handle_var_ilength();
   	handle_var_i8length = new_handle_var_i8length();
-  	handle_mpar_ = new_handle_var_dlength();
   }
   
   
@@ -385,7 +391,7 @@ public:
 
   
   void set_type(const std::vector<int>& arr_i) {
-       ::set_data_var_i(handle_type_, &arr_i[0], arr_i.size());
+       set_var_i(arr_i, handle_type_);
   }
   
   void set_attr(const std::vector<double> &arr_d) {
