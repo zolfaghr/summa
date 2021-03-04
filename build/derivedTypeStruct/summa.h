@@ -84,7 +84,7 @@ extern "C" {
     void  get_data_var_dlength(void* handle, double* array);
 
 // wrappers of summa subroutines
-    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
+    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4, void* h5);
  }
 
 
@@ -370,15 +370,11 @@ extern "C" {
     		mat[i][j] = array[num_elem + j];
     	num_elem += num_col[i];    		
     }
-    
-    
+     
     return mat;
   }
   
-  
-
-
-
+ 
 
 class Summa  {
 private:
@@ -386,6 +382,7 @@ private:
   void *handle_attr_;
   void *handle_forc_;
   void *handle_mpar_;
+  void *handle_bvar_;
 public:
   // ************* CONSTRUCTOR *************
   Summa()  {     
@@ -393,6 +390,7 @@ public:
   	handle_attr_ = new_handle_var_d();
   	handle_forc_ = new_handle_var_d();
   	handle_mpar_ = new_handle_var_dlength();
+  	handle_bvar_ = new_handle_var_dlength();
   }
   
   
@@ -416,6 +414,10 @@ public:
   	   set_var_dlength(mat, handle_mpar_); 
   } 
   
+  void set_bvar(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_bvar_); 
+  } 
+  
   // get data --------------------------
   
   std::vector<int> get_type() {
@@ -434,6 +436,10 @@ public:
     return get_data_var_dlength(handle_mpar_);
   }
   
+  std::vector<std::vector<double>> get_bvar() {
+    return get_data_var_dlength(handle_bvar_);
+  }
+  
   
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
@@ -441,7 +447,8 @@ public:
     ::solveCoupledEM(handle_type_,
     				 handle_attr_,
     				 handle_forc_,
-    				 handle_mpar_
+    				 handle_mpar_,
+    				 handle_bvar_
     				);
    }
   
@@ -451,6 +458,7 @@ public:
   	delete_handle_var_d(handle_attr_);
   	delete_handle_var_d(handle_forc_);
   	delete_handle_var_dlength(handle_mpar_);
+  	delete_handle_var_dlength(handle_bvar_);
    }
 };
 

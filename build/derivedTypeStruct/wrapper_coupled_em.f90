@@ -21,7 +21,8 @@ contains
   subroutine solveCoupledEM(handle_type,		&
   							handle_attr,		&
   							handle_forc,		&
-  							handle_mpar			&
+  							handle_mpar,		&
+  							handle_bvar			&
   							) bind(C,name='solveCoupledEM')
   
   use coupled_em_module,only:coupled_em
@@ -33,13 +34,15 @@ contains
     type(c_ptr), intent(in), value         :: handle_type
     type(c_ptr), intent(in), value		   :: handle_attr 
     type(c_ptr), intent(in), value		   :: handle_forc  
-    type(c_ptr), intent(in), value		   :: handle_mpar       
+    type(c_ptr), intent(in), value		   :: handle_mpar
+    type(c_ptr), intent(in), value		   :: handle_bvar       
     
     ! local variables
     type(var_i), pointer				   :: type_data
     type(var_d), pointer				   :: attr_data
     type(var_d), pointer				   :: forc_data
-    type(var_dlength), pointer			   :: mpar_data  
+    type(var_dlength), pointer			   :: mpar_data
+    type(var_dlength), pointer			   :: bvar_data  
 
     !======= Internals ============
     
@@ -48,8 +51,9 @@ contains
     call c_f_pointer(handle_attr, attr_data)
     call c_f_pointer(handle_forc, forc_data)
     call c_f_pointer(handle_mpar, mpar_data)
+    call c_f_pointer(handle_bvar, bvar_data)
     
-    call coupled_em(type_data, attr_data, forc_data, mpar_data)
+    call coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data)
     
 
  end subroutine solveCoupledEM
