@@ -5,85 +5,87 @@
 #include <vector>
 #include <iostream>
 
+extern "C" {
 // flagVec 
-extern "C" void* new_handle_flagVec();
-extern "C" void  delete_handle_flagVec(void* handle);
-extern "C" void  set_data_flagVec(void* handle, const int* array, int size);
-extern "C" void  get_size_data_flagVec(void* handle, int* size);
-extern "C" void  get_data_flagVec(void* handle, int* array);
+    void* new_handle_flagVec();
+    void  delete_handle_flagVec(void* handle);
+    void  set_data_flagVec(void* handle, const int* array, int size);
+    void  get_size_data_flagVec(void* handle, int* size);
+    void  get_data_flagVec(void* handle, int* array);
 
 // var_i 
-extern "C" void* new_handle_var_i();
-extern "C" void  delete_handle_var_i(void* handle);
-extern "C" void  set_data_var_i(void* handle, const int* array, int size);
-extern "C" void  get_size_data_var_i(void* handle, int* size);
-extern "C" void  get_data_var_i(void* handle, int* array);
+    void* new_handle_var_i();
+    void  delete_handle_var_i(void* handle);
+    void  set_data_var_i(void* handle, const int* array, int size);
+    void  get_size_data_var_i(void* handle, int* size);
+    void  get_data_var_i(void* handle, int* array);
 
 // var_i8 
-extern "C" void* new_handle_var_i8();
-extern "C" void  delete_handle_var_i8(void* handle);
-extern "C" void  set_data_var_i8(void* handle, const int* array, int size);
-extern "C" void  get_size_data_var_i8(void* handle, int* size);
-extern "C" void  get_data_var_i8(void* handle, int* array);
+    void* new_handle_var_i8();
+    void  delete_handle_var_i8(void* handle);
+    void  set_data_var_i8(void* handle, const int* array, int size);
+    void  get_size_data_var_i8(void* handle, int* size);
+    void  get_data_var_i8(void* handle, int* array);
 
 // var_d
-extern "C" void* new_handle_var_d();
-extern "C" void  delete_handle_var_d(void* handle);
-extern "C" void  set_data_var_d(void* handle, const double* array, int size);
-extern "C" void  get_size_data_var_d(void* handle, int* size);
-extern "C" void  get_data_var_d(void* handle, double* array);
+    void* new_handle_var_d();
+    void  delete_handle_var_d(void* handle);
+    void  set_data_var_d(void* handle, const double* array, int size);
+    void  get_size_data_var_d(void* handle, int* size);
+    void  get_data_var_d(void* handle, double* array);
 
 // ilength
-extern "C" void* new_handle_ilength();
-extern "C" void  delete_handle_ilength(void* handle);
-extern "C" void  set_data_ilength(void* handle, const int* array, int size);
-extern "C" void  get_size_data_ilength(void* handle, int* size);
-extern "C" void  get_data_ilength(void* handle, int* array);
+    void* new_handle_ilength();
+    void  delete_handle_ilength(void* handle);
+    void  set_data_ilength(void* handle, const int* array, int size);
+    void  get_size_data_ilength(void* handle, int* size);
+    void  get_data_ilength(void* handle, int* array);
 
 // i8length
-extern "C" void* new_handle_i8length();
-extern "C" void  delete_handle_i8length(void* handle);
-extern "C" void  set_data_i8length(void* handle, const int* array, int size);
-extern "C" void  get_size_data_i8length(void* handle, int* size);
-extern "C" void  get_data_i8length(void* handle, int* array);
+    void* new_handle_i8length();
+    void  delete_handle_i8length(void* handle);
+    void  set_data_i8length(void* handle, const int* array, int size);
+    void  get_size_data_i8length(void* handle, int* size);
+    void  get_data_i8length(void* handle, int* array);
 
 // dlength
-extern "C" void* new_handle_dlength();
-extern "C" void  delete_handle_dlength(void* handle);
-extern "C" void  set_data_dlength(void* handle, const double* array, int size);
-extern "C" void  get_size_data_dlength(void* handle, int* size);
-extern "C" void  get_data_dlength(void* handle, double* array);
+    void* new_handle_dlength();
+    void  delete_handle_dlength(void* handle);
+    void  set_data_dlength(void* handle, const double* array, int size);
+    void  get_size_data_dlength(void* handle, int* size);
+    void  get_data_dlength(void* handle, double* array);
 
 // var_flagVec
-extern "C" void* new_handle_var_flagVec();
-extern "C" void  delete_handle_var_flagVec(void* handle);
-extern "C" void  set_data_var_flagVec(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
-extern "C" void  get_size_data_var_flagVec(void* handle, int* num_var, int* num_dat);
-extern "C" void  get_data_var_flagVec(void* handle, int* array);
+    void* new_handle_var_flagVec();
+    void  delete_handle_var_flagVec(void* handle);
+    void  set_data_var_flagVec(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_data_var_flagVec(void* handle, int* num_var, int* num_dat);
+    void  get_data_var_flagVec(void* handle, int* array);
 
 // var_ilength
-extern "C" void* new_handle_var_ilength();
-extern "C" void  delete_handle_var_ilength(void* handle);
-extern "C" void  set_data_var_ilength(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
-extern "C" void  get_size_data_var_ilength(void* handle, int* num_var, int* num_dat);
-extern "C" void  get_data_var_ilength(void* handle, int* array);
+    void* new_handle_var_ilength();
+    void  delete_handle_var_ilength(void* handle);
+    void  set_data_var_ilength(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_data_var_ilength(void* handle, int* num_var, int* num_dat);
+    void  get_data_var_ilength(void* handle, int* array);
 
 // var_i8length
-extern "C" void* new_handle_var_i8length();
-extern "C" void  delete_handle_var_i8length(void* handle);
-extern "C" void  set_data_var_i8length(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
-extern "C" void  get_size_data_var_i8length(void* handle, int* num_var, int* num_dat);
-extern "C" void  get_data_var_i8length(void* handle, int* array);
+    void* new_handle_var_i8length();
+    void  delete_handle_var_i8length(void* handle);
+    void  set_data_var_i8length(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_data_var_i8length(void* handle, int* num_var, int* num_dat);
+    void  get_data_var_i8length(void* handle, int* array);
 
 // var_dlength
-extern "C" void* new_handle_var_dlength();
-extern "C" void  delete_handle_var_dlength(void* handle);
-extern "C" void  set_data_var_dlength(void* handle, const double* array, int num_row, const int* num_col, int num_elements);
-extern "C" void  get_size_data_var_dlength(void* handle, int* num_var, int* num_dat);
-extern "C" void  get_data_var_dlength(void* handle, double* array);
+    void* new_handle_var_dlength();
+    void  delete_handle_var_dlength(void* handle);
+    void  set_data_var_dlength(void* handle, const double* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_data_var_dlength(void* handle, int* num_var, int* num_dat);
+    void  get_data_var_dlength(void* handle, double* array);
 
-
-extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
+// wrappers of summa subroutines
+    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
+ }
 
 
   // set functions ---------------------------------------------------
