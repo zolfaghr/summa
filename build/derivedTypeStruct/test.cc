@@ -7,7 +7,7 @@ int main()  {
   
 
   std::vector<int> vec_in{1,-2,3,-4,5}, vec_out;
-  std::vector<double> vec_ind{1,-2,3,-4,5}, vec_outd;
+  std::vector<double> vec_ind{1,-2,3,-4,5}, vec_outd, vec_outd2;
 //  std::vector<std::vector<int>> mat_in{ { 11, 12 }, { 21, 22, 23 }, {31} }, mat_out;
 //    std::vector<int> vec_in{true,false,false,true}, vec_out;
 //    std::vector<std::vector<int>> mat_in{ { true, false }, { true, false, false }, {false} }, mat_out;
@@ -16,13 +16,15 @@ int main()  {
 
   S.set_type(vec_in);
   S.set_attr(vec_ind);
+  S.set_forc(vec_ind);
 
   
  // update data
   S.coupled_em();
    
   vec_out = S.get_type();
-  vec_outd = S.get_attr();  
+  vec_outd = S.get_attr();
+  vec_outd2 = S.get_forc();  
    
 //  for(size_t i=0; i<mat_out.size(); i++) {
 //  	for(size_t j=0; j<mat_out[i].size(); j++)
@@ -36,6 +38,10 @@ int main()  {
   
   for(size_t i=0; i<vec_outd.size(); i++)
         std::cout << vec_outd[i] << " ";
+  std::cout << std::endl;
+  
+  for(size_t i=0; i<vec_outd2.size(); i++)
+        std::cout << vec_outd2[i] << " ";
   std::cout << std::endl;
 
   return 0;

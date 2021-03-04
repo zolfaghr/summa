@@ -83,7 +83,7 @@ extern "C" void  get_size_data_var_dlength(void* handle, int* num_var, int* num_
 extern "C" void  get_data_var_dlength(void* handle, double* array);
 
 
-extern "C" void  solveCoupledEM(void* handle1, void* handle2);
+extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3);
 
 
 
@@ -94,6 +94,7 @@ private:
   void *handle_type_;
   void *handle_var_i8;
   void *handle_attr_;
+  void *handle_forc_;
   void *handle_ilength;
   void *handle_i8length;
   void *handle_dlength;
@@ -108,6 +109,7 @@ public:
   	handle_type_ = new_handle_var_i();
   	handle_var_i8 = new_handle_var_i8();
   	handle_attr_ = new_handle_var_d();
+  	handle_forc_ = new_handle_var_d();
   	handle_i8length = new_handle_i8length();
   	handle_ilength = new_handle_ilength();
   	handle_dlength = new_handle_dlength();
@@ -135,6 +137,10 @@ public:
   
   void set_attr(const std::vector<double> &arr_d) {
        ::set_data_var_d(handle_attr_, &arr_d[0], arr_d.size());
+  }
+  
+  void set_forc(const std::vector<double> &arr_d) {
+       ::set_data_var_d(handle_forc_, &arr_d[0], arr_d.size());
   }
   
   void set_i8length(const std::vector<int> &arr_i8length) {
@@ -256,6 +262,16 @@ public:
 
     std::vector<double> array(size);
     ::get_data_var_d(handle_attr_, &array[0]);
+    return array;
+  }
+  
+  std::vector<double> get_forc() {
+    int size;
+    ::get_size_data_var_d(handle_forc_, &size);
+    if (size == 0) return std::vector<double>();
+
+    std::vector<double> array(size);
+    ::get_data_var_d(handle_forc_, &array[0]);
     return array;
   }
   
@@ -409,7 +425,8 @@ public:
   
    void coupled_em() {
     ::solveCoupledEM(handle_type_,
-    				 handle_attr_
+    				 handle_attr_,
+    				 handle_forc_
     				);
    }
   
@@ -419,6 +436,7 @@ public:
   	delete_handle_var_i(handle_type_);
   	delete_handle_var_i8(handle_var_i8);
   	delete_handle_var_d(handle_attr_);
+  	delete_handle_var_d(handle_forc_);
   	delete_handle_ilength(handle_ilength);
   	delete_handle_i8length(handle_i8length);
   	delete_handle_dlength(handle_dlength);
