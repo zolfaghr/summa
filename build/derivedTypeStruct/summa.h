@@ -87,6 +87,7 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
 
 
 void set_var_dlength(const std::vector<std::vector<double>> &mat, void *handle);
+std::vector<std::vector<double>> get_data_var_dlength(void* handle);
 
 
 
@@ -382,34 +383,10 @@ public:
     return mat;
   }
   
-  std::vector<std::vector<double>> get_data_var_dlength() {
-    int num_row;
-    std::vector<int> num_col(num_row);
-    ::get_size_data_var_dlength(handle_mpar_, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<double>>();
-    
-    int num_elem = 0;
-    for(int i=0; i<num_row; i++)
-    	num_elem += num_col[i];   	
-
-    std::vector<double> array(num_elem);
-
-    ::get_data_var_dlength(handle_mpar_, &array[0]);
-    
-    std::vector<std::vector<double>> mat(num_row);
-    for(size_t i=0; i<num_row; i++)
-    	mat[i] = std::vector<double>(num_col[i]);
-
-    num_elem = 0;
-    for(size_t i=0; i<num_row; i++){
-    	for(size_t j=0; j<num_col[i]; j++)
-    		mat[i][j] = array[num_elem + j];
-    	num_elem += num_col[i];    		
-    }
-    
-    
-    return mat;
+  std::vector<std::vector<double>> get_mpar() {
+    return ::get_data_var_dlength(handle_mpar_);
   }
+  
   
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
@@ -453,6 +430,35 @@ public:
   	   }
   	    
        ::set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
+  }
+  
+  std::vector<std::vector<double>> get_data_var_dlength(void* handle) {
+    int num_row;
+    std::vector<int> num_col(num_row);
+    ::get_size_data_var_dlength(handle, &num_row, &num_col[0]);
+    if (num_row == 0) return std::vector<std::vector<double>>();
+    
+    int num_elem = 0;
+    for(int i=0; i<num_row; i++)
+    	num_elem += num_col[i];   	
+
+    std::vector<double> array(num_elem);
+
+    ::get_data_var_dlength(handle, &array[0]);
+    
+    std::vector<std::vector<double>> mat(num_row);
+    for(size_t i=0; i<num_row; i++)
+    	mat[i] = std::vector<double>(num_col[i]);
+
+    num_elem = 0;
+    for(size_t i=0; i<num_row; i++){
+    	for(size_t j=0; j<num_col[i]; j++)
+    		mat[i][j] = array[num_elem + j];
+    	num_elem += num_col[i];    		
+    }
+    
+    
+    return mat;
   }
 
 #endif

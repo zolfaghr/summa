@@ -26,7 +26,7 @@ int main()  {
   vec_out = S.get_type();
   vec_outd = S.get_attr();
   vec_outd2 = S.get_forc();
-  mat_out = S.get_data_var_dlength();  
+  mat_out = S.get_mpar();  
    
   for(size_t i=0; i<mat_out.size(); i++) {
   	for(size_t j=0; j<mat_out[i].size(); j++)
