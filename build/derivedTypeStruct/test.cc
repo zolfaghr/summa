@@ -13,13 +13,13 @@ int main()  {
 
   Summa S;
 
-  S.set_type_data(vec_in);
+  S.set_type(vec_in);
 
   
  // update data
   S.coupled_em();
    
-  vec_out = S.get_type_data();  
+  vec_out = S.get_type();  
    
 //  for(size_t i=0; i<mat_out.size(); i++) {
 //  	for(size_t j=0; j<mat_out[i].size(); j++)

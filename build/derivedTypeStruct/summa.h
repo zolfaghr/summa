@@ -91,7 +91,7 @@ extern "C" void  solveCoupledEM(void* handle);
 class Summa  {
 private:
   void *handle_flagVec;
-  void *handle_type_data_;
+  void *handle_type_;
   void *handle_var_i8;
   void *handle_var_d;
   void *handle_ilength;
@@ -105,7 +105,7 @@ public:
   // ************* CONSTRUCTOR *************
   Summa()  { 
     handle_flagVec = new_handle_flagVec();
-  	handle_type_data_ = new_handle_var_i();
+  	handle_type_ = new_handle_var_i();
   	handle_var_i8 = new_handle_var_i8();
   	handle_var_d = new_handle_var_d();
   	handle_i8length = new_handle_i8length();
@@ -125,8 +125,8 @@ public:
        ::set_data_flagVec(handle_flagVec, &arr_i[0], arr_i.size());
   }
   
-  void set_type_data(const std::vector<int>& arr_i) {
-       ::set_data_var_i(handle_type_data_, &arr_i[0], arr_i.size());
+  void set_type(const std::vector<int>& arr_i) {
+       ::set_data_var_i(handle_type_, &arr_i[0], arr_i.size());
   }
   
   void set_var_i8(const std::vector<int>& arr_i) {
@@ -229,13 +229,13 @@ public:
     return array;
   }
   
-  std::vector<int> get_type_data() {
+  std::vector<int> get_type() {
     int size;
-    ::get_size_data_var_i(handle_type_data_, &size);
+    ::get_size_data_var_i(handle_type_, &size);
     if (size == 0) return std::vector<int>();
 
     std::vector<int> array(size);
-    ::get_data_var_i(handle_type_data_, &array[0]);
+    ::get_data_var_i(handle_type_, &array[0]);
     return array;
   }
 
@@ -408,13 +408,13 @@ public:
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
    void coupled_em() {
-    ::solveCoupledEM(handle_type_data_);
+    ::solveCoupledEM(handle_type_);
    }
   
   // ************* DESTRUCTOR *************
   ~Summa() { 
     delete_handle_flagVec(handle_flagVec);
-  	delete_handle_var_i(handle_type_data_);
+  	delete_handle_var_i(handle_type_);
   	delete_handle_var_i8(handle_var_i8);
   	delete_handle_var_d(handle_var_d);
   	delete_handle_ilength(handle_ilength);
