@@ -79,7 +79,7 @@ contains
     
     call c_f_pointer(handle, p)
     if (allocated(p%dat)) then
-      array(:size(p%dat)) = p%dat
+      array(:size(p%dat)) = merge(1,0,p%dat)
     end if
     
   end subroutine get_data_flagVec
