@@ -63,9 +63,11 @@ contains
     
     sum_elem = 0
     do i=1,num_row
-    	do j=1,num_col(i)
-    		p%var(i)%dat(j) = array(sum_elem + j)
-    	end do
+        where ( array( sum_elem+1 : sum_elem+num_col(i) ) == 1 )
+     		p%var(i)%dat = .true.
+  		elsewhere
+     		p%var(i)%dat = .false.
+  		end where
     	sum_elem = sum_elem + num_col(i)
     end do
     
