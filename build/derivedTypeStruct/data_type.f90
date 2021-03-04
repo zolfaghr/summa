@@ -4,6 +4,10 @@ use nrtype
 
   implicit none
   
+ type, public :: flagVec
+  logical(lgt), allocatable            :: dat(:)
+ end type flagVec
+  
   type, public :: var_i
     integer(i4b), allocatable :: var(:)
   end type var_i

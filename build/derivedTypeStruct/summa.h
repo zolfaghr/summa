@@ -5,6 +5,13 @@
 #include <vector>
 #include <iostream>
 
+// flagVec 
+extern "C" void* new_handle_flagVec();
+extern "C" void  delete_handle_flagVec(void* handle);
+extern "C" void  set_data_flagVec(void* handle, const int* array, int size);
+extern "C" void  get_size_data_flagVec(void* handle, int* size);
+extern "C" void  get_data_flagVec(void* handle, int* array);
+
 // var_i 
 extern "C" void* new_handle_var_i();
 extern "C" void  delete_handle_var_i(void* handle);
@@ -76,6 +83,7 @@ extern "C" void  update_summa_data(void* handle);
 
 class Summa  {
 private:
+  void *handle_flagVec;
   void *handle_var_i;
   void *handle_var_i8;
   void *handle_var_d;
@@ -88,6 +96,7 @@ private:
 public:
   // ************* CONSTRUCTOR *************
   Summa()  { 
+    handle_flagVec = new_handle_flagVec();
   	handle_var_i = new_handle_var_i();
   	handle_var_i8 = new_handle_var_i8();
   	handle_var_d = new_handle_var_d();
@@ -101,7 +110,12 @@ public:
   
   
   // ************* METHODS *************
-  // set data
+  
+  // set data 
+  void set_flagVec(const std::vector<int>& arr_i) {
+       ::set_data_flagVec(handle_flagVec, &arr_i[0], arr_i.size());
+  }
+  
   void set_var_i(const std::vector<int>& arr_i) {
        ::set_data_var_i(handle_var_i, &arr_i[0], arr_i.size());
   }
@@ -179,6 +193,16 @@ public:
   
   
   // get data
+  std::vector<int> get_data_flagVec() {
+    int size;
+    ::get_size_data_flagVec(handle_flagVec, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    ::get_data_flagVec(handle_flagVec, &array[0]);
+    return array;
+  }
+  
   std::vector<int> get_data_var_i() {
     int size;
     ::get_size_data_var_i(handle_var_i, &size);
@@ -334,6 +358,7 @@ public:
   
   // ************* DESTRUCTOR *************
   ~Summa() { 
+    delete_handle_flagVec(handle_flagVec);
   	delete_handle_var_i(handle_var_i);
   	delete_handle_var_i8(handle_var_i8);
   	delete_handle_var_d(handle_var_d);
