@@ -8,7 +8,7 @@ int main()  {
 
   std::vector<int> vec_in{1,-2,3,-4,5}, vec_out;
   std::vector<double> vec_ind{1,-2,3,-4,5}, vec_outd, vec_outd2;
-//  std::vector<std::vector<int>> mat_in{ { 11, 12 }, { 21, 22, 23 }, {31} }, mat_out;
+  std::vector<std::vector<double>> mat_in{ { 11, 12 }, { 21, 22, 23 }, {31} }, mat_out;
 //    std::vector<int> vec_in{true,false,false,true}, vec_out;
 //    std::vector<std::vector<int>> mat_in{ { true, false }, { true, false, false }, {false} }, mat_out;
 
@@ -17,6 +17,7 @@ int main()  {
   S.set_type(vec_in);
   S.set_attr(vec_ind);
   S.set_forc(vec_ind);
+  S.set_mpar(mat_in);
 
   
  // update data
@@ -24,13 +25,14 @@ int main()  {
    
   vec_out = S.get_type();
   vec_outd = S.get_attr();
-  vec_outd2 = S.get_forc();  
+  vec_outd2 = S.get_forc();
+  mat_out = S.get_data_var_dlength();  
    
-//  for(size_t i=0; i<mat_out.size(); i++) {
-//  	for(size_t j=0; j<mat_out[i].size(); j++)
-//  		std::cout << mat_out[i][j] << " ";
-//  	std::cout << std::endl;
-//  }
+  for(size_t i=0; i<mat_out.size(); i++) {
+  	for(size_t j=0; j<mat_out[i].size(); j++)
+  		std::cout << mat_out[i][j] << " ";
+  	std::cout << std::endl;
+  }
  
   for(size_t i=0; i<vec_out.size(); i++)
         std::cout << vec_out[i] << " ";

@@ -9,19 +9,20 @@ public::coupled_em
 contains
 
 !********************************************   
-	subroutine coupled_em(type_data, attr_data, forc_data) 
+	subroutine coupled_em(type_data, attr_data, forc_data, mpar_data) 
 	implicit none
 	
 		type(var_i), intent(inout)::   type_data
 		type(var_d), intent(inout)::   attr_data
 		type(var_d), intent(inout)::   forc_data
+		type(var_dlength), intent(inout)::   mpar_data
 		integer :: i,j
  
-!        do i=1,size(v%var)
-!        	do j=1,size(v%var(i)%dat)
-!		  		v%var(i)%dat(j) = .not.v%var(i)%dat(j)
-!		  	end do
-!		end do
+        do i=1,size(mpar_data%var)
+        	do j=1,size(mpar_data%var(i)%dat)
+		  		mpar_data%var(i)%dat(j) = mpar_data%var(i)%dat(j) * 3
+		  	end do
+		end do
 
         do i=1,size(type_data%var)
         	type_data%var(i) = type_data%var(i) * 2

@@ -83,7 +83,10 @@ extern "C" void  get_size_data_var_dlength(void* handle, int* num_var, int* num_
 extern "C" void  get_data_var_dlength(void* handle, double* array);
 
 
-extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3);
+extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
+
+
+void set_var_dlength(const std::vector<std::vector<double>> &mat, void *handle);
 
 
 
@@ -101,7 +104,7 @@ private:
   void *handle_var_flagVec;
   void *handle_var_ilength;
   void *handle_var_i8length;
-  void *handle_var_dlength;
+  void *handle_mpar_;
 public:
   // ************* CONSTRUCTOR *************
   Summa()  { 
@@ -116,7 +119,7 @@ public:
   	handle_var_flagVec = new_handle_var_flagVec();
   	handle_var_ilength = new_handle_var_ilength();
   	handle_var_i8length = new_handle_var_i8length();
-  	handle_var_dlength = new_handle_var_dlength();
+  	handle_mpar_ = new_handle_var_dlength();
   }
   
   
@@ -206,23 +209,10 @@ public:
        ::set_data_var_i8length(handle_var_i8length, &array[0], num_row, &num_col[0], num_elements);
   }
   
-  void set_var_dlength(const std::vector<std::vector<double>> &mat) {
   
-  	   size_t num_row = mat.size();
-  	   std::vector<int> num_col( num_row );
-  	   std::vector<double> array;
-  	   
-  	   int num_elements = 0;
-  	   for(size_t i=0; i<num_row; i++) {
-  	   	  num_col[i] = mat[i].size();
-  	   	  for(size_t j=0; j<num_col[i]; j++)
-  	   	  	array.push_back(mat[i][j]);
-  	   	  num_elements += num_col[i];
-  	   }
-  	    
-       ::set_data_var_dlength(handle_var_dlength, &array[0], num_row, &num_col[0], num_elements);
-  }
-  
+  void set_mpar(const std::vector<std::vector<double>> &mat) {
+  	   ::set_var_dlength(mat, handle_mpar_); 
+  } 
   
   // get data
   std::vector<int> get_data_flagVec() {
@@ -395,7 +385,7 @@ public:
   std::vector<std::vector<double>> get_data_var_dlength() {
     int num_row;
     std::vector<int> num_col(num_row);
-    ::get_size_data_var_dlength(handle_var_dlength, &num_row, &num_col[0]);
+    ::get_size_data_var_dlength(handle_mpar_, &num_row, &num_col[0]);
     if (num_row == 0) return std::vector<std::vector<double>>();
     
     int num_elem = 0;
@@ -404,7 +394,7 @@ public:
 
     std::vector<double> array(num_elem);
 
-    ::get_data_var_dlength(handle_var_dlength, &array[0]);
+    ::get_data_var_dlength(handle_mpar_, &array[0]);
     
     std::vector<std::vector<double>> mat(num_row);
     for(size_t i=0; i<num_row; i++)
@@ -426,7 +416,8 @@ public:
    void coupled_em() {
     ::solveCoupledEM(handle_type_,
     				 handle_attr_,
-    				 handle_forc_
+    				 handle_forc_,
+    				 handle_mpar_
     				);
    }
   
@@ -443,8 +434,25 @@ public:
   	delete_handle_var_flagVec(handle_var_flagVec);
   	delete_handle_var_ilength(handle_var_ilength);
   	delete_handle_var_i8length(handle_var_i8length);
-  	delete_handle_var_dlength(handle_var_dlength);
+  	delete_handle_var_dlength(handle_mpar_);
    }
 };
+
+  void set_var_dlength(const std::vector<std::vector<double>> &mat, void *handle) {
+  
+  	   size_t num_row = mat.size();
+  	   std::vector<int> num_col( num_row );
+  	   std::vector<double> array;
+  	   
+  	   int num_elements = 0;
+  	   for(size_t i=0; i<num_row; i++) {
+  	   	  num_col[i] = mat[i].size();
+  	   	  for(size_t j=0; j<num_col[i]; j++)
+  	   	  	array.push_back(mat[i][j]);
+  	   	  num_elements += num_col[i];
+  	   }
+  	    
+       ::set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
+  }
 
 #endif
