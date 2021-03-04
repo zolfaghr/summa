@@ -194,6 +194,27 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
     return array;
   }
   
+  std::vector<int> get_var_i(void* handle) {
+    int size;
+    get_size_data_var_i(handle, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    get_data_var_i(handle, &array[0]);
+    return array;
+  }
+
+    
+  std::vector<double> get_var_d(void* handle) {
+    int size;
+    get_size_data_var_d(handle, &size);
+    if (size == 0) return std::vector<double>();
+
+    std::vector<double> array(size);
+    get_data_var_d(handle, &array[0]);
+    return array;
+  }
+  
   std::vector<int> get_data_var_i8(void* handle) {
     int size;
     get_size_data_var_i8(handle, &size);
@@ -414,34 +435,15 @@ public:
   // get data
   
   std::vector<int> get_type() {
-    int size;
-    ::get_size_data_var_i(handle_type_, &size);
-    if (size == 0) return std::vector<int>();
-
-    std::vector<int> array(size);
-    ::get_data_var_i(handle_type_, &array[0]);
-    return array;
+    return get_var_i(handle_type_);
   }
-
     
   std::vector<double> get_attr() {
-    int size;
-    ::get_size_data_var_d(handle_attr_, &size);
-    if (size == 0) return std::vector<double>();
-
-    std::vector<double> array(size);
-    ::get_data_var_d(handle_attr_, &array[0]);
-    return array;
+  	return get_var_d(handle_attr_);
   }
   
   std::vector<double> get_forc() {
-    int size;
-    ::get_size_data_var_d(handle_forc_, &size);
-    if (size == 0) return std::vector<double>();
-
-    std::vector<double> array(size);
-    ::get_data_var_d(handle_forc_, &array[0]);
-    return array;
+	return get_var_d(handle_forc_);
   }
   
   std::vector<std::vector<double>> get_mpar() {
