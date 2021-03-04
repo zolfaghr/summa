@@ -31,6 +31,10 @@ use nrtype
   type, public :: dlength
   	real(dp), allocatable   :: dat(:)   
   end type dlength
+  
+ type, public :: var_flagVec
+  type(flagVec),allocatable           :: var(:)   
+ end type var_flagVec
 
  type, public :: var_ilength
   type(ilength), allocatable           :: var(:)  

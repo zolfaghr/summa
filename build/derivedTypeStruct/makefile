@@ -5,7 +5,7 @@ CC = g++
 
 FFILES = nrtype.f90 data_type.f90 updateVar.f90 wrapper_var_i.f90 wrapper_var_d.f90 wrapper_dlength.f90 wrapper_summa_subroutines.f90 \
 		wrapper_ilength.f90 wrapper_i8length.f90 wrapper_var_ilength.f90 wrapper_var_i8length.f90 wrapper_var_dlength.f90 wrapper_var_i8.f90 \
-		wrapper_flagVec.f90 
+		wrapper_flagVec.f90 wrapper_var_flagVec.f90
 CFILES = test.cc
 
 compile_f:
@@ -17,7 +17,7 @@ compile_c:
 link:
 	$(CC) -o program nrtype.o data_type.o updateVar.o wrapper_var_i.o wrapper_var_i8.o wrapper_var_d.o wrapper_dlength.o \
 	wrapper_ilength.o wrapper_i8length.o wrapper_var_ilength.o wrapper_var_i8length.o wrapper_var_dlength.o wrapper_summa_subroutines.o \
-	wrapper_flagVec.o test.o -l$(FC)
+	wrapper_flagVec.o wrapper_var_flagVec.o test.o -l$(FC)
 	
 clean:
 	rm *.o program *.mod
