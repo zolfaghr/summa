@@ -86,6 +86,8 @@ extern "C" void  get_data_var_dlength(void* handle, double* array);
 extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
 
 
+  // set functions ---------------------------------------------------
+  
   void set_flagVec(const std::vector<int>& arr_i, void* handle) {
        set_data_flagVec(handle, &arr_i[0], arr_i.size());
   }
@@ -182,7 +184,7 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
        set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
   
-  // get
+  // get functions --------------------------------------
   
   std::vector<int> get_data_flagVec(void* handle) {
     int size;
@@ -378,42 +380,23 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
 
 class Summa  {
 private:
-  void *handle_flagVec;
   void *handle_type_;
-  void *handle_var_i8;
   void *handle_attr_;
   void *handle_forc_;
-  void *handle_ilength;
-  void *handle_i8length;
-  void *handle_dlength;
-  void *handle_var_flagVec;
-  void *handle_var_ilength;
-  void *handle_var_i8length;
   void *handle_mpar_;
 public:
   // ************* CONSTRUCTOR *************
-  Summa()  { 
-    
+  Summa()  {     
   	handle_type_ = new_handle_var_i();
   	handle_attr_ = new_handle_var_d();
   	handle_forc_ = new_handle_var_d();
   	handle_mpar_ = new_handle_var_dlength();
-  	
-  	handle_flagVec = new_handle_flagVec();
-  	handle_var_i8 = new_handle_var_i8();
-  	handle_i8length = new_handle_i8length();
-  	handle_ilength = new_handle_ilength();
-  	handle_dlength = new_handle_dlength();
-  	handle_var_flagVec = new_handle_var_flagVec();
-  	handle_var_ilength = new_handle_var_ilength();
-  	handle_var_i8length = new_handle_var_i8length();
   }
   
   
   // ************* METHODS *************
   
-  // set data 
-
+  // set data -------------------------- 
   
   void set_type(const std::vector<int>& arr_i) {
        set_var_i(arr_i, handle_type_);
@@ -426,13 +409,12 @@ public:
   void set_forc(const std::vector<double> &arr_d) {
        set_var_d(arr_d, handle_forc_);
   }
-  
-  
+    
   void set_mpar(const std::vector<std::vector<double>> &mat) {
   	   set_var_dlength(mat, handle_mpar_); 
   } 
   
-  // get data
+  // get data --------------------------
   
   std::vector<int> get_type() {
     return get_var_i(handle_type_);
@@ -463,17 +445,9 @@ public:
   
   // ************* DESTRUCTOR *************
   ~Summa() { 
-    delete_handle_flagVec(handle_flagVec);
   	delete_handle_var_i(handle_type_);
-  	delete_handle_var_i8(handle_var_i8);
   	delete_handle_var_d(handle_attr_);
   	delete_handle_var_d(handle_forc_);
-  	delete_handle_ilength(handle_ilength);
-  	delete_handle_i8length(handle_i8length);
-  	delete_handle_dlength(handle_dlength);
-  	delete_handle_var_flagVec(handle_var_flagVec);
-  	delete_handle_var_ilength(handle_var_ilength);
-  	delete_handle_var_i8length(handle_var_i8length);
   	delete_handle_var_dlength(handle_mpar_);
    }
 };
