@@ -94,6 +94,10 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
        set_data_var_i(handle, &arr_i[0], arr_i.size());
   }
   
+  void set_var_d(const std::vector<double> &arr_d, void* handle) {
+       set_data_var_d(handle, &arr_d[0], arr_d.size());
+  }
+  
   void set_var_i8(const std::vector<int>& arr_i, void* handle) {
        ::set_data_var_i8(handle, &arr_i[0], arr_i.size());
   }
@@ -395,16 +399,16 @@ public:
   }
   
   void set_attr(const std::vector<double> &arr_d) {
-       ::set_data_var_d(handle_attr_, &arr_d[0], arr_d.size());
+       set_var_d(arr_d, handle_attr_);
   }
   
   void set_forc(const std::vector<double> &arr_d) {
-       ::set_data_var_d(handle_forc_, &arr_d[0], arr_d.size());
+       set_var_d(arr_d, handle_forc_);
   }
   
   
   void set_mpar(const std::vector<std::vector<double>> &mat) {
-  	   ::set_var_dlength(mat, handle_mpar_); 
+  	   set_var_dlength(mat, handle_mpar_); 
   } 
   
   // get data
@@ -441,7 +445,7 @@ public:
   }
   
   std::vector<std::vector<double>> get_mpar() {
-    return ::get_data_var_dlength(handle_mpar_);
+    return get_data_var_dlength(handle_mpar_);
   }
   
   
