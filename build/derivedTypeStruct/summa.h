@@ -174,6 +174,145 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
        set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
   
+  // get
+  
+  std::vector<int> get_data_flagVec(void* handle) {
+    int size;
+    ::get_size_data_flagVec(handle, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    ::get_data_flagVec(handle, &array[0]);
+    return array;
+  }
+  
+  std::vector<int> get_data_var_i8(void* handle) {
+    int size;
+    get_size_data_var_i8(handle, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    get_data_var_i8(handle, &array[0]);
+    return array;
+  }
+  
+  std::vector<int> get_data_i8length(void* handle) {
+    int size;
+    get_size_data_i8length(handle, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    get_data_i8length(handle, &array[0]);
+    return array;
+  }
+  
+  std::vector<int> get_data_ilength(void* handle) {
+    int size;
+    get_size_data_ilength(handle, &size);
+    if (size == 0) return std::vector<int>();
+
+    std::vector<int> array(size);
+    get_data_ilength(handle, &array[0]);
+    return array;
+  }
+  
+  std::vector<double> get_data_dlength(void* handle) {
+    int size;
+    get_size_data_dlength(handle, &size);
+    if (size == 0) return std::vector<double>();
+
+    std::vector<double> array(size);
+    get_data_dlength(handle, &array[0]);
+    return array;
+  }
+  
+  std::vector<std::vector<int>> get_data_var_flagVec(void* handle) {
+    int num_row;
+    std::vector<int> num_col(num_row);
+    get_size_data_var_flagVec(handle, &num_row, &num_col[0]);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
+    int num_elem = 0;
+    for(int i=0; i<num_row; i++)
+    	num_elem += num_col[i];   	
+
+    std::vector<int> array(num_elem);
+
+    get_data_var_flagVec(handle, &array[0]);
+    
+    std::vector<std::vector<int>> mat(num_row);
+    for(size_t i=0; i<num_row; i++)
+    	mat[i] = std::vector<int>(num_col[i]);
+
+    num_elem = 0;
+    for(size_t i=0; i<num_row; i++){
+    	for(size_t j=0; j<num_col[i]; j++)
+    		mat[i][j] = array[num_elem + j];
+    	num_elem += num_col[i];    		
+    }
+    
+    
+    return mat;
+  }
+  
+  std::vector<std::vector<int>> get_data_var_ilength(void* handle) {
+    int num_row;
+    std::vector<int> num_col(num_row);
+    get_size_data_var_ilength(handle, &num_row, &num_col[0]);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
+    int num_elem = 0;
+    for(int i=0; i<num_row; i++)
+    	num_elem += num_col[i];   	
+
+    std::vector<int> array(num_elem);
+
+    get_data_var_ilength(handle, &array[0]);
+    
+    std::vector<std::vector<int>> mat(num_row);
+    for(size_t i=0; i<num_row; i++)
+    	mat[i] = std::vector<int>(num_col[i]);
+
+    num_elem = 0;
+    for(size_t i=0; i<num_row; i++){
+    	for(size_t j=0; j<num_col[i]; j++)
+    		mat[i][j] = array[num_elem + j];
+    	num_elem += num_col[i];    		
+    }
+    
+    
+    return mat;
+  }
+  
+  std::vector<std::vector<int>> get_data_var_i8length(void* handle) {
+    int num_row;
+    std::vector<int> num_col(num_row);
+    get_size_data_var_i8length(handle, &num_row, &num_col[0]);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
+    int num_elem = 0;
+    for(int i=0; i<num_row; i++)
+    	num_elem += num_col[i];   	
+
+    std::vector<int> array(num_elem);
+
+    get_data_var_i8length(handle, &array[0]);
+    
+    std::vector<std::vector<int>> mat(num_row);
+    for(size_t i=0; i<num_row; i++)
+    	mat[i] = std::vector<int>(num_col[i]);
+
+    num_elem = 0;
+    for(size_t i=0; i<num_row; i++){
+    	for(size_t j=0; j<num_col[i]; j++)
+    		mat[i][j] = array[num_elem + j];
+    	num_elem += num_col[i];    		
+    }
+    
+    
+    return mat;
+  }
+  
   std::vector<std::vector<double>> get_data_var_dlength(void* handle) {
     int num_row;
     std::vector<int> num_col(num_row);
@@ -202,6 +341,8 @@ extern "C" void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4);
     
     return mat;
   }
+  
+  
 
 
 
@@ -261,15 +402,6 @@ public:
   } 
   
   // get data
-  std::vector<int> get_data_flagVec() {
-    int size;
-    ::get_size_data_flagVec(handle_flagVec, &size);
-    if (size == 0) return std::vector<int>();
-
-    std::vector<int> array(size);
-    ::get_data_flagVec(handle_flagVec, &array[0]);
-    return array;
-  }
   
   std::vector<int> get_type() {
     int size;
@@ -281,15 +413,6 @@ public:
     return array;
   }
 
-  std::vector<int> get_data_var_i8() {
-    int size;
-    ::get_size_data_var_i8(handle_var_i8, &size);
-    if (size == 0) return std::vector<int>();
-
-    std::vector<int> array(size);
-    ::get_data_var_i8(handle_var_i8, &array[0]);
-    return array;
-  }
     
   std::vector<double> get_attr() {
     int size;
@@ -309,123 +432,6 @@ public:
     std::vector<double> array(size);
     ::get_data_var_d(handle_forc_, &array[0]);
     return array;
-  }
-  
-  std::vector<int> get_data_i8length() {
-    int size;
-    ::get_size_data_i8length(handle_i8length, &size);
-    if (size == 0) return std::vector<int>();
-
-    std::vector<int> array(size);
-    ::get_data_i8length(handle_i8length, &array[0]);
-    return array;
-  }
-  
-  std::vector<int> get_data_ilength() {
-    int size;
-    ::get_size_data_ilength(handle_ilength, &size);
-    if (size == 0) return std::vector<int>();
-
-    std::vector<int> array(size);
-    ::get_data_ilength(handle_ilength, &array[0]);
-    return array;
-  }
-  
-  std::vector<double> get_data_dlength() {
-    int size;
-    ::get_size_data_dlength(handle_dlength, &size);
-    if (size == 0) return std::vector<double>();
-
-    std::vector<double> array(size);
-    ::get_data_dlength(handle_dlength, &array[0]);
-    return array;
-  }
-  
-  std::vector<std::vector<int>> get_data_var_flagVec() {
-    int num_row;
-    std::vector<int> num_col(num_row);
-    ::get_size_data_var_flagVec(handle_var_flagVec, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<int>>();
-    
-    int num_elem = 0;
-    for(int i=0; i<num_row; i++)
-    	num_elem += num_col[i];   	
-
-    std::vector<int> array(num_elem);
-
-    ::get_data_var_flagVec(handle_var_flagVec, &array[0]);
-    
-    std::vector<std::vector<int>> mat(num_row);
-    for(size_t i=0; i<num_row; i++)
-    	mat[i] = std::vector<int>(num_col[i]);
-
-    num_elem = 0;
-    for(size_t i=0; i<num_row; i++){
-    	for(size_t j=0; j<num_col[i]; j++)
-    		mat[i][j] = array[num_elem + j];
-    	num_elem += num_col[i];    		
-    }
-    
-    
-    return mat;
-  }
-  
-  std::vector<std::vector<int>> get_data_var_ilength() {
-    int num_row;
-    std::vector<int> num_col(num_row);
-    ::get_size_data_var_ilength(handle_var_ilength, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<int>>();
-    
-    int num_elem = 0;
-    for(int i=0; i<num_row; i++)
-    	num_elem += num_col[i];   	
-
-    std::vector<int> array(num_elem);
-
-    ::get_data_var_ilength(handle_var_ilength, &array[0]);
-    
-    std::vector<std::vector<int>> mat(num_row);
-    for(size_t i=0; i<num_row; i++)
-    	mat[i] = std::vector<int>(num_col[i]);
-
-    num_elem = 0;
-    for(size_t i=0; i<num_row; i++){
-    	for(size_t j=0; j<num_col[i]; j++)
-    		mat[i][j] = array[num_elem + j];
-    	num_elem += num_col[i];    		
-    }
-    
-    
-    return mat;
-  }
-  
-  std::vector<std::vector<int>> get_data_var_i8length() {
-    int num_row;
-    std::vector<int> num_col(num_row);
-    ::get_size_data_var_i8length(handle_var_i8length, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<int>>();
-    
-    int num_elem = 0;
-    for(int i=0; i<num_row; i++)
-    	num_elem += num_col[i];   	
-
-    std::vector<int> array(num_elem);
-
-    ::get_data_var_i8length(handle_var_i8length, &array[0]);
-    
-    std::vector<std::vector<int>> mat(num_row);
-    for(size_t i=0; i<num_row; i++)
-    	mat[i] = std::vector<int>(num_col[i]);
-
-    num_elem = 0;
-    for(size_t i=0; i<num_row; i++){
-    	for(size_t j=0; j<num_col[i]; j++)
-    		mat[i][j] = array[num_elem + j];
-    	num_elem += num_col[i];    		
-    }
-    
-    
-    return mat;
   }
   
   std::vector<std::vector<double>> get_mpar() {
