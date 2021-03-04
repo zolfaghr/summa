@@ -109,9 +109,11 @@ contains
       size_var = size(p%var)
       do i=1,size_var
       	size_dat = size(p%var(i)%dat)
-      	do j=1,size_dat
-      		array(size_array+j) = p%var(i)%dat(j)
-      	end do
+  		where (p%var(i)%dat)
+     		array(size_array+1 : size_array+size_dat) = 1
+  		elsewhere
+     		array(size_array+1 : size_array+size_dat) = 0
+  		end where
       	size_array = size_array + size_dat
       end do
       
