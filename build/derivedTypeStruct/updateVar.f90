@@ -22,7 +22,7 @@ contains
 !		end do
 
         do i=1,size(v%dat)
-        	v%dat(i) = .true.
+        	v%dat(i) = .false.
         end do
 
 	end subroutine updateSummaData

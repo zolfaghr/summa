@@ -50,7 +50,12 @@ contains
     else
       allocate(p%dat(arr_size))
     end if
-    p%dat = array
+    
+    where (array==1)
+     	p%dat = .true.
+  	elsewhere
+     	p%dat = .false.
+  	end where
     
   end subroutine set_data_flagVec
 
@@ -79,7 +84,11 @@ contains
     
     call c_f_pointer(handle, p)
     if (allocated(p%dat)) then
-      array(:size(p%dat)) = merge(1,0,p%dat)
+  		where (p%dat)
+     		array(:size(p%dat)) = 1
+  		elsewhere
+     		array(:size(p%dat)) = 0
+  		end where
     end if
     
   end subroutine get_data_flagVec
