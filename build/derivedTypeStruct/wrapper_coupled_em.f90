@@ -18,7 +18,9 @@ contains
   ! **********************************************************************************************************
   ! public subroutine solveCoupledEM: solving coupled energy-mass equations for one timestep
   ! **********************************************************************************************************
-  subroutine solveCoupledEM(handle_type) bind(C,name='solveCoupledEM')
+  subroutine solveCoupledEM(handle_type,		&
+  							handle_attr			&
+  							) bind(C,name='solveCoupledEM')
   
   use coupled_em_module,only:coupled_em
 
@@ -26,17 +28,20 @@ contains
     implicit none
 
     ! calling variables
-    type(c_ptr), intent(in), value         :: handle_type          
+    type(c_ptr), intent(in), value         :: handle_type
+    type(c_ptr), intent(in), value		   :: handle_attr          
     
     ! local variables
-    type(var_i), pointer				   :: type_data 
+    type(var_i), pointer				   :: type_data
+    type(var_d), pointer				   :: attr_data 
 
     !======= Internals ============
     
-    ! get summa data from user-defined data
-    call c_f_pointer(handle_type, type_data) 
     
-    call coupled_em(type_data)
+    call c_f_pointer(handle_type, type_data) 
+    call c_f_pointer(handle_attr, attr_data)
+    
+    call coupled_em(type_data, attr_data)
     
 
  end subroutine solveCoupledEM

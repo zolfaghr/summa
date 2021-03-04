@@ -9,10 +9,11 @@ public::coupled_em
 contains
 
 !********************************************   
-	subroutine coupled_em(v) 
+	subroutine coupled_em(type_data, attr_data) 
 	implicit none
 	
-		type(var_i), intent(inout):: v
+		type(var_i), intent(inout)::   type_data
+		type(var_d), intent(inout)::   attr_data
 		integer :: i,j
  
 !        do i=1,size(v%var)
@@ -21,8 +22,12 @@ contains
 !		  	end do
 !		end do
 
-        do i=1,size(v%var)
-        	v%var(i) = v%var(i) * 2
+        do i=1,size(type_data%var)
+        	type_data%var(i) = type_data%var(i) * 2
+        end do
+        
+        do i=1,size(attr_data%var)
+        	attr_data%var(i) = attr_data%var(i) * 0.1
         end do
 
 	end subroutine coupled_em
