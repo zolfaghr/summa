@@ -10,12 +10,12 @@ public::coupled_em
 contains
 
 !********************************************   
-	subroutine coupled_em(dt_init, computeVegFlux, &
+	subroutine coupled_em(hruId, dt_init, computeVegFlux, &
 						   type_data, attr_data, forc_data, mpar_data, bvar_data, &
 						   indx_data, prog_data, diag_data, flux_data, &
 						   err, message)
 	implicit none
-	
+		integer(8),intent(in)           :: hruId
 		real(dp), intent(in)			::   dt_init
 		logical(lgt), intent(in)		::   computeVegFlux			
 		type(var_i), intent(inout)		::   type_data

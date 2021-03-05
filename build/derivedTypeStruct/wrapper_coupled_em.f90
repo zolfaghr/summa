@@ -64,6 +64,7 @@ contains
     type(var_dlength), pointer			   :: flux_data  
     logical(lgt)						   :: computeVegFlux
     character(len=256)                     :: message
+    integer(8)							   :: hruId
 
     
     ! getting data
@@ -79,9 +80,9 @@ contains
     
     if(veg_fluxflag == 0)then; computeVegFlux = .false.; else; computeVegFlux = .true.; endif
     
+    hruId = 1001
     
-    
-    call coupled_em(dt_init, computeVegFlux, &
+    call coupled_em(hruId, dt_init, computeVegFlux, &
     				type_data, attr_data, forc_data, mpar_data, bvar_data, &
     				indx_data, prog_data, diag_data, flux_data, &
     				err, message)

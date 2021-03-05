@@ -382,17 +382,17 @@ extern "C" {
 class Summa  {
 private:
   double dt_init_;
-  int	 veg_fluxflag_;
-  void *handle_type_;
-  void *handle_attr_;
-  void *handle_forc_;
-  void *handle_mpar_;
-  void *handle_bvar_;
-  void *handle_indx_;
-  void *handle_prog_;
-  void *handle_diag_;
-  void *handle_flux_;
-  int	err_;
+  int	 veg_fluxflag_,
+     	 err_;
+  void  *handle_type_,
+  	    *handle_attr_,
+   		*handle_forc_,
+   		*handle_mpar_,
+   		*handle_bvar_,
+   		*handle_indx_,
+   		*handle_prog_,
+   		*handle_diag_,
+   		*handle_flux_;
 public:
   // ************* CONSTRUCTOR *************
   Summa()  {
