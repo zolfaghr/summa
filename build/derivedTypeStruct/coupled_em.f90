@@ -28,9 +28,9 @@ contains
 		  	end do
 		end do
 		
-        do i=1,size(bvar_data%var)
-        	do j=1,size(bvar_data%var(i)%dat)
-		  		bvar_data%var(i)%dat(j) = bvar_data%var(i)%dat(j) * 0.1
+        do i=1,size(prog_data%var)
+        	do j=1,size(prog_data%var(i)%dat)
+		  		prog_data%var(i)%dat(j) = prog_data%var(i)%dat(j) * 0.1
 		  	end do
 		end do
 

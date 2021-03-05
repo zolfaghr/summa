@@ -61,9 +61,9 @@ contains
     call c_f_pointer(handle_forc, forc_data)
     call c_f_pointer(handle_mpar, mpar_data)
     call c_f_pointer(handle_bvar, bvar_data)
-    call c_f_pointer(handle_bvar, prog_data)
-    call c_f_pointer(handle_bvar, diag_data)
-    call c_f_pointer(handle_bvar, flux_data)
+    call c_f_pointer(handle_prog, prog_data)
+    call c_f_pointer(handle_diag, diag_data)
+    call c_f_pointer(handle_flux, flux_data)
     
     call coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data, prog_data, diag_data, flux_data)
     
