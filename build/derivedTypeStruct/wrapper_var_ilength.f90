@@ -90,21 +90,17 @@ contains
 !**************************************************
   subroutine get_size_data_var_ilength(handle, var_size, dat_size) bind(C, name='get_size_data_var_ilength')
     
-    type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: var_size
-    integer(c_int), intent(out) :: dat_size(*)
-    type(var_ilength), pointer :: p
-    integer(c_int)  :: i,j
+    type(c_ptr), intent(in), value  :: handle
+    integer(c_int), intent(in) 		:: var_size
+    integer(c_int), intent(out) 	:: dat_size(*)
+    type(var_ilength), pointer 		:: p
+    integer(c_int)  :: i
     
     call c_f_pointer(handle, p)
-    if (allocated(p%var)) then
-      var_size = size(p%var, kind=c_int)
-      do i=1,var_size
+    
+    do i=1,var_size
       	dat_size(i) = size(p%var(i)%dat, kind=c_int)
-      end do
-    else
-      var_size = 0_c_int
-    end if
+    end do
     
   end subroutine get_size_data_var_ilength
   

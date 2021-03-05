@@ -318,9 +318,7 @@ extern "C" {
     	for(size_t j=0; j<num_col[i]; j++)
     		mat[i][j] = array[num_elem + j];
     	num_elem += num_col[i];    		
-    }
-    
-    
+    }    
     return mat;
   }
   
