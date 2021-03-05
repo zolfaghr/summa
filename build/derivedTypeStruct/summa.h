@@ -84,7 +84,7 @@ extern "C" {
     void  get_data_var_dlength(void* handle, double* array);
 
 // wrappers of summa subroutines
-    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4, void* h5);
+    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8);
  }
 
 
@@ -383,6 +383,9 @@ private:
   void *handle_forc_;
   void *handle_mpar_;
   void *handle_bvar_;
+  void *handle_prog_;
+  void *handle_diag_;
+  void *handle_flux_;
 public:
   // ************* CONSTRUCTOR *************
   Summa()  {     
@@ -391,6 +394,9 @@ public:
   	handle_forc_ = new_handle_var_d();
   	handle_mpar_ = new_handle_var_dlength();
   	handle_bvar_ = new_handle_var_dlength();
+  	handle_prog_ = new_handle_var_dlength();
+  	handle_diag_ = new_handle_var_dlength();
+  	handle_flux_ = new_handle_var_dlength();
   }
   
   
@@ -418,6 +424,18 @@ public:
   	   set_var_dlength(mat, handle_bvar_); 
   } 
   
+  void set_prog(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_prog_); 
+  }
+  
+  void set_diag(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_diag_); 
+  }
+  
+  void set_flux(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_flux_); 
+  }
+  
   // get data --------------------------
   
   std::vector<int> get_type() {
@@ -440,6 +458,18 @@ public:
     return get_data_var_dlength(handle_bvar_);
   }
   
+  std::vector<std::vector<double>> get_prog() {
+    return get_data_var_dlength(handle_prog_);
+  }
+  
+  std::vector<std::vector<double>> get_diag() {
+    return get_data_var_dlength(handle_diag_);
+  }
+  
+  std::vector<std::vector<double>> get_flux() {
+    return get_data_var_dlength(handle_flux_);
+  }
+  
   
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
@@ -448,7 +478,10 @@ public:
     				 handle_attr_,
     				 handle_forc_,
     				 handle_mpar_,
-    				 handle_bvar_
+    				 handle_bvar_,
+    				 handle_prog_,
+    				 handle_diag_,
+    				 handle_flux_
     				);
    }
   
@@ -459,6 +492,9 @@ public:
   	delete_handle_var_d(handle_forc_);
   	delete_handle_var_dlength(handle_mpar_);
   	delete_handle_var_dlength(handle_bvar_);
+  	delete_handle_var_dlength(handle_prog_);
+  	delete_handle_var_dlength(handle_diag_);
+  	delete_handle_var_dlength(handle_flux_);
    }
 };
 

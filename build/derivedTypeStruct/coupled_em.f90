@@ -9,7 +9,7 @@ public::coupled_em
 contains
 
 !********************************************   
-	subroutine coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data) 
+	subroutine coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data, prog_data, diag_data, flux_data)
 	implicit none
 	
 		type(var_i), intent(inout)::   type_data
@@ -17,6 +17,9 @@ contains
 		type(var_d), intent(inout)::   forc_data
 		type(var_dlength), intent(inout)::   mpar_data
 		type(var_dlength), intent(inout)::   bvar_data
+		type(var_dlength), intent(inout)::   prog_data
+		type(var_dlength), intent(inout)::   diag_data
+		type(var_dlength), intent(inout)::   flux_data
 		integer :: i,j
  
         do i=1,size(mpar_data%var)
