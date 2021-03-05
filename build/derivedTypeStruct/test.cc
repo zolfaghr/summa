@@ -16,7 +16,7 @@ int main()  {
   Summa S;
   
   S.set_dt(4.5);
-  S.set_veg_flux_flag(true);
+  S.set_veg_fluxflag(true);
   S.set_type(vec_in);
   S.set_attr(vec_ind);
   S.set_forc(vec_ind);
@@ -31,6 +31,9 @@ int main()  {
   vec_outd2 = S.get_forc();
   mat_out3 = S.get_indx(); 
   mat_out2 = S.get_diag(); 
+  int err = S.get_err();
+  
+  std::cout << "error code = " << err << std::endl;
   
   
   

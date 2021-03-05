@@ -20,7 +20,7 @@ contains
   ! **********************************************************************************************************
   subroutine solveCoupledEM(&
   							dt_init,			&
-  							veg_flux_flag,		&
+  							veg_fluxflag,		&
   							handle_type,		&
   							handle_attr,		&
   							handle_forc,		&
@@ -29,7 +29,8 @@ contains
   							handle_indx,		&
   							handle_prog,		&
   							handle_diag,		&
-  							handle_flux 		&
+  							handle_flux, 		&
+  							err					&
   							) bind(C,name='solveCoupledEM')
   
   use coupled_em_module,only:coupled_em
@@ -39,7 +40,7 @@ contains
 
     ! calling variables
     real(c_double), intent(in)			   :: dt_init
-    integer(c_int), intent(in)			   :: veg_flux_flag
+    integer(c_int), intent(in)			   :: veg_fluxflag
     type(c_ptr), intent(in), value         :: handle_type
     type(c_ptr), intent(in), value		   :: handle_attr 
     type(c_ptr), intent(in), value		   :: handle_forc  
@@ -48,7 +49,8 @@ contains
     type(c_ptr), intent(in), value		   :: handle_indx 
     type(c_ptr), intent(in), value		   :: handle_prog
     type(c_ptr), intent(in), value		   :: handle_diag
-    type(c_ptr), intent(in), value		   :: handle_flux      
+    type(c_ptr), intent(in), value		   :: handle_flux  
+    integer(c_int), intent(out)			   :: err    
     
     ! local variables
     type(var_i), pointer				   :: type_data
@@ -61,6 +63,7 @@ contains
     type(var_dlength), pointer			   :: diag_data 
     type(var_dlength), pointer			   :: flux_data  
     logical(lgt)						   :: computeVegFlux
+    character(len=256)                     :: message
 
     
     ! getting data
@@ -74,13 +77,14 @@ contains
     call c_f_pointer(handle_diag, diag_data)
     call c_f_pointer(handle_flux, flux_data)
     
-    if(veg_flux_flag == 0)then; computeVegFlux = .false.; else; computeVegFlux = .true.; endif
+    if(veg_fluxflag == 0)then; computeVegFlux = .false.; else; computeVegFlux = .true.; endif
     
     
     
     call coupled_em(dt_init, computeVegFlux, &
     				type_data, attr_data, forc_data, mpar_data, bvar_data, &
-    				indx_data, prog_data, diag_data, flux_data)
+    				indx_data, prog_data, diag_data, flux_data, &
+    				err, message)
     
 
  end subroutine solveCoupledEM

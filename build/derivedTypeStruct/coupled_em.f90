@@ -12,7 +12,8 @@ contains
 !********************************************   
 	subroutine coupled_em(dt_init, computeVegFlux, &
 						   type_data, attr_data, forc_data, mpar_data, bvar_data, &
-						   indx_data, prog_data, diag_data, flux_data)
+						   indx_data, prog_data, diag_data, flux_data, &
+						   err, message)
 	implicit none
 	
 		real(dp), intent(in)			::   dt_init
@@ -26,7 +27,11 @@ contains
 		type(var_dlength), intent(inout)::   prog_data
 		type(var_dlength), intent(inout)::   diag_data
 		type(var_dlength), intent(inout)::   flux_data
+		integer(i4b),intent(out)        :: err
+		character(*),intent(out)        :: message
 		integer :: i,j
+		
+		err = 23
 		
 		print *, "computeVegFlux = ", computeVegFlux
  
