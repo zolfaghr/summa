@@ -31,9 +31,6 @@ contains
 		character(*),intent(out)        :: message
 		integer :: i,j
 		
-		err = 23
-		
-		print *, "computeVegFlux = ", computeVegFlux
  
         do i=1,size(indx_data%var)
         	do j=1,size(indx_data%var(i)%dat)

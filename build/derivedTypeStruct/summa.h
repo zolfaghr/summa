@@ -91,7 +91,9 @@ extern "C" {
  } // extern "C"
 
 
-  // set functions ---------------------------------------------------
+/*******************************************************************/
+/************************** AUXILIARY FUNCTIONS ********************/ 
+/*******************************************************************/
   
   void set_flagVec(const std::vector<int>& arr_i, void* handle) {
        set_data_flagVec(handle, &arr_i[0], arr_i.size());
@@ -188,8 +190,6 @@ extern "C" {
   	    
        set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
-  
-  // get functions --------------------------------------
   
   std::vector<int> get_data_flagVec(void* handle) {
     int size;
@@ -377,7 +377,9 @@ extern "C" {
     return mat;
   }
   
- 
+/*******************************************************************/
+/************************** SUMMA CLASS ****************************/ 
+/*******************************************************************/
 
 class Summa  {
 private:
@@ -394,10 +396,11 @@ private:
    		*handle_diag_,
    		*handle_flux_;
 public:
-  // ************* CONSTRUCTOR *************
+  /************** CONSTRUCTOR *************/
   Summa()  {
     dt_init_ = 0;
-    veg_fluxflag_ = false;     
+    veg_fluxflag_ = false;
+    err_ = 0;     
   	handle_type_ = new_handle_var_i();
   	handle_attr_ = new_handle_var_d();
   	handle_forc_ = new_handle_var_d();
@@ -410,9 +413,7 @@ public:
   }
   
   
-  // ************* METHODS *************
-  
-  // set data -------------------------- 
+  /*************** SET DATA **************/
   
   void set_dt(double dt) {
   	dt_init_ = dt;
@@ -458,7 +459,7 @@ public:
   	   set_var_dlength(mat, handle_flux_); 
   }
   
-  // get data --------------------------
+  /*************** GET DATA **************/
   
   std::vector<int> get_type() {
     return get_var_i(handle_type_);
@@ -499,7 +500,7 @@ public:
   int get_err() { return err_; }
   
   
-  // ************* METHODS FROM SUMMA SUBROUTINES *************
+  /***** METHODS FROM SUMMA SUBROUTINES ****/
   
    void coupled_em() {
    		solveCoupledEM(
@@ -518,7 +519,7 @@ public:
     				);
    }
   
-  // ************* DESTRUCTOR *************
+  /************** DESTRUCTOR *************/
   ~Summa() { 
   	delete_handle_var_i(handle_type_);
   	delete_handle_var_d(handle_attr_);
