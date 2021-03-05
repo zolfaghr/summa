@@ -191,13 +191,13 @@ extern "C" {
        set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
   
-  std::vector<int> get_data_flagVec(void* handle) {
+  std::vector<int> get_flagVec(void* handle) {
     int size;
-    ::get_size_data_flagVec(handle, &size);
+    get_size_data_flagVec(handle, &size);
     if (size == 0) return std::vector<int>();
 
     std::vector<int> array(size);
-    ::get_data_flagVec(handle, &array[0]);
+    get_data_flagVec(handle, &array[0]);
     return array;
   }
   
@@ -222,7 +222,7 @@ extern "C" {
     return array;
   }
   
-  std::vector<int> get_data_var_i8(void* handle) {
+  std::vector<int> get_var_i8(void* handle) {
     int size;
     get_size_data_var_i8(handle, &size);
     if (size == 0) return std::vector<int>();
@@ -232,7 +232,7 @@ extern "C" {
     return array;
   }
   
-  std::vector<int> get_data_i8length(void* handle) {
+  std::vector<int> get_i8length(void* handle) {
     int size;
     get_size_data_i8length(handle, &size);
     if (size == 0) return std::vector<int>();
@@ -242,7 +242,7 @@ extern "C" {
     return array;
   }
   
-  std::vector<int> get_data_ilength(void* handle) {
+  std::vector<int> get_ilength(void* handle) {
     int size;
     get_size_data_ilength(handle, &size);
     if (size == 0) return std::vector<int>();
@@ -252,7 +252,7 @@ extern "C" {
     return array;
   }
   
-  std::vector<double> get_data_dlength(void* handle) {
+  std::vector<double> get_dlength(void* handle) {
     int size;
     get_size_data_dlength(handle, &size);
     if (size == 0) return std::vector<double>();
@@ -262,7 +262,7 @@ extern "C" {
     return array;
   }
   
-  std::vector<std::vector<int>> get_data_var_flagVec(void* handle) {
+  std::vector<std::vector<int>> get_var_flagVec(void* handle) {
     int num_row;
     std::vector<int> num_col(num_row);
     get_size_data_var_flagVec(handle, &num_row, &num_col[0]);
@@ -291,7 +291,7 @@ extern "C" {
     return mat;
   }
   
-  std::vector<std::vector<int>> get_data_var_ilength(void* handle) {
+  std::vector<std::vector<int>> get_var_ilength(void* handle) {
     int num_row;
     std::vector<int> num_col(num_row);
     get_size_data_var_ilength(handle, &num_row, &num_col[0]);
@@ -320,7 +320,7 @@ extern "C" {
     return mat;
   }
   
-  std::vector<std::vector<int>> get_data_var_i8length(void* handle) {
+  std::vector<std::vector<int>> get_var_i8length(void* handle) {
     int num_row;
     std::vector<int> num_col(num_row);
     get_size_data_var_i8length(handle, &num_row, &num_col[0]);
@@ -349,7 +349,7 @@ extern "C" {
     return mat;
   }
   
-  std::vector<std::vector<double>> get_data_var_dlength(void* handle) {
+  std::vector<std::vector<double>> get_var_dlength(void* handle) {
     int num_row;
     std::vector<int> num_col(num_row);
     get_size_data_var_dlength(handle, &num_row, &num_col[0]);
@@ -474,27 +474,27 @@ public:
   }
   
   std::vector<std::vector<double>> get_mpar() {
-    return get_data_var_dlength(handle_mpar_);
+    return get_var_dlength(handle_mpar_);
   }
   
   std::vector<std::vector<double>> get_bvar() {
-    return get_data_var_dlength(handle_bvar_);
+    return get_var_dlength(handle_bvar_);
   }
   
   std::vector<std::vector<int>> get_indx() {
-    return get_data_var_ilength(handle_indx_);
+    return get_var_ilength(handle_indx_);
   }
   
   std::vector<std::vector<double>> get_prog() {
-    return get_data_var_dlength(handle_prog_);
+    return get_var_dlength(handle_prog_);
   }
   
   std::vector<std::vector<double>> get_diag() {
-    return get_data_var_dlength(handle_diag_);
+    return get_var_dlength(handle_diag_);
   }
   
   std::vector<std::vector<double>> get_flux() {
-    return get_data_var_dlength(handle_flux_);
+    return get_var_dlength(handle_flux_);
   }
   
   int get_err() { return err_; }
