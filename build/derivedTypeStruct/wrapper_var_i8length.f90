@@ -72,23 +72,34 @@ contains
   end subroutine set_data_var_i8length
   
 !**************************************************
-  subroutine get_size_data_var_i8length(handle, var_size, dat_size) bind(C, name='get_size_data_var_i8length')
+  subroutine get_size_var_i8length(handle, var_size) bind(C, name='get_size_var_i8length')
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(out) :: var_size
-    integer(c_int), intent(out) :: dat_size(*)
     type(var_i8length), pointer :: p
-    integer(c_int)  :: i,j
     
     call c_f_pointer(handle, p)
     if (allocated(p%var)) then
       var_size = size(p%var, kind=c_int)
-      do i=1,var_size
-      	dat_size(i) = size(p%var(i)%dat, kind=c_int)
-      end do
     else
       var_size = 0_c_int
     end if
+    
+  end subroutine get_size_var_i8length
+  
+!**************************************************
+  subroutine get_size_data_var_i8length(handle, var_size, dat_size) bind(C, name='get_size_data_var_i8length')
+    
+    type(c_ptr), intent(in), value :: handle
+    integer(c_int), intent(in) :: var_size
+    integer(c_int), intent(out) :: dat_size(*)
+    type(var_i8length), pointer :: p
+    integer(c_int)  :: i
+    
+    call c_f_pointer(handle, p)
+    do i=1,var_size
+      dat_size(i) = size(p%var(i)%dat, kind=c_int)
+    end do
     
   end subroutine get_size_data_var_i8length
   

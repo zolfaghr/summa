@@ -74,6 +74,7 @@ extern "C" {
     void* new_handle_var_i8length();
     void  delete_handle_var_i8length(void* handle);
     void  set_data_var_i8length(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_var_i8length(void* handle, int* num_var);
     void  get_size_data_var_i8length(void* handle, int* num_var, int* num_dat);
     void  get_data_var_i8length(void* handle, int* array);
 
