@@ -18,7 +18,9 @@ contains
   ! **********************************************************************************************************
   ! public subroutine solveCoupledEM: solving coupled energy-mass equations for one timestep
   ! **********************************************************************************************************
-  subroutine solveCoupledEM(handle_type,		&
+  subroutine solveCoupledEM(&
+  							dt_init,			&
+  							handle_type,		&
   							handle_attr,		&
   							handle_forc,		&
   							handle_mpar,		&
@@ -35,6 +37,7 @@ contains
     implicit none
 
     ! calling variables
+    real(c_double), intent(in)			   :: dt_init
     type(c_ptr), intent(in), value         :: handle_type
     type(c_ptr), intent(in), value		   :: handle_attr 
     type(c_ptr), intent(in), value		   :: handle_forc  
@@ -69,7 +72,7 @@ contains
     call c_f_pointer(handle_diag, diag_data)
     call c_f_pointer(handle_flux, flux_data)
     
-    call coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
+    call coupled_em(dt_init, type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
     
 
  end subroutine solveCoupledEM

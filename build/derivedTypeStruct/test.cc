@@ -14,7 +14,8 @@ int main()  {
 //    std::vector<std::vector<int>> mat_in{ { true, false }, { true, false, false }, {false} }, mat_out;
 
   Summa S;
-
+  
+  S.set_dt(4.5);
   S.set_type(vec_in);
   S.set_attr(vec_ind);
   S.set_forc(vec_ind);

@@ -84,7 +84,7 @@ extern "C" {
     void  get_data_var_dlength(void* handle, double* array);
 
 // wrappers of summa subroutines
-    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9);
+    void  solveCoupledEM(const double* dt, void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9);
  }
 
 
@@ -378,6 +378,7 @@ extern "C" {
 
 class Summa  {
 private:
+  double dt_init_;
   void *handle_type_;
   void *handle_attr_;
   void *handle_forc_;
@@ -405,6 +406,10 @@ public:
   // ************* METHODS *************
   
   // set data -------------------------- 
+  
+  void set_dt(double dt) {
+  	dt_init_ = dt;
+  }
   
   void set_type(const std::vector<int>& arr_i) {
        set_var_i(arr_i, handle_type_);
@@ -484,7 +489,9 @@ public:
   // ************* METHODS FROM SUMMA SUBROUTINES *************
   
    void coupled_em() {
-    ::solveCoupledEM(handle_type_,
+   		solveCoupledEM(
+   					 &dt_init_,
+   					 handle_type_,
     				 handle_attr_,
     				 handle_forc_,
     				 handle_mpar_,

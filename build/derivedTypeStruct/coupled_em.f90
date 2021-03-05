@@ -1,5 +1,6 @@
 
 module coupled_em_module
+use nrtype
 use data_type
 
 implicit none
@@ -9,12 +10,13 @@ public::coupled_em
 contains
 
 !********************************************   
-	subroutine coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
+	subroutine coupled_em(dt_init, type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
 	implicit none
 	
-		type(var_i), intent(inout)::   type_data
-		type(var_d), intent(inout)::   attr_data
-		type(var_d), intent(inout)::   forc_data
+		real(dp), intent(in)			::   dt_init			
+		type(var_i), intent(inout)		::   type_data
+		type(var_d), intent(inout)		::   attr_data
+		type(var_d), intent(inout)		::   forc_data
 		type(var_dlength), intent(inout)::   mpar_data
 		type(var_dlength), intent(inout)::   bvar_data
 		type(var_ilength), intent(inout)::   indx_data
@@ -22,6 +24,8 @@ contains
 		type(var_dlength), intent(inout)::   diag_data
 		type(var_dlength), intent(inout)::   flux_data
 		integer :: i,j
+		
+		print *, "dt_init = ", dt_init
  
         do i=1,size(indx_data%var)
         	do j=1,size(indx_data%var(i)%dat)
