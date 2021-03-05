@@ -1,5 +1,5 @@
 
-module data_type
+module data_types
 use nrtype
 
   implicit none
@@ -48,6 +48,6 @@ use nrtype
   	type(dlength), allocatable	 :: var(:)
   end type var_dlength
 
-end module data_type
+end module data_types
 
 

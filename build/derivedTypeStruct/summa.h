@@ -87,8 +87,8 @@ extern "C" {
     void  get_size_data_var_dlength(void* handle, int* num_var, int* num_dat);
     void  get_data_var_dlength(void* handle, double* array);
 
-// wrappers of summa subroutines
-    void  solveCoupledEM(const double* dt, int* flag,
+// cppwrappers of summa subroutines
+    void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
     					 int* err);
 
@@ -392,18 +392,18 @@ extern "C" {
 class Summa {
 
 private:
-  double dt_init_;
-  int	 veg_fluxflag_,
-     	 err_;
-  void  *handle_type_,
-  	    *handle_attr_,
-   		*handle_forc_,
-   		*handle_mpar_,
-   		*handle_bvar_,
-   		*handle_indx_,
-   		*handle_prog_,
-   		*handle_diag_,
-   		*handle_flux_;
+  double dt_init_;				// initial time step
+  int	 veg_fluxflag_,			// flag to indicate if we are computing fluxes over vegetation
+     	 err_;					// error conotrol
+  void  *handle_type_,			// local classification of soil veg etc.
+  	    *handle_attr_,			// local attributes
+   		*handle_forc_,			// model forcing data
+   		*handle_mpar_,			// model parameters
+   		*handle_bvar_,			// basin-average model variables
+   		*handle_indx_,			// model indices
+   		*handle_prog_,			// model prognostic variables
+   		*handle_diag_,			// model diagnostic variables
+   		*handle_flux_;			// model fluxes
 public:
 
   /************** CONSTRUCTOR *************/
@@ -513,7 +513,7 @@ public:
   /***** METHODS FROM SUMMA SUBROUTINES ****/
   
    void coupled_em() {
-   		solveCoupledEM(
+   		SolveCoupledEM(
    					 &dt_init_,
    					 &veg_fluxflag_,
    					 handle_type_,

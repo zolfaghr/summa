@@ -2,7 +2,7 @@
 module cppwrap_datatypes
 
 use, intrinsic :: iso_c_binding
-use data_type
+use data_types
 
 implicit none
   

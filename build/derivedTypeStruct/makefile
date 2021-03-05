@@ -3,9 +3,7 @@ all: compile_f compile_c link
 FC = gfortran
 CC = g++
 
-FFILES = nrtype.f90 data_type.f90 wrapper_var_i.f90 wrapper_var_d.f90 wrapper_dlength.f90 \
-		wrapper_ilength.f90 wrapper_i8length.f90 wrapper_var_ilength.f90 wrapper_var_i8length.f90 wrapper_var_dlength.f90 wrapper_var_i8.f90 \
-		wrapper_flagVec.f90 wrapper_var_flagVec.f90 coupled_em.f90 wrapper_coupled_em.f90 
+FFILES = nrtype.f90 data_types.f90 cppwrap_datatypes.f90 coupled_em.f90 cppwrap_summa.f90 
 CFILES = test.cc
 
 compile_f:
@@ -15,9 +13,7 @@ compile_c:
 	$(CC) -c $(CFILES)
 	
 link:
-	$(CC) -o program nrtype.o data_type.o wrapper_var_i.o wrapper_var_i8.o wrapper_var_d.o wrapper_dlength.o \
-	wrapper_ilength.o wrapper_i8length.o wrapper_var_ilength.o wrapper_var_i8length.o wrapper_var_dlength.o  \
-	wrapper_flagVec.o wrapper_var_flagVec.o coupled_em.o wrapper_coupled_em.o test.o -l$(FC)
+	$(CC) -o program nrtype.o data_types.o cppwrap_datatypes.o coupled_em.o cppwrap_summa.o test.o -l$(FC)
 	
 clean:
 	rm *.o program *.mod

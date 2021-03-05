@@ -1,7 +1,7 @@
 
 module coupled_em_module
 use nrtype
-use data_type
+use data_types
 
 implicit none
 
