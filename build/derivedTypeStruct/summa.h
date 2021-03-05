@@ -66,6 +66,7 @@ extern "C" {
     void* new_handle_var_ilength();
     void  delete_handle_var_ilength(void* handle);
     void  set_data_var_ilength(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_var_ilength(void* handle, int* num_var);
     void  get_size_data_var_ilength(void* handle, int* num_var, int* num_dat);
     void  get_data_var_ilength(void* handle, int* array);
 
@@ -294,9 +295,11 @@ extern "C" {
   
   std::vector<std::vector<int>> get_var_ilength(void* handle) {
     int num_row;
+    get_size_var_ilength(handle, &num_row);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
     std::vector<int> num_col(num_row);
     get_size_data_var_ilength(handle, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<int>>();
     
     int num_elem = 0;
     for(int i=0; i<num_row; i++)
