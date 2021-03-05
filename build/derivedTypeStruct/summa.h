@@ -59,6 +59,7 @@ extern "C" {
     void* new_handle_var_flagVec();
     void  delete_handle_var_flagVec(void* handle);
     void  set_data_var_flagVec(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  get_size_var_flagVec(void* handle, int* num_var);
     void  get_size_data_var_flagVec(void* handle, int* num_var, int* num_dat);
     void  get_data_var_flagVec(void* handle, int* array);
 
@@ -267,9 +268,11 @@ extern "C" {
   
   std::vector<std::vector<int>> get_var_flagVec(void* handle) {
     int num_row;
+    get_size_var_flagVec(handle, &num_row);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
     std::vector<int> num_col(num_row);
     get_size_data_var_flagVec(handle, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<int>>();
     
     int num_elem = 0;
     for(int i=0; i<num_row; i++)
@@ -325,9 +328,11 @@ extern "C" {
   
   std::vector<std::vector<int>> get_var_i8length(void* handle) {
     int num_row;
+    get_size_var_i8length(handle, &num_row);
+    if (num_row == 0) return std::vector<std::vector<int>>();
+    
     std::vector<int> num_col(num_row);
     get_size_data_var_i8length(handle, &num_row, &num_col[0]);
-    if (num_row == 0) return std::vector<std::vector<int>>();
     
     int num_elem = 0;
     for(int i=0; i<num_row; i++)
@@ -346,9 +351,7 @@ extern "C" {
     	for(size_t j=0; j<num_col[i]; j++)
     		mat[i][j] = array[num_elem + j];
     	num_elem += num_col[i];    		
-    }
-    
-    
+    }    
     return mat;
   }
   
@@ -386,7 +389,8 @@ extern "C" {
 /************************** SUMMA CLASS ****************************/ 
 /*******************************************************************/
 
-class Summa  {
+class Summa {
+
 private:
   double dt_init_;
   int	 veg_fluxflag_,
@@ -401,6 +405,7 @@ private:
    		*handle_diag_,
    		*handle_flux_;
 public:
+
   /************** CONSTRUCTOR *************/
   Summa()  {
     dt_init_ = 0;
