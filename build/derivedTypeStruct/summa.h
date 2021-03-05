@@ -84,7 +84,7 @@ extern "C" {
     void  get_data_var_dlength(void* handle, double* array);
 
 // wrappers of summa subroutines
-    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8);
+    void  solveCoupledEM(void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9);
  }
 
 
@@ -383,6 +383,7 @@ private:
   void *handle_forc_;
   void *handle_mpar_;
   void *handle_bvar_;
+  void *handle_indx_;
   void *handle_prog_;
   void *handle_diag_;
   void *handle_flux_;
@@ -394,6 +395,7 @@ public:
   	handle_forc_ = new_handle_var_d();
   	handle_mpar_ = new_handle_var_dlength();
   	handle_bvar_ = new_handle_var_dlength();
+  	handle_indx_ = new_handle_var_ilength();
   	handle_prog_ = new_handle_var_dlength();
   	handle_diag_ = new_handle_var_dlength();
   	handle_flux_ = new_handle_var_dlength();
@@ -423,6 +425,10 @@ public:
   void set_bvar(const std::vector<std::vector<double>> &mat) {
   	   set_var_dlength(mat, handle_bvar_); 
   } 
+  
+  void set_indx(const std::vector<std::vector<int>> &mat) {
+  	   set_var_ilength(mat, handle_indx_); 
+  }
   
   void set_prog(const std::vector<std::vector<double>> &mat) {
   	   set_var_dlength(mat, handle_prog_); 
@@ -458,6 +464,10 @@ public:
     return get_data_var_dlength(handle_bvar_);
   }
   
+  std::vector<std::vector<int>> get_indx() {
+    return get_data_var_ilength(handle_indx_);
+  }
+  
   std::vector<std::vector<double>> get_prog() {
     return get_data_var_dlength(handle_prog_);
   }
@@ -479,6 +489,7 @@ public:
     				 handle_forc_,
     				 handle_mpar_,
     				 handle_bvar_,
+    				 handle_indx_,
     				 handle_prog_,
     				 handle_diag_,
     				 handle_flux_
@@ -492,6 +503,7 @@ public:
   	delete_handle_var_d(handle_forc_);
   	delete_handle_var_dlength(handle_mpar_);
   	delete_handle_var_dlength(handle_bvar_);
+  	delete_handle_var_ilength(handle_indx_);
   	delete_handle_var_dlength(handle_prog_);
   	delete_handle_var_dlength(handle_diag_);
   	delete_handle_var_dlength(handle_flux_);

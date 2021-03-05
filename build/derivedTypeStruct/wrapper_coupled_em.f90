@@ -23,6 +23,7 @@ contains
   							handle_forc,		&
   							handle_mpar,		&
   							handle_bvar,		&
+  							handle_indx,		&
   							handle_prog,		&
   							handle_diag,		&
   							handle_flux 		&
@@ -38,7 +39,8 @@ contains
     type(c_ptr), intent(in), value		   :: handle_attr 
     type(c_ptr), intent(in), value		   :: handle_forc  
     type(c_ptr), intent(in), value		   :: handle_mpar
-    type(c_ptr), intent(in), value		   :: handle_bvar 
+    type(c_ptr), intent(in), value		   :: handle_bvar
+    type(c_ptr), intent(in), value		   :: handle_indx 
     type(c_ptr), intent(in), value		   :: handle_prog
     type(c_ptr), intent(in), value		   :: handle_diag
     type(c_ptr), intent(in), value		   :: handle_flux      
@@ -49,6 +51,7 @@ contains
     type(var_d), pointer				   :: forc_data
     type(var_dlength), pointer			   :: mpar_data
     type(var_dlength), pointer			   :: bvar_data 
+    type(var_ilength), pointer			   :: indx_data
     type(var_dlength), pointer			   :: prog_data 
     type(var_dlength), pointer			   :: diag_data 
     type(var_dlength), pointer			   :: flux_data  
@@ -61,11 +64,12 @@ contains
     call c_f_pointer(handle_forc, forc_data)
     call c_f_pointer(handle_mpar, mpar_data)
     call c_f_pointer(handle_bvar, bvar_data)
+    call c_f_pointer(handle_indx, indx_data)
     call c_f_pointer(handle_prog, prog_data)
     call c_f_pointer(handle_diag, diag_data)
     call c_f_pointer(handle_flux, flux_data)
     
-    call coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data, prog_data, diag_data, flux_data)
+    call coupled_em(type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
     
 
  end subroutine solveCoupledEM
