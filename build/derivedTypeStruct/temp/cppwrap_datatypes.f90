@@ -1,5 +1,5 @@
 
-module cppwrap_data_type
+module cppwrap_datatypes
 
 use, intrinsic :: iso_c_binding
 use data_type
@@ -1013,6 +1013,6 @@ contains
     
   end subroutine get_data_var_dlength
      
-end module cppwrap_data_type
+end module cppwrap_datatypes
 
 

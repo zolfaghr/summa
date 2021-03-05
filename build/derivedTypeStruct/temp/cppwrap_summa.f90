@@ -1,6 +1,6 @@
 
 
-module wrapper_coupled_em
+module cppwrap_summa
 
 
   !======= Inclusions ===========
@@ -91,4 +91,4 @@ contains
  end subroutine solveCoupledEM
 
 
-end module wrapper_coupled_em
+end module cppwrap_summa
