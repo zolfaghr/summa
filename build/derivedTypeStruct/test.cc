@@ -17,8 +17,8 @@ int main()  {
   S.set_type(vec_in);
   S.set_attr(vec_ind);
   S.set_forc(vec_ind);
-  S.set_mpar(mat_in);
-  S.set_prog(mat_in);
+  S.set_flux(mat_in);
+  S.set_diag(mat_in);
 
   
  // update data
@@ -27,8 +27,8 @@ int main()  {
   vec_out = S.get_type();
   vec_outd = S.get_attr();
   vec_outd2 = S.get_forc();
-  mat_out = S.get_mpar(); 
-  mat_out2 = S.get_prog(); 
+  mat_out = S.get_flux(); 
+  mat_out2 = S.get_diag(); 
    
   for(size_t i=0; i<mat_out.size(); i++) {
   	for(size_t j=0; j<mat_out[i].size(); j++)

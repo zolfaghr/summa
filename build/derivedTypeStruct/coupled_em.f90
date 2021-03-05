@@ -22,15 +22,15 @@ contains
 		type(var_dlength), intent(inout)::   flux_data
 		integer :: i,j
  
-        do i=1,size(mpar_data%var)
-        	do j=1,size(mpar_data%var(i)%dat)
-		  		mpar_data%var(i)%dat(j) = mpar_data%var(i)%dat(j) * 10
+        do i=1,size(flux_data%var)
+        	do j=1,size(flux_data%var(i)%dat)
+		  		flux_data%var(i)%dat(j) = flux_data%var(i)%dat(j) * 100
 		  	end do
 		end do
 		
-        do i=1,size(prog_data%var)
-        	do j=1,size(prog_data%var(i)%dat)
-		  		prog_data%var(i)%dat(j) = prog_data%var(i)%dat(j) * 0.1
+        do i=1,size(diag_data%var)
+        	do j=1,size(diag_data%var(i)%dat)
+		  		diag_data%var(i)%dat(j) = diag_data%var(i)%dat(j) * 0.01
 		  	end do
 		end do
 
