@@ -20,6 +20,7 @@ contains
   ! **********************************************************************************************************
   subroutine solveCoupledEM(&
   							dt_init,			&
+  							veg_flux_flag,		&
   							handle_type,		&
   							handle_attr,		&
   							handle_forc,		&
@@ -38,6 +39,7 @@ contains
 
     ! calling variables
     real(c_double), intent(in)			   :: dt_init
+    integer(c_int), intent(in)			   :: veg_flux_flag
     type(c_ptr), intent(in), value         :: handle_type
     type(c_ptr), intent(in), value		   :: handle_attr 
     type(c_ptr), intent(in), value		   :: handle_forc  
@@ -58,10 +60,10 @@ contains
     type(var_dlength), pointer			   :: prog_data 
     type(var_dlength), pointer			   :: diag_data 
     type(var_dlength), pointer			   :: flux_data  
+    logical(lgt)						   :: computeVegFlux
 
-    !======= Internals ============
     
-    
+    ! getting data
     call c_f_pointer(handle_type, type_data) 
     call c_f_pointer(handle_attr, attr_data)
     call c_f_pointer(handle_forc, forc_data)
@@ -72,7 +74,13 @@ contains
     call c_f_pointer(handle_diag, diag_data)
     call c_f_pointer(handle_flux, flux_data)
     
-    call coupled_em(dt_init, type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
+    if(veg_flux_flag == 0)then; computeVegFlux = .false.; else; computeVegFlux = .true.; endif
+    
+    
+    
+    call coupled_em(dt_init, computeVegFlux, &
+    				type_data, attr_data, forc_data, mpar_data, bvar_data, &
+    				indx_data, prog_data, diag_data, flux_data)
     
 
  end subroutine solveCoupledEM

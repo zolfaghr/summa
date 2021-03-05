@@ -10,10 +10,13 @@ public::coupled_em
 contains
 
 !********************************************   
-	subroutine coupled_em(dt_init, type_data, attr_data, forc_data, mpar_data, bvar_data, indx_data, prog_data, diag_data, flux_data)
+	subroutine coupled_em(dt_init, computeVegFlux, &
+						   type_data, attr_data, forc_data, mpar_data, bvar_data, &
+						   indx_data, prog_data, diag_data, flux_data)
 	implicit none
 	
-		real(dp), intent(in)			::   dt_init			
+		real(dp), intent(in)			::   dt_init
+		logical(lgt), intent(in)		::   computeVegFlux			
 		type(var_i), intent(inout)		::   type_data
 		type(var_d), intent(inout)		::   attr_data
 		type(var_d), intent(inout)		::   forc_data
@@ -25,7 +28,7 @@ contains
 		type(var_dlength), intent(inout)::   flux_data
 		integer :: i,j
 		
-		print *, "dt_init = ", dt_init
+		print *, "computeVegFlux = ", computeVegFlux
  
         do i=1,size(indx_data%var)
         	do j=1,size(indx_data%var(i)%dat)

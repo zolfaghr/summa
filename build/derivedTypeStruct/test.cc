@@ -16,6 +16,7 @@ int main()  {
   Summa S;
   
   S.set_dt(4.5);
+  S.set_veg_flux_flag(true);
   S.set_type(vec_in);
   S.set_attr(vec_ind);
   S.set_forc(vec_ind);

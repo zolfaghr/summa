@@ -84,8 +84,9 @@ extern "C" {
     void  get_data_var_dlength(void* handle, double* array);
 
 // wrappers of summa subroutines
-    void  solveCoupledEM(const double* dt, void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9);
- }
+    void  solveCoupledEM(const double* dt, int* flag, void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9);
+
+ } // extern "C"
 
 
   // set functions ---------------------------------------------------
@@ -379,6 +380,7 @@ extern "C" {
 class Summa  {
 private:
   double dt_init_;
+  int	 veg_flux_flag_;
   void *handle_type_;
   void *handle_attr_;
   void *handle_forc_;
@@ -390,7 +392,9 @@ private:
   void *handle_flux_;
 public:
   // ************* CONSTRUCTOR *************
-  Summa()  {     
+  Summa()  {
+    dt_init_ = 0;
+    veg_flux_flag_ = false;     
   	handle_type_ = new_handle_var_i();
   	handle_attr_ = new_handle_var_d();
   	handle_forc_ = new_handle_var_d();
@@ -409,6 +413,10 @@ public:
   
   void set_dt(double dt) {
   	dt_init_ = dt;
+  }
+  
+  void set_veg_flux_flag(int flag) {
+  	veg_flux_flag_ = flag;
   }
   
   void set_type(const std::vector<int>& arr_i) {
@@ -491,6 +499,7 @@ public:
    void coupled_em() {
    		solveCoupledEM(
    					 &dt_init_,
+   					 &veg_flux_flag_,
    					 handle_type_,
     				 handle_attr_,
     				 handle_forc_,
