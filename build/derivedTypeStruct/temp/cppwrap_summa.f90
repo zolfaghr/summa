@@ -10,15 +10,15 @@ module cppwrap_summa
 
   ! privacy
   implicit none
-  public::solveCoupledEM
+  public::SolveCoupledEM
 
 
 contains
 
   ! **********************************************************************************************************
-  ! public subroutine solveCoupledEM: solving coupled energy-mass equations for one timestep
+  ! public subroutine SolveCoupledEM: solving coupled energy-mass equations for one timestep
   ! **********************************************************************************************************
-  subroutine solveCoupledEM(&
+  subroutine SolveCoupledEM(&
   							dt_init,			&
   							veg_fluxflag,		&
   							handle_type,		&
@@ -31,7 +31,7 @@ contains
   							handle_diag,		&
   							handle_flux, 		&
   							err					&
-  							) bind(C,name='solveCoupledEM')
+  							) bind(C,name='SolveCoupledEM')
   
   use coupled_em_module,only:coupled_em
 
@@ -88,7 +88,7 @@ contains
     				err, message)
     
 
- end subroutine solveCoupledEM
+ end subroutine SolveCoupledEM
 
 
 end module cppwrap_summa

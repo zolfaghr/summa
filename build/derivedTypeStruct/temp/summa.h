@@ -88,7 +88,7 @@ extern "C" {
     void  get_data_var_dlength(void* handle, double* array);
 
 // wrappers of summa subroutines
-    void  solveCoupledEM(const double* dt, int* flag,
+    void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
     					 int* err);
 
@@ -513,7 +513,7 @@ public:
   /***** METHODS FROM SUMMA SUBROUTINES ****/
   
    void coupled_em() {
-   		solveCoupledEM(
+   		SolveCoupledEM(
    					 &dt_init_,
    					 &veg_fluxflag_,
    					 handle_type_,
