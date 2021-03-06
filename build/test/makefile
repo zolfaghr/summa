@@ -1,22 +1,28 @@
 
-all: compile_f compile_c link
+all: compile_c link lib_avalable
 FC = gfortran
 CC = g++
+
+# libraries
+INCLUDES = -I/usr/include -I/usr/share/doc/liblapack3 -I/usr/lib/x86_64-linux-gnu -I/usr/local/include \
+            -I/usr/local/lib -I/usr/local/fortran 
+LIBRARIES = -llapack -lgfortran -lnetcdff -lnetcdf
 
 # directory
 DIR = /home/stiff/summa/build/test
 
-FFILES = cppwrap_datatypes.f90 cppwrap_summa.f90 
 CFILES = test.cc
-
-compile_f:
-	$(FC) -c $(FFILES)
 
 compile_c:
 	$(CC) -c $(CFILES)
 	
 link:
-	$(CC) -L$(DIR) -o program cppwrap_datatypes.o coupled_em.o cppwrap_summa.o test.o -lsumma4chm -l$(FC)
+	$(CC) -L$(DIR) -o program test.o -lsumma4chm -llapack -l$(FC) $(INCLUDES)
+	
+# make library available at runtime
+lib_avalable:
+	echo IMORTANT, before running program run the following
+	export LD_LIBRARY_PATH=$(DIR):$LD_LIBRARY_PATH
 	
 clean:
 	rm *.o program *.mod
