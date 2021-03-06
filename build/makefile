@@ -38,6 +38,7 @@ DSHARE_DIR = $(F_KORE_DIR)/dshare
 NUMREC_DIR = $(F_KORE_DIR)/numrec
 NOAHMP_DIR = $(F_KORE_DIR)/noah-mp
 ENGINE_DIR = $(F_KORE_DIR)/engine
+CPPWRAP_DIR = $(F_KORE_DIR)/cppwrap
 
 #  utilities
 SUMMA_NRUTIL= \
@@ -105,10 +106,15 @@ SUMMA_SOLVER= \
 		systemSolv.f90 \
 		varSubstep.f90 \
 		opSplittin.f90 \
-		coupled_em.f90 \
-		summaData.f90 \
-		solveCoupledEM.f90
+		coupled_em.f90
 SOLVER = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_SOLVER))
+
+# C++ wrappers
+CPP_WRAP= \
+		cppwrap_datatypes.f90 \
+		cppwrap_summa.f90
+		
+WRAP = $(patsubst %, $(CPPWRAP_DIR)/%, $(CPP_WRAP))
 
 # Define routines for SUMMA preliminaries
 SUMMA_PRELIM= \
@@ -152,7 +158,7 @@ MODRUN = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_MODRUN))
 COMM_ALL = $(NRUTIL) $(NRPROC) $(HOOKUP) $(DATAMS) $(UTILMS)
 
 # ... stitch together SUMMA programs
-SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER)
+SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER) $(WRAP)
 
 
 #========================================================================
