@@ -41,8 +41,8 @@ contains
     implicit none
 
     ! calling variables
-    real(c_double), intent(in)			   :: dt_init
-    integer(c_int), intent(in)			   :: veg_fluxflag
+    real(c_double), intent(inout)		   :: dt_init
+    integer(c_int), intent(inout)		   :: veg_fluxflag
     type(c_ptr), intent(in), value         :: handle_type
     type(c_ptr), intent(in), value		   :: handle_attr 
     type(c_ptr), intent(in), value		   :: handle_forc  
