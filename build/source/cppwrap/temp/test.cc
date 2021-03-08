@@ -11,8 +11,8 @@ int main()  {
   std::vector<double> vec_d1{1.1,-2.2,3.3,-4.4,5.5}, vec_d2, vec_d3;
   std::vector<std::vector<int>> mat_i1{ { 11, 12, 13, 14 }, { 21, 22, 23 }, {31} }, mat_i2;
   std::vector<std::vector<double>> mat_d1{ { 1.1, 1.2, 1.3, 1.4 }, { 2.1, 2.2, 2.3 }, {3.1} }, mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
-  VarInfo  vf;
-  vf.a = 2; vf.b = 4.5;
+  VarInfo  vfo1, vfo2;
+  vfo1.a = 2; vfo1.b = 4.5;
 
 
   S.set_dt(60);
@@ -28,7 +28,7 @@ int main()  {
   S.set_diag(mat_d1);
   S.set_flux(mat_d1);
   
-  S.set_indxmeta(vf);
+  S.set_indxmeta(vfo1);
 
   
   S.coupled_em();
@@ -44,6 +44,7 @@ int main()  {
   mat_d2 = S.get_diag();
   mat_d6 = S.get_flux(); 
   int err = S.get_err();
+  vfo2 = S.get_indxmeta();
   
    
  
@@ -118,6 +119,8 @@ int main()  {
   	std::cout << std::endl << "\t";
   } 
   std::cout << "\n" << "-----------------------" << std::endl;
+  
+  std::cout << "indx_meta = " << vfo2.a  << ", " << vfo2.b << std::endl;
 
   return 0;
 }
