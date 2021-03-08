@@ -1,6 +1,6 @@
 
 module data_types
-use nrtype
+use nrtype, integerMissing=>nr_integerMissing
 
   implicit none
   
@@ -8,9 +8,10 @@ use nrtype
  ! Define variable metadata
  ! ***********************************************************************************************************
  ! define derived type for model variables, including name, description, and units
- type, public :: var_info
-   integer(i4b)		::  int_a
-   real(dp)			::  real_b
+ type,public :: var_info
+  character(len=64)                      :: varname   = 'empty'         ! variable name
+  integer(i4b)                           :: vartype   = integerMissing  ! variable type
+  logical(lgt)                           :: varDesire = .false.         ! flag to denote if the variable is desired for model output
  end type var_info
   
  type, public 	:: flagVec

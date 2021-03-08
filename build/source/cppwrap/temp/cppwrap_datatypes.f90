@@ -31,31 +31,35 @@ contains
     
   end subroutine delete_handle_var_info
 !-----------------------------------
-  subroutine set_data_var_info(handle, a, b) bind(C, name='set_data_var_info')
+  subroutine set_data_var_info(handle, varname, vartype, varDesire) bind(C, name='set_data_var_info')
     
-    type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(in), value :: a
-    real(dp), intent(in), value :: b
+    type(c_ptr), intent(in), value 			:: handle
+  	character(c_char),intent(in), value  	:: varname
+  	integer(c_int),intent(in), value       	:: vartype   
+  	integer(c_int),intent(in), value       	:: varDesire
     type(var_info), pointer :: p
     
     call c_f_pointer(handle, p)
    
-    p%int_a = a
-    p%real_b = b
+    p%varname = varname
+    p%vartype = vartype
+    p%varDesire = varDesire
     
   end subroutine set_data_var_info
 !-----------------------------------
-  subroutine get_data_var_info(handle, a, b) bind(C, name='get_data_var_info')
+  subroutine get_data_var_info(handle, varname, vartype, varDesire) bind(C, name='get_data_var_info')
     
-    type(c_ptr), intent(in), value 	:: handle
-    integer(c_int), intent(out) 	:: a
-    real(dp), intent(out) 			:: b
-    type(var_info), pointer 		:: p
+    type(c_ptr), intent(in), value 		:: handle
+  	character(c_char),intent(out)  		:: varname(64)
+  	integer(c_int),intent(out)      	:: vartype   
+  	integer(c_int),intent(out)       	:: varDesire
+    type(var_info), pointer 			:: p
     
     call c_f_pointer(handle, p)
 
-	a = p%int_a
-	b = p%real_b
+    varname = p%varname 
+    vartype = p%vartype 
+    varDesire = p%varDesire
     
   end subroutine get_data_var_info
 

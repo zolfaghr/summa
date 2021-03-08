@@ -6,12 +6,6 @@
 #include <iostream>
 
 extern "C" {
-// var_info 
-    void* new_handle_var_info();
-    void  delete_handle_var_info(void* handle);
-    void  set_data_var_info(void* handle, int a, double b);
-    void  get_data_var_info(void* handle, int *a, double *b);
-    
 // flagVec 
     void* new_handle_flagVec();
     void  delete_handle_flagVec(void* handle);
@@ -93,6 +87,12 @@ extern "C" {
     void  get_size_data_var_dlength(void* handle, int* num_var, int* num_dat);
     void  get_data_var_dlength(void* handle, double* array);
 
+// var_info 
+    void* new_handle_var_info();
+    void  delete_handle_var_info(void* handle);
+    void  set_data_var_info(void* handle, const unsigned char* str, int name, int flag);
+    void  get_data_var_info(void* handle, unsigned char* str, int* name, int* flag);
+
 // cppwrappers of summa subroutines
     void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
@@ -104,8 +104,9 @@ extern "C" {
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
 struct  VarInfo {
-	int a;
-	double b;
+	unsigned char varname[64];
+	int 		  vartype;
+	int			  varDesire;
 };
 
 
@@ -210,8 +211,8 @@ struct  VarInfo {
        set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
   
-  void set_var_info(int a, double b, void* handle) {
-  		set_data_var_info(handle, a, b);
+  void set_var_info(VarInfo v, void* handle) {
+  		set_data_var_info(handle, v.varname, v.vartype, v.varDesire);
   }
 
   /*************** GET DATA **************/
@@ -408,7 +409,7 @@ struct  VarInfo {
   
   VarInfo get_var_info(void* handle) {
   	VarInfo v;
-  	get_data_var_info(handle, &v.a, &v.b);
+  	get_data_var_info(handle, v.varname, &v.vartype, &v.varDesire);
   	return v;
   }
   
@@ -499,7 +500,7 @@ public:
   }
   
   void set_indxmeta(const VarInfo &v) {
-  	   set_var_info(v.a, v.b, handle_indxmeta_);
+  	   set_var_info(v, handle_indxmeta_);
   }
   
   /*************** GET DATA **************/
