@@ -8,6 +8,55 @@ implicit none
   
 contains
 
+! **************************** var_info ********************************
+
+  function new_handle_var_info() result(handle) bind(C, name='new_handle_var_info')
+    
+    type(c_ptr) :: handle
+    type(var_info), pointer :: p
+    
+    allocate(p)    
+    handle = c_loc(p)   
+    
+  end function new_handle_var_info
+
+!-----------------------------------
+  subroutine delete_handle_var_info(handle) bind(C, name='delete_handle_var_info')
+    
+    type(c_ptr), intent(in), value :: handle
+    type(var_info), pointer :: p
+    
+    call c_f_pointer(handle, p)
+    deallocate(p)
+    
+  end subroutine delete_handle_var_info
+!-----------------------------------
+  subroutine set_data_var_info(handle, a, b) bind(C, name='set_data_var_info')
+    
+    type(c_ptr), intent(in), value :: handle
+    integer(c_int), intent(in), value :: a
+    real(dp), intent(in), value :: b
+    type(var_info), pointer :: p
+   
+    p%int_a = a
+    p%real_b = b
+    
+  end subroutine set_data_var_info
+!-----------------------------------
+  subroutine get_data_var_info(handle, a, b) bind(C, name='get_data_var_info')
+    
+    type(c_ptr), intent(in), value 	:: handle
+    integer(c_int), intent(out) 	:: a
+    real(dp), intent(out) 			:: b
+    type(var_info), pointer 		:: p
+    
+    call c_f_pointer(handle, p)
+
+	a = p%int_a
+	b = p%real_b
+    
+  end subroutine get_data_var_info
+
 ! **************************** flagVec ****************************
 
   function new_handle_flagVec() result(handle) bind(C, name='new_handle_flagVec')

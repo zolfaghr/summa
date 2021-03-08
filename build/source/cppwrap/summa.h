@@ -6,6 +6,12 @@
 #include <iostream>
 
 extern "C" {
+// var_info 
+    void* new_handle_var_info();
+    void  delete_handle_var_info(void* handle);
+    void  set_data_var_info(void* handle, int a, double b);
+    void  get_data_var_info(void* handle, int *a, double *b);
+    
 // flagVec 
     void* new_handle_flagVec();
     void  delete_handle_flagVec(void* handle);
@@ -98,7 +104,8 @@ extern "C" {
 /*******************************************************************/
 /************************** AUXILIARY FUNCTIONS ********************/ 
 /*******************************************************************/
-  
+
+  /*************** SET DATA **************/  
   void set_flagVec(const std::vector<int>& arr_i, void* handle) {
        set_data_flagVec(handle, &arr_i[0], arr_i.size());
   }
@@ -194,6 +201,12 @@ extern "C" {
   	    
        set_data_var_dlength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
+  
+  void set_var_info(int a, double b, void* handle) {
+  		set_data_var_info(handle, a, b);
+  }
+
+  /*************** GET DATA **************/
   
   std::vector<int> get_flagVec(void* handle) {
     int size;
@@ -386,6 +399,14 @@ extern "C" {
   }
   
 /*******************************************************************/
+/************************** STRUCTURES *****************************/ 
+/*******************************************************************/
+struct  var_inf {
+	int a;
+	double b;
+};
+  
+/*******************************************************************/
 /************************** SUMMA CLASS ****************************/ 
 /*******************************************************************/
 
@@ -403,7 +424,8 @@ private:
    		*handle_indx_,			// model indices
    		*handle_prog_,			// model prognostic variables
    		*handle_diag_,			// model diagnostic variables
-   		*handle_flux_;			// model fluxes
+   		*handle_flux_,			// model fluxes
+   		*handle_indxmeta_;
 public:
 
   /************** CONSTRUCTOR *************/
@@ -420,6 +442,7 @@ public:
   	handle_prog_ = new_handle_var_dlength();
   	handle_diag_ = new_handle_var_dlength();
   	handle_flux_ = new_handle_var_dlength();
+  	handle_indxmeta_ = new_handle_var_info();
   }
   
   
@@ -467,6 +490,10 @@ public:
   
   void set_flux(const std::vector<std::vector<double>> &mat) {
   	   set_var_dlength(mat, handle_flux_); 
+  }
+  
+  void set_indxmeta(const var_inf &v_inf) {
+  	   set_var_info(v_inf.a, v_inf.b, handle_indxmeta_);
   }
   
   /*************** GET DATA **************/
@@ -540,6 +567,7 @@ public:
   	delete_handle_var_dlength(handle_prog_);
   	delete_handle_var_dlength(handle_diag_);
   	delete_handle_var_dlength(handle_flux_);
+  	delete_handle_var_info(handle_indxmeta_);
    }
 };
 
