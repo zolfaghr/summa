@@ -37,6 +37,8 @@ contains
     integer(c_int), intent(in), value :: a
     real(dp), intent(in), value :: b
     type(var_info), pointer :: p
+    
+    call c_f_pointer(handle, p)
    
     p%int_a = a
     p%real_b = b
