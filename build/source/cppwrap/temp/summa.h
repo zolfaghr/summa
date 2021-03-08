@@ -401,7 +401,7 @@ extern "C" {
 /*******************************************************************/
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
-struct  var_inf {
+struct  VarInfo {
 	int a;
 	double b;
 };
@@ -492,8 +492,8 @@ public:
   	   set_var_dlength(mat, handle_flux_); 
   }
   
-  void set_indxmeta(const var_inf &v_inf) {
-  	   set_var_info(v_inf.a, v_inf.b, handle_indxmeta_);
+  void set_indxmeta(const VarInfo &v) {
+  	   set_var_info(v.a, v.b, handle_indxmeta_);
   }
   
   /*************** GET DATA **************/
