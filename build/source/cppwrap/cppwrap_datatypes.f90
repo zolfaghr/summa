@@ -43,7 +43,7 @@ contains
    
     p%varname = varname
     p%vartype = vartype
-    p%varDesire = varDesire
+    if(varDesire == 0)then; p%varDesire = .false.; else; p%varDesire = .true.; endif
     
   end subroutine set_data_var_info
 !-----------------------------------
@@ -59,7 +59,7 @@ contains
 
     varname = p%varname 
     vartype = p%vartype 
-    varDesire = p%varDesire
+    if(p%varDesire .eqv. .false.)then; varDesire = 0; else; varDesire = 1; endif
     
   end subroutine get_data_var_info
 
