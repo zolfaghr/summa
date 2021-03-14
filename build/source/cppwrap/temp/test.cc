@@ -1,5 +1,7 @@
 #include <iostream>
+#include <stdio.h>
 #include <vector>
+#include<string.h>
 #include "summa.h"
 
 
@@ -12,8 +14,10 @@ int main()  {
   std::vector<std::vector<int>> mat_i1{ { 11, 12, 13, 14 }, { 21, 22, 23 }, {31} }, mat_i2;
   std::vector<std::vector<double>> mat_d1{ { 1.1, 1.2, 1.3, 1.4 }, { 2.1, 2.2, 2.3 }, {3.1} }, mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
   VarInfo  vfo1, vfo2;
-  //vfo1.varname = "hello";
-   vfo1.vartype = 4; vfo1.varDesire = true;
+  unsigned char str[64] = "hello";
+  memcpy(vfo1.varname, str, sizeof(str));
+  vfo1.vartype = 4; vfo1.varDesire = true;
+
 
 
   S.set_dt(60);
