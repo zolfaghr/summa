@@ -33,28 +33,28 @@ contains
 !-----------------------------------
   subroutine set_data_var_info(handle, varname, vartype, varDesire) bind(C, name='set_data_var_info')
     
-    type(c_ptr), intent(in), 	value 					 :: handle
-  	character(kind=c_char,len=1),intent(in)				 :: varname(*)
-  	integer(c_int),intent(in),  value       			 :: vartype   
-  	integer(c_int),intent(in),  value       			 :: varDesire
+    type(c_ptr), intent(in), 	value 			:: handle
+  	character(kind=c_char,len=1),intent(in)		:: varname(*)
+  	integer(c_int),intent(in),  value       	:: vartype   
+  	integer(c_int),intent(in),  value       	:: varDesire
   	
-    type(var_info), pointer :: p
-    integer :: length
-    character(len=56)     temp
+    type(var_info), pointer 					:: p
+    character(len=:), allocatable 				:: temp
+    integer 									:: length
+    
     
     
     length=0
     do
        if (varname(length+1) == C_NULL_CHAR) exit
        length = length + 1
-    end do
-    
-    print *, 'length = ', length
-    
+    end do    
+    allocate(character(len=length) :: temp)    
     temp = transfer(varname(1:length), temp)
     
     
     call c_f_pointer(handle, p)
+    
    
         
     p%varname = temp
@@ -65,7 +65,7 @@ contains
     print *, p%vartype
     print *, p%varDesire
     
-    stop 1
+
     
   end subroutine set_data_var_info
 
