@@ -34,12 +34,12 @@ contains
   subroutine set_data_var_info(handle, varname, vartype, varDesire) bind(C, name='set_data_var_info')
     
     type(c_ptr), intent(in), 	value 					 :: handle
-  	character(kind=c_char), 	dimension(*), intent(in) :: varname
+  	character(kind=c_char),intent(in)					 :: varname(*)
   	integer(c_int),intent(in),  value       			 :: vartype   
   	integer(c_int),intent(in),  value       			 :: varDesire
   	
     type(var_info), pointer :: p
-    integer :: length, i
+    integer :: length
 
     length=0
     do
