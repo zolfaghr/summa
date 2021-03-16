@@ -90,8 +90,8 @@ extern "C" {
 // var_info 
     void* new_handle_var_info();
     void  delete_handle_var_info(void* handle);
-    void  set_data_var_info(void* handle, const unsigned char* str, int name, int flag);
-    void  get_data_var_info(void* handle, unsigned char* str, int* name, int* flag);
+    void  set_data_var_info(void* handle, const char* str, int name, int flag);
+ //   void  get_data_var_info(void* handle, unsigned char* str, int* name, int* flag);
 
 // cppwrappers of summa subroutines
     void  SolveCoupledEM(const double* dt, int* flag,
@@ -104,7 +104,7 @@ extern "C" {
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
 struct  VarInfo {
-	unsigned char varname[64];
+    char const 		  *varname;
 	int 		  vartype;
 	int			  varDesire;
 };
@@ -407,11 +407,13 @@ struct  VarInfo {
     return mat;
   }
   
+/*
+  
   VarInfo get_var_info(void* handle) {
   	VarInfo v;
   	get_data_var_info(handle, v.varname, &v.vartype, &v.varDesire);
   	return v;
-  }
+  } */
   
 /*******************************************************************/
 /************************** SUMMA CLASS ****************************/ 
@@ -542,11 +544,12 @@ public:
   }
   
   int get_err() { return err_; }
-  
+
+/*  
   VarInfo get_indxmeta() {
   	return get_var_info(handle_indxmeta_);
   }
-  
+*/  
   
   /***** METHODS FROM SUMMA SUBROUTINES ****/
   

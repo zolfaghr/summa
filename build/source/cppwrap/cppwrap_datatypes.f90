@@ -34,34 +34,30 @@ contains
   subroutine set_data_var_info(handle, varname, vartype, varDesire) bind(C, name='set_data_var_info')
     
     type(c_ptr), intent(in), value 			:: handle
-  	character(c_char),intent(in), value  	:: varname
+  	character(kind=c_char), dimension(*), intent(in) :: varname
   	integer(c_int),intent(in), value       	:: vartype   
   	integer(c_int),intent(in), value       	:: varDesire
+  	
     type(var_info), pointer :: p
+    integer :: length, i
+
+    length=0
+    do
+       if (varname(length+1) == C_NULL_CHAR) exit
+       length = length + 1
+    end do
     
     call c_f_pointer(handle, p)
-   
-    p%varname = varname
+    
+    p%varname = transfer(varname(1:length), p%varname)
     p%vartype = vartype
     if(varDesire == 0)then; p%varDesire = .false.; else; p%varDesire = .true.; endif
     
+    print *, p%varname
+    
+    stop 1
+    
   end subroutine set_data_var_info
-!-----------------------------------
-  subroutine get_data_var_info(handle, varname, vartype, varDesire) bind(C, name='get_data_var_info')
-    
-    type(c_ptr), intent(in), value 		:: handle
-  	character(c_char),intent(out)  		:: varname(64)
-  	integer(c_int),intent(out)      	:: vartype   
-  	integer(c_int),intent(out)       	:: varDesire
-    type(var_info), pointer 			:: p
-    
-    call c_f_pointer(handle, p)
-
-    varname = p%varname 
-    vartype = p%vartype 
-    if(p%varDesire .eqv. .false.)then; varDesire = 0; else; varDesire = 1; endif
-    
-  end subroutine get_data_var_info
 
 ! **************************** flagVec ****************************
 
