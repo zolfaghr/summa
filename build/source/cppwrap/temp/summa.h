@@ -103,7 +103,7 @@ extern "C" {
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
 struct  VarInfo {
-    char const	  *varname = "empty";
+    char const*   varname = "empty";
 	int 		  vartype;
 	int			  varDesire;
 };

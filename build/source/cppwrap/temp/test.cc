@@ -15,7 +15,7 @@ int main()  {
   std::vector<std::vector<double>> mat_d1{ { 1.1, 1.2, 1.3, 1.4 }, { 2.1, 2.2, 2.3 }, {3.1} }, mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
   VarInfo  vfo1;
  
-  vfo1.varname="Hello";
+  vfo1.varname="this is varname variable we passed from C++";
   vfo1.vartype = 4; vfo1.varDesire = true;
 
 
