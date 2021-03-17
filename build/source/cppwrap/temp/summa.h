@@ -90,7 +90,7 @@ extern "C" {
 // var_info 
     void* new_handle_var_info();
     void  delete_handle_var_info(void* handle);
-    void  set_data_var_info(void* handle, char const *str, int name, int flag);
+    void  set_data_var_info(void* handle, char const *str1, char const *str2, char const *str3, int name, int flag);
 
 // cppwrappers of summa subroutines
     void  SolveCoupledEM(const double* dt, int* flag,
@@ -104,6 +104,8 @@ extern "C" {
 /*******************************************************************/
 struct  VarInfo {
     char const*   varname = "empty";
+    char const*   vardesc = "empty";
+    char const*   varunit = "empty";
 	int 		  vartype;
 	int			  varDesire;
 };
@@ -211,7 +213,7 @@ struct  VarInfo {
   }
   
   void set_var_info(VarInfo v, void* handle) {
-  		set_data_var_info(handle, v.varname, v.vartype, v.varDesire);
+  		set_data_var_info(handle, v.varname, v.vardesc, v.varunit, v.vartype, v.varDesire);
   }
 
   /*************** GET DATA **************/

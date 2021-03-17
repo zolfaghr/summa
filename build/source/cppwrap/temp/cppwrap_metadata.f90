@@ -68,10 +68,10 @@ contains
   end subroutine delete_handle_var_info
   
 !-----------------------------------
-  subroutine set_data_var_info(handle, varname, vartype, varDesire) bind(C, name='set_data_var_info')
+  subroutine set_data_var_info(handle, varname, vardesc, varunit, vartype, varDesire) bind(C, name='set_data_var_info')
     
     type(c_ptr), intent(in), 	value 			:: handle
-  	character(kind=c_char,len=1),intent(in)		:: varname(*)
+  	character(kind=c_char,len=1),intent(in)		:: varname(*), vardesc(*), varunit(*)
   	integer(c_int),intent(in),  value       	:: vartype   
   	integer(c_int),intent(in),  value       	:: varDesire
   	
@@ -81,12 +81,18 @@ contains
     call c_f_pointer(handle, p)
     
     call c_f_string(varname, p%varname, 64)
+    call c_f_string(vardesc, p%vardesc, 128)
+    call c_f_string(varunit, p%varunit, 64)
     p%vartype = vartype
     if(varDesire == 0)then; p%varDesire = .false.; else; p%varDesire = .true.; endif
     
     print *, p%varname
+    print *, p%vardesc
+    print *, p%varunit
     print *, p%vartype
     print *, p%varDesire
+    
+    stop 1
     
 
     

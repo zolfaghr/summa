@@ -10,6 +10,8 @@ use nrtype, integerMissing=>nr_integerMissing
  ! define derived type for model variables, including name, description, and units
  type,public :: var_info
   character(len=64)                      :: varname   = 'empty'         ! variable name
+  character(len=128)                     :: vardesc   = 'empty'         ! variable description
+  character(len=64)                      :: varunit   = 'empty'         ! variable units
   integer(i4b)                           :: vartype   = integerMissing  ! variable type
   logical(lgt)                           :: varDesire = .false.         ! flag to denote if the variable is desired for model output
  end type var_info
