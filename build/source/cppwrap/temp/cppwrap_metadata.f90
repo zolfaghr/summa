@@ -74,12 +74,12 @@ contains
     
     type(c_ptr), intent(in), 	value 			:: handle
   	character(kind=c_char,len=1),intent(in)		:: varname(*), vardesc(*), varunit(*)
-  	integer(c_int),intent(in),  value       	:: vartype 
+  	integer(c_int), intent(in),  value       	:: vartype 
     integer(c_int), intent(in), value 			:: ncVarID_size
     integer(c_int), intent(in) 					:: ncVarID(ncVarID_size)
     integer(c_int), intent(in), value 			:: statIndex_size
     integer(c_int), intent(in) 					:: statIndex(statIndex_size)  
-  	integer(c_int),intent(in),  value       	:: varDesire
+  	integer(c_int), intent(in),  value       	:: varDesire
   	
     type(var_info), pointer 					:: p
     character(len=:), allocatable 				:: temp
@@ -98,8 +98,7 @@ contains
     	p%statIndex(i) = statIndex(i)
     end do
     if(varDesire == 0)then; p%varDesire = .false.; else; p%varDesire = .true.; endif
-    
- 
+     
   end subroutine set_data_var_info
 
 

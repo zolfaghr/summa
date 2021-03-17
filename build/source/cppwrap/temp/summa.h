@@ -110,7 +110,7 @@ struct  VarInfo {
     std::vector<int> 	ncVarID;
     std::vector<int> 	statIndex;
 	int 		  		vartype;
-	int			  		varDesire;
+	int			  		varDesire = 0;
 };
 
 

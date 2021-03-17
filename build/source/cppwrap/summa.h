@@ -103,6 +103,7 @@ extern "C" {
 /*******************************************************************/
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
+// var_info 
 struct  VarInfo {
     char const*   		varname = "empty";
     char const*   		vardesc = "empty";
@@ -110,7 +111,7 @@ struct  VarInfo {
     std::vector<int> 	ncVarID;
     std::vector<int> 	statIndex;
 	int 		  		vartype;
-	int			  		varDesire;
+	int			  		varDesire = 0;
 };
 
 
