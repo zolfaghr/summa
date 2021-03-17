@@ -20,10 +20,11 @@ contains
     
   end function comp_len_string
 ! -----------------------------------------------------------  	
-  subroutine c_f_string64(c_str, f_str)
+  subroutine c_f_string(c_str, f_str, l)
   
   	character(kind=c_char,len=1),intent(in)		:: c_str(*)
-  	character(len=64),intent(out)				:: f_str
+  	integer, intent(in)							:: l
+  	character(len=l),intent(out)				:: f_str
   
   	character(len=:), allocatable 				:: temp
   	integer 									:: length   
@@ -35,7 +36,9 @@ contains
     
     f_str = temp
     
-  end subroutine c_f_string64
+    deallocate(temp)
+    
+  end subroutine c_f_string
 
 ! **************************** var_info ********************************
 
@@ -76,8 +79,8 @@ contains
 	length = comp_len_string(varname)
 	    
     call c_f_pointer(handle, p)
-    call c_f_string64(varname, p%varname)
     
+    call c_f_string(varname, p%varname, 64)
     p%vartype = vartype
     if(varDesire == 0)then; p%varDesire = .false.; else; p%varDesire = .true.; endif
     
