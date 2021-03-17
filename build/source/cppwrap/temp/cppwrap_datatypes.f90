@@ -8,6 +8,31 @@ implicit none
   
 contains
 
+  function comp_len_string(c_str) result(length)
+  	character(kind=c_char,len=1),intent(in)		:: c_str(*)
+  	integer 									:: length
+  	
+  	length=0
+    do
+       if (c_str(length+1) == C_NULL_CHAR) exit
+       length = length + 1
+    end do 
+    
+  end function comp_len_string
+! -----------------------------------------------------------  	
+!  subroutine c_f_string(c_str, f_str)
+  
+!  character(kind=c_char,len=1),intent(in)		:: c_str(*)
+!  character(len=:), allocatable 				:: f_str
+!  integer 										:: length   
+      
+!    length = comp_len_string(c_str)
+    
+!    allocate(character(len=length) :: temp)    
+!    temp = transfer(varname(1:length), temp)
+    
+!  end subroutine c_f_string
+
 ! **************************** var_info ********************************
 
   function new_handle_var_info() result(handle) bind(C, name='new_handle_var_info')
@@ -44,11 +69,8 @@ contains
     
     
     
-    length=0
-    do
-       if (varname(length+1) == C_NULL_CHAR) exit
-       length = length + 1
-    end do    
+	length = comp_len_string(varname)
+	    
     allocate(character(len=length) :: temp)    
     temp = transfer(varname(1:length), temp)
     
