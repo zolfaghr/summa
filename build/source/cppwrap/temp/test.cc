@@ -19,6 +19,7 @@ int main()  {
   vfo1.vardesc="this is vardesc variable";
   vfo1.varunit="this is varunit variable";
   vfo1.vartype = 4; vfo1.varDesire = true;
+  vfo1.statIndex = vec_i1;
 
 
 

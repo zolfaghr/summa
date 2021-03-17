@@ -80,6 +80,7 @@ contains
   	
     type(var_info), pointer 					:: p
     character(len=:), allocatable 				:: temp
+    integer :: i
 	    
     call c_f_pointer(handle, p)
     
@@ -87,12 +88,16 @@ contains
     call c_f_string(vardesc, p%vardesc, 128)
     call c_f_string(varunit, p%varunit, 64)
     p%vartype = vartype
+    do i=1,statIndex_size
+    	p%statIndex(i) = statIndex(i)
+    end do
     if(varDesire == 0)then; p%varDesire = .false.; else; p%varDesire = .true.; endif
     
     print *, p%varname
     print *, p%vardesc
     print *, p%varunit
     print *, p%vartype
+    print *, p%statIndex
     print *, p%varDesire
     
     stop 1
