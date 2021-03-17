@@ -16,6 +16,7 @@ use nrtype, integerMissing=>nr_integerMissing
   character(len=128)                     :: vardesc   = 'empty'         ! variable description
   character(len=64)                      :: varunit   = 'empty'         ! variable units
   integer(i4b)                           :: vartype   = integerMissing  ! variable type
+  integer(i4b),dimension(maxvarFreq)     :: ncVarID   = integerMissing  ! netcdf variable id (missing if frequency is not desired)
   integer(i4b),dimension(maxvarFreq)     :: statIndex = integerMissing  ! index of desired statistic for temporal aggregation
   logical(lgt)                           :: varDesire = .false.         ! flag to denote if the variable is desired for model output
  end type var_info

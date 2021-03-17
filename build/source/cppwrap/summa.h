@@ -91,7 +91,7 @@ extern "C" {
     void* new_handle_var_info();
     void  delete_handle_var_info(void* handle);
     void  set_data_var_info(void* handle, char const *str1, char const *str2, char const *str3,
-    					    int type, const int* index, int index_size, int flag);
+    					    int type, const int* ncid, int ncid_size, const int* index, int index_size, int flag);
 
 // cppwrappers of summa subroutines
     void  SolveCoupledEM(const double* dt, int* flag,
@@ -104,12 +104,13 @@ extern "C" {
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
 struct  VarInfo {
-    char const*   varname = "empty";
-    char const*   vardesc = "empty";
-    char const*   varunit = "empty";
-    std::vector<int> statIndex;
-	int 		  vartype;
-	int			  varDesire;
+    char const*   		varname = "empty";
+    char const*   		vardesc = "empty";
+    char const*   		varunit = "empty";
+    std::vector<int> 	ncVarID;
+    std::vector<int> 	statIndex;
+	int 		  		vartype;
+	int			  		varDesire;
 };
 
 
@@ -215,7 +216,8 @@ struct  VarInfo {
   }
   
   void set_var_info(VarInfo v, void* handle) {
-  		set_data_var_info(handle, v.varname, v.vardesc, v.varunit, v.vartype, &v.statIndex[0], v.statIndex.size(), v.varDesire);
+  		set_data_var_info(handle, v.varname, v.vardesc, v.varunit, v.vartype,
+  	                      &v.ncVarID[0], v.ncVarID.size(),  &v.statIndex[0], v.statIndex.size(), v.varDesire);
   }
 
   /*************** GET DATA **************/
