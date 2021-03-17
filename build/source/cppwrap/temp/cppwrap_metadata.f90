@@ -68,11 +68,14 @@ contains
   end subroutine delete_handle_var_info
   
 !-----------------------------------
-  subroutine set_data_var_info(handle, varname, vardesc, varunit, vartype, varDesire) bind(C, name='set_data_var_info')
+  subroutine set_data_var_info(handle, varname, vardesc, varunit, vartype, statIndex, statIndex_size, varDesire) &
+  							   bind(C, name='set_data_var_info')
     
     type(c_ptr), intent(in), 	value 			:: handle
   	character(kind=c_char,len=1),intent(in)		:: varname(*), vardesc(*), varunit(*)
-  	integer(c_int),intent(in),  value       	:: vartype   
+  	integer(c_int),intent(in),  value       	:: vartype 
+    integer(c_int), intent(in), value 			:: statIndex_size
+    integer(c_int), intent(in) 					:: statIndex(statIndex_size)  
   	integer(c_int),intent(in),  value       	:: varDesire
   	
     type(var_info), pointer 					:: p
