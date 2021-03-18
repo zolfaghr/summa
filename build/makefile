@@ -112,7 +112,8 @@ SOLVER = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_SOLVER))
 # C++ wrappers
 CPP_WRAP= \
 		cppwrap_datatypes.f90 \
-		cppwrap_summa.f90
+		cppwrap_metadata.f90 \
+		cppwrap_summa.f90 
 		
 WRAP = $(patsubst %, $(CPPWRAP_DIR)/%, $(CPP_WRAP))
 
