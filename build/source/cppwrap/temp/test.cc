@@ -7,7 +7,7 @@
 
 int main()  {
 
-  Summa S(1);
+  Summa S(10);
   
   std::vector<int> vec_i1{1,-2,3,-4,5}, vec_i2;
   std::vector<double> vec_d1{1.1,-2.2,3.3,-4.4,5.5}, vec_d2, vec_d3;

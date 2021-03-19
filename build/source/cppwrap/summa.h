@@ -94,6 +94,8 @@ extern "C" {
     					    int type, const int* ncid, int ncid_size, const int* index, int index_size, int flag);
 
 // cppwrappers of summa subroutines
+
+	void  DefineGlobalData();
     void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
     					 int* err);
@@ -555,6 +557,10 @@ public:
  
   
   /***** METHODS FROM SUMMA SUBROUTINES ****/
+  
+   void summa_defineGlobalData() {
+   		DefineGlobalData();   
+   }
   
    void coupled_em(size_t i) {
    		SolveCoupledEM(

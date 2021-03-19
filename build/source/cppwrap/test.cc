@@ -1,45 +1,58 @@
 #include <iostream>
+#include <stdio.h>
 #include <vector>
+#include<string.h>
 #include "summa.h"
 
 
 int main()  {
 
-  Summa S;
+  Summa S(10);
   
   std::vector<int> vec_i1{1,-2,3,-4,5}, vec_i2;
   std::vector<double> vec_d1{1.1,-2.2,3.3,-4.4,5.5}, vec_d2, vec_d3;
   std::vector<std::vector<int>> mat_i1{ { 11, 12, 13, 14 }, { 21, 22, 23 }, {31} }, mat_i2;
   std::vector<std::vector<double>> mat_d1{ { 1.1, 1.2, 1.3, 1.4 }, { 2.1, 2.2, 2.3 }, {3.1} }, mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
+  VarInfo  vfo1;
+ 
+  vfo1.varname="this is varname variable";
+  vfo1.vardesc="this is vardesc variable";
+  vfo1.varunit="this is varunit variable";
+  vfo1.vartype = 4; vfo1.varDesire = true;
+  vfo1.statIndex = vec_i1;
+  vfo1.ncVarID = {3,-100,12};
 
 
-  S.set_dt(60);
-  S.set_veg_fluxflag(true);
+
+  S.set_dt(0,60);
+  S.set_veg_fluxflag(0,true);
   
-  S.set_type(vec_i1);
-  S.set_attr(vec_d1);
-  S.set_forc(vec_d1);
-  S.set_mpar(mat_d1);
-  S.set_bvar(mat_d1);
-  S.set_indx(mat_i1);
-  S.set_prog(mat_d1);
-  S.set_diag(mat_d1);
-  S.set_flux(mat_d1);
+  S.set_type(0,vec_i1);
+  S.set_attr(0,vec_d1);
+  S.set_forc(0,vec_d1);
+  S.set_mpar(0,mat_d1);
+  S.set_bvar(0,mat_d1);
+  S.set_indx(0,mat_i1);
+  S.set_prog(0,mat_d1);
+  S.set_diag(0,mat_d1);
+  S.set_flux(0,mat_d1);
+  
+  S.set_indxmeta(0,vfo1);
 
   
-  S.coupled_em();
+  S.coupled_em(0);
   
    
-  vec_i2 = S.get_type();
-  vec_d2 = S.get_attr();
-  vec_d3 = S.get_forc();
-  mat_d3 = S.get_mpar();
-  mat_d4 = S.get_bvar();
-  mat_i2 = S.get_indx(); 
-  mat_d5 = S.get_prog();
-  mat_d2 = S.get_diag();
-  mat_d6 = S.get_flux(); 
-  int err = S.get_err();
+  vec_i2 = S.get_type(0);
+  vec_d2 = S.get_attr(0);
+  vec_d3 = S.get_forc(0);
+  mat_d3 = S.get_mpar(0);
+  mat_d4 = S.get_bvar(0);
+  mat_i2 = S.get_indx(0); 
+  mat_d5 = S.get_prog(0);
+  mat_d2 = S.get_diag(0);
+  mat_d6 = S.get_flux(0); 
+  int err = S.get_err(0);
   
    
  
@@ -114,6 +127,7 @@ int main()  {
   	std::cout << std::endl << "\t";
   } 
   std::cout << "\n" << "-----------------------" << std::endl;
+  
 
   return 0;
 }
