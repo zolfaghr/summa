@@ -79,7 +79,7 @@ contains
     integer(c_int), intent(in) 					:: ncVarID(ncVarID_size)
     integer(c_int), intent(in), value 			:: statIndex_size
     integer(c_int), intent(in) 					:: statIndex(statIndex_size)  
-  	integer(c_int), intent(in),  value       	:: varDesire
+  	integer(c_int), intent(in), value       	:: varDesire
   	
     type(var_info), pointer 					:: p
     character(len=:), allocatable 				:: temp

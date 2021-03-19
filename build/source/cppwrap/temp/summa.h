@@ -103,6 +103,7 @@ extern "C" {
 /*******************************************************************/
 /************************** STRUCTURES *****************************/ 
 /*******************************************************************/
+// var_info 
 struct  VarInfo {
     char const*   		varname = "empty";
     char const*   		vardesc = "empty";
@@ -417,9 +418,7 @@ struct  VarInfo {
 /************************** SUMMA CLASS ****************************/ 
 /*******************************************************************/
 
-class Summa {
-
-private:
+struct Block {
   double dt_init_;				// initial time step
   int	 veg_fluxflag_,			// flag to indicate if we are computing fluxes over vegetation
      	 err_;					// error conotrol
@@ -433,148 +432,161 @@ private:
    		*handle_diag_,			// model diagnostic variables
    		*handle_flux_,			// model fluxes
    		*handle_indxmeta_;
+};
+
+class Summa {
+
+private:
+	size_t n_;
+	std::vector<Block> block_;
 public:
 
   /************** CONSTRUCTOR *************/
-  Summa()  {
-    dt_init_ = 0;
-    veg_fluxflag_ = false;
-    err_ = 0;     
-  	handle_type_ = new_handle_var_i();
-  	handle_attr_ = new_handle_var_d();
-  	handle_forc_ = new_handle_var_d();
-  	handle_mpar_ = new_handle_var_dlength();
-  	handle_bvar_ = new_handle_var_dlength();
-  	handle_indx_ = new_handle_var_ilength();
-  	handle_prog_ = new_handle_var_dlength();
-  	handle_diag_ = new_handle_var_dlength();
-  	handle_flux_ = new_handle_var_dlength();
-  	handle_indxmeta_ = new_handle_var_info();
+  Summa(size_t n)  {
+  	n_ = n;
+  	block_ = std::vector<Block>(n);
+  	for(size_t i=0; i<n; ++i) {
+    	block_[i].dt_init_ = 0;
+    	block_[i].veg_fluxflag_ = false;
+    	block_[i].err_ = 0;     
+  		block_[i].handle_type_ = new_handle_var_i();
+  		block_[i].handle_attr_ = new_handle_var_d();
+  		block_[i].handle_forc_ = new_handle_var_d();
+  		block_[i].handle_mpar_ = new_handle_var_dlength();
+  		block_[i].handle_bvar_ = new_handle_var_dlength();
+  		block_[i].handle_indx_ = new_handle_var_ilength();
+  		block_[i].handle_prog_ = new_handle_var_dlength();
+  		block_[i].handle_diag_ = new_handle_var_dlength();
+  		block_[i].handle_flux_ = new_handle_var_dlength();
+  		block_[i].handle_indxmeta_ = new_handle_var_info();
+  	}
   }
   
   
   /*************** SET DATA **************/
   
-  void set_dt(double dt) {
-  	dt_init_ = dt;
+  void set_dt(size_t i, double dt) {
+  	block_[i].dt_init_ = dt;
   }
   
-  void set_veg_fluxflag(int flag) {
-  	veg_fluxflag_ = flag;
+  void set_veg_fluxflag(size_t i, int flag) {
+  	block_[i].veg_fluxflag_ = flag;
   }
   
-  void set_type(const std::vector<int>& arr_i) {
-       set_var_i(arr_i, handle_type_);
+  void set_type(size_t i, const std::vector<int>& arr_i) {
+     set_var_i(arr_i, block_[i].handle_type_);
   }
   
-  void set_attr(const std::vector<double> &arr_d) {
-       set_var_d(arr_d, handle_attr_);
+  void set_attr(size_t i, const std::vector<double> &arr_d) {
+       set_var_d(arr_d, block_[i].handle_attr_);
   }
   
-  void set_forc(const std::vector<double> &arr_d) {
-       set_var_d(arr_d, handle_forc_);
+  void set_forc(size_t i, const std::vector<double> &arr_d) {
+       set_var_d(arr_d, block_[i].handle_forc_);
   }
     
-  void set_mpar(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_mpar_); 
+  void set_mpar(size_t i, const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, block_[i].handle_mpar_); 
   } 
   
-  void set_bvar(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_bvar_); 
+  void set_bvar(size_t i, const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, block_[i].handle_bvar_); 
   } 
   
-  void set_indx(const std::vector<std::vector<int>> &mat) {
-  	   set_var_ilength(mat, handle_indx_); 
+  void set_indx(size_t i, const std::vector<std::vector<int>> &mat) {
+  	   set_var_ilength(mat, block_[i].handle_indx_); 
   }
   
-  void set_prog(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_prog_); 
+  void set_prog(size_t i, const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, block_[i].handle_prog_); 
   }
   
-  void set_diag(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_diag_); 
+  void set_diag(size_t i, const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, block_[i].handle_diag_); 
   }
   
-  void set_flux(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_flux_); 
+  void set_flux(size_t i, const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, block_[i].handle_flux_); 
   }
   
-  void set_indxmeta(VarInfo &v) {
-  	   set_var_info(v, handle_indxmeta_);
+  void set_indxmeta(size_t i, VarInfo &v) {
+  	   set_var_info(v, block_[i].handle_indxmeta_);
   }
   
   /*************** GET DATA **************/
   
-  std::vector<int> get_type() {
-    return get_var_i(handle_type_);
+  std::vector<int> get_type(size_t i) {
+    return get_var_i(block_[i].handle_type_);
   }
     
-  std::vector<double> get_attr() {
-  	return get_var_d(handle_attr_);
+  std::vector<double> get_attr(size_t i) {
+  	return get_var_d(block_[i].handle_attr_);
   }
   
-  std::vector<double> get_forc() {
-	return get_var_d(handle_forc_);
+  std::vector<double> get_forc(size_t i) {
+	return get_var_d(block_[i].handle_forc_);
   }
   
-  std::vector<std::vector<double>> get_mpar() {
-    return get_var_dlength(handle_mpar_);
+  std::vector<std::vector<double>> get_mpar(size_t i) {
+    return get_var_dlength(block_[i].handle_mpar_);
   }
   
-  std::vector<std::vector<double>> get_bvar() {
-    return get_var_dlength(handle_bvar_);
+  std::vector<std::vector<double>> get_bvar(size_t i) {
+    return get_var_dlength(block_[i].handle_bvar_);
   }
   
-  std::vector<std::vector<int>> get_indx() {
-    return get_var_ilength(handle_indx_);
+  std::vector<std::vector<int>> get_indx(size_t i) {
+    return get_var_ilength(block_[i].handle_indx_);
   }
   
-  std::vector<std::vector<double>> get_prog() {
-    return get_var_dlength(handle_prog_);
+  std::vector<std::vector<double>> get_prog(size_t i) {
+    return get_var_dlength(block_[i].handle_prog_);
   }
   
-  std::vector<std::vector<double>> get_diag() {
-    return get_var_dlength(handle_diag_);
+  std::vector<std::vector<double>> get_diag(size_t i) {
+    return get_var_dlength(block_[i].handle_diag_);
   }
   
-  std::vector<std::vector<double>> get_flux() {
-    return get_var_dlength(handle_flux_);
+  std::vector<std::vector<double>> get_flux(size_t i) {
+    return get_var_dlength(block_[i].handle_flux_);
   }
   
-  int get_err() { return err_; }
+  int get_err(size_t i) { return block_[i].err_; }
  
   
   /***** METHODS FROM SUMMA SUBROUTINES ****/
   
-   void coupled_em() {
+   void coupled_em(size_t i) {
    		SolveCoupledEM(
-   					 &dt_init_,
-   					 &veg_fluxflag_,
-   					 handle_type_,
-    				 handle_attr_,
-    				 handle_forc_,
-    				 handle_mpar_,
-    				 handle_bvar_,
-    				 handle_indx_,
-    				 handle_prog_,
-    				 handle_diag_,
-    				 handle_flux_,
-    				 &err_
+   					 &block_[i].dt_init_,
+   					 &block_[i].veg_fluxflag_,
+   					 block_[i].handle_type_,
+    				 block_[i].handle_attr_,
+    				 block_[i].handle_forc_,
+    				 block_[i].handle_mpar_,
+    				 block_[i].handle_bvar_,
+    				 block_[i].handle_indx_,
+    				 block_[i].handle_prog_,
+    				 block_[i].handle_diag_,
+    				 block_[i].handle_flux_,
+    				 &block_[i].err_
     				);
    }
   
   /************** DESTRUCTOR *************/
   ~Summa() { 
-  	delete_handle_var_i(handle_type_);
-  	delete_handle_var_d(handle_attr_);
-  	delete_handle_var_d(handle_forc_);
-  	delete_handle_var_dlength(handle_mpar_);
-  	delete_handle_var_dlength(handle_bvar_);
-  	delete_handle_var_ilength(handle_indx_);
-  	delete_handle_var_dlength(handle_prog_);
-  	delete_handle_var_dlength(handle_diag_);
-  	delete_handle_var_dlength(handle_flux_);
-  	delete_handle_var_info(handle_indxmeta_);
+  	for(size_t i=0; i<n_; ++i) {
+  		delete_handle_var_i(block_[i].handle_type_);
+  		delete_handle_var_d(block_[i].handle_attr_);
+  		delete_handle_var_d(block_[i].handle_forc_);
+  		delete_handle_var_dlength(block_[i].handle_mpar_);
+  		delete_handle_var_dlength(block_[i].handle_bvar_);
+  		delete_handle_var_ilength(block_[i].handle_indx_);
+  		delete_handle_var_dlength(block_[i].handle_prog_);
+  		delete_handle_var_dlength(block_[i].handle_diag_);
+  		delete_handle_var_dlength(block_[i].handle_flux_);
+  		delete_handle_var_info(block_[i].handle_indxmeta_);
+  	 }
    }
 };
 
