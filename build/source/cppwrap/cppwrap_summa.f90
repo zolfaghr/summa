@@ -28,7 +28,7 @@ contains
   character(len=256)               :: message
   
   ! define global data (parameters, metadata)
-  call summa_defineGlobalData(err, cmessage)
+  call summa_defineGlobalData(err, message)
   
   
   

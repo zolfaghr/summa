@@ -33,6 +33,7 @@ EXE_PATH = $(F_MASTER)/bin
 #========================================================================
 
 # Define directories
+DRIVER_DIR = $(F_KORE_DIR)/driver
 HOOKUP_DIR = $(F_KORE_DIR)/hookup
 DSHARE_DIR = $(F_KORE_DIR)/dshare
 NUMREC_DIR = $(F_KORE_DIR)/numrec
@@ -159,7 +160,13 @@ MODRUN = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_MODRUN))
 COMM_ALL = $(NRUTIL) $(NRPROC) $(HOOKUP) $(DATAMS) $(UTILMS)
 
 # ... stitch together SUMMA programs
-SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER) $(WRAP)
+SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER) $(DRIVER) $(WRAP)
+
+# Define the driver routine
+SUMMA_DRIVER= \
+		summa_globalData.f90 
+		
+DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 
 
 #========================================================================

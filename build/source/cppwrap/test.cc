@@ -41,6 +41,7 @@ int main()  {
 
   
   S.coupled_em(0);
+  S.summa_defineGlobalData();
   
    
   vec_i2 = S.get_type(0);
