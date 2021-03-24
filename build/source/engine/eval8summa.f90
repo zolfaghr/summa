@@ -148,7 +148,7 @@ contains
  ! provide access to subroutines
  USE getVectorz_module, only:varExtract           ! extract variables from the state vector
  USE updateVars_module, only:updateVars           ! update prognostic variables
- USE t2enthalpy_module, only:t2enthalpy           ! compute enthalpy
+ USE t2enthalpy_module, only:t2enthalpy_T         ! compute enthalpy
  USE computFlux_module, only:soilCmpres           ! compute soil compression
  USE computFlux_module, only:computFlux           ! compute fluxes given a state vector
  USE computResid_module,only:computResid          ! compute residuals given a state vector
@@ -398,7 +398,7 @@ contains
  
  ! compute enthalpy (J m-3)
  if(needEnthalpy)then
-  call t2enthalpy(&
+  call t2enthalpy_T(&
                   ! input: data structures
                   diag_data,                   & ! intent(in):  model diagnostic variables for a local HRU
                   mpar_data,                   & ! intent(in):  parameter data structure
