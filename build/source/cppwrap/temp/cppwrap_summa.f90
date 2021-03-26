@@ -10,10 +10,29 @@ module cppwrap_summa
 
   ! privacy
   implicit none
+  public::DefineGlobalData
   public::SolveCoupledEM
 
 
 contains
+
+  ! **********************************************************************************************************
+  ! public subroutine SolveCoupledEM: solving coupled energy-mass equations for one timestep
+  ! **********************************************************************************************************
+  subroutine DefineGlobalData() bind(C, name ='DefineGlobalData')
+  
+!  use summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
+  
+  implicit none
+  integer(c_int)				   :: err
+  character(len=256)               :: message
+  
+  ! define global data (parameters, metadata)
+!  call summa_defineGlobalData(err, message)
+  
+  
+  
+  end subroutine DefineGlobalData
 
   ! **********************************************************************************************************
   ! public subroutine SolveCoupledEM: solving coupled energy-mass equations for one timestep

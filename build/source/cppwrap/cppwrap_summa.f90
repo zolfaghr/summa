@@ -21,14 +21,14 @@ contains
   ! **********************************************************************************************************
   subroutine DefineGlobalData() bind(C, name ='DefineGlobalData')
   
-  use summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
+!  use summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
   
   implicit none
   integer(c_int)				   :: err
   character(len=256)               :: message
   
   ! define global data (parameters, metadata)
-  call summa_defineGlobalData(err, message)
+!  call summa_defineGlobalData(err, message)
   
   
   
