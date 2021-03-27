@@ -670,10 +670,11 @@ contains
  indx_meta(iLookINDEX%numberDomainSplitNrg)  = var_info('numberDomainSplitNrg' , 'number of domain splitting solutions for energy'                         , '-', get_ixVarType('scalarv'), iMissVec, iMissVec, .false.)
  indx_meta(iLookINDEX%numberDomainSplitMass) = var_info('numberDomainSplitMass', 'number of domain splitting solutions for mass'                           , '-', get_ixVarType('scalarv'), iMissVec, iMissVec, .false.)
  indx_meta(iLookINDEX%numberScalarSolutions) = var_info('numberScalarSolutions', 'number of scalar solutions'                                              , '-', get_ixVarType('scalarv'), iMissVec, iMissVec, .false.)
-
+ 
+ 
  ! read file to define model output (modifies metadata structures)
- call read_output_file(err,cmessage)
- if (err.ne.0) message=trim(message)//trim(cmessage)
+ !call read_output_file(err,cmessage)
+ !if (err.ne.0) message=trim(message)//trim(cmessage)
 
  end subroutine popMetadat
 
