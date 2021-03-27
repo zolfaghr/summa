@@ -160,7 +160,7 @@ MODRUN = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_MODRUN))
 COMM_ALL = $(NRUTIL) $(NRPROC) $(HOOKUP) $(DATAMS) $(UTILMS)
 
 # ... stitch together SUMMA programs
-SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER) $(DRIVER) $(WRAP)
+SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER) 
 
 # Define the driver routine
 SUMMA_DRIVER= \
@@ -189,7 +189,7 @@ compile_comm:
 
 # compile SUMMA routines
 compile_summa: 
-	$(FC_EXE) $(FLAGS_SUMMA) -c $(SUMMA_ALL) $(INCLUDES)
+	$(FC_EXE) $(FLAGS_SUMMA) -c $(SUMMA_ALL) $(DRIVER) $(WRAP) $(INCLUDES)
 
 # generate library
 link:   
