@@ -1,0 +1,50 @@
+
+
+summa_init
+		 getCommandArguments
+		 summa_SetTimesDirsAndFiles
+		 summa_defineGlobalData
+		 **read the number of GRUs and HRUs**
+		 **read the number of snow and soil layers**
+		 **allocate space for data structures**
+		 **allocate space for output statistics data structures**
+		 **define the suffix for the model output file**
+		 
+		 
+summa_setup
+		 ffile_info (read information on forcing datafile; output: forcFileInfo, data_step and gru_struc in globalData)
+		 mDecisions (read model decisions; output: model_decision in globalData)
+		 read_attrb (read local attributes; output: summa1_struc%attrStruct, summa1_struc%typeStruct, summa1_struc%idStruct)
+		 read_param (read trial model parameter values; output: summa1_struc%mparStruct, summa1_struc%dparStruct)
+
+
+summa_readRestart
+		 read_icond (read initial conditions; output: summa1_struc%progStruct, summa1_struc%bvarStruct, summa1_struc%indxStruct)
+		 **compute ancillary variables**
+		 **initialize aquifer storage**
+		 **initialize time step**
+		 
+		 
+summa_readForcing
+		 read_force (read model forcing data; output: summa1_struc%timeStruct, summa1_struc%forcStruct)
+		 
+
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+had to commented out the following from popMetadat:
+	call read_output_file(err,cmessage)
+		 
+		 
+		 
