@@ -29,7 +29,7 @@ type, public :: summa4chm_type_dec
     type(var_dlength)          :: bvarStat                   ! x%var(:)%dat -- basin-average variabl
 
     ! define the primary data structures (scalars)
-    type(var_i)                :: timeStruct                 ! x%var(:)                   -- model time data
+    type(var_i)                :: timeStruct                 ! x%var(:)     -- model time data
     type(var_d)                :: forcStruct                 ! x%var(:)     -- model forcing data
     type(var_d)                :: attrStruct                 ! x%var(:)     -- local attributes for each HRU
     type(var_i)                :: typeStruct                 ! x%var(:)     -- local classification of soil veg etc. for each HRU
@@ -44,10 +44,10 @@ type, public :: summa4chm_type_dec
 
     ! define the basin-average structures
     type(var_d)                :: bparStruct                 ! x%var(:)            -- basin-average parameters
-    type(var_dlength)          :: bvarStruct                 ! x%gru(:)%var(:)%dat        -- basin-average variables
+    type(var_dlength)          :: bvarStruct                 ! x%var(:)%dat -- basin-average variables
 
     ! define the ancillary data structures
-    type(var_d)                :: dparStruct                 ! x%gru(:)%hru(:)%var(:)     -- default model parameters
+    type(var_d)                :: dparStruct                 ! x%var(:)     -- default model parameters
 
     ! define the run-time variables
     integer(i4b)               :: computeVegFlux             ! flag to indicate if we are computing fluxes over vegetation (.false. means veg is buried with snow)

@@ -194,7 +194,7 @@ contains
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: arr_size
-    integer(c_int), intent(in) :: array(arr_size)
+    integer(c_long), intent(in) :: array(arr_size)
     type(var_i8), pointer :: p
     
     call c_f_pointer(handle, p)    
@@ -230,7 +230,7 @@ contains
   subroutine get_data_var_i8(handle, array) bind(C, name='get_data_var_i8')
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: array(*)
+    integer(c_long), intent(out) :: array(*)
     type(var_i8), pointer :: p
     
     call c_f_pointer(handle, p)
@@ -342,7 +342,7 @@ contains
     
     type(c_ptr), intent(in), value :: handle
     integer(c_int), intent(in), value :: arr_size
-    integer(c_int), intent(in) :: array(arr_size)
+    integer(c_long), intent(in) :: array(arr_size)
     type(i8length), pointer :: p
     
     call c_f_pointer(handle, p)    
@@ -378,7 +378,7 @@ contains
   subroutine get_data_i8length(handle, array) bind(C, name='get_data_i8length')
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: array(*)
+    integer(c_long), intent(out) :: array(*)
     type(i8length), pointer :: p
     
     call c_f_pointer(handle, p)
@@ -807,7 +807,7 @@ contains
     integer(c_int), intent(in), value :: num_row
     integer(c_int), intent(in), value :: num_elements
     integer(c_int), intent(in)   	  :: num_col(num_row) 
-    integer(c_int), intent(in)        :: array(num_elements)
+    integer(c_long), intent(in)        :: array(num_elements)
     type(var_i8length), pointer :: p
     integer(c_int)  :: i,j,sum_elem
     
@@ -874,7 +874,7 @@ contains
   subroutine get_data_var_i8length(handle, array) bind(C, name='get_data_var_i8length')
     
     type(c_ptr), intent(in), value :: handle
-    integer(c_int), intent(out) :: array(*)
+    integer(c_long), intent(out) :: array(*)
     type(var_i8length), pointer :: p
     integer(c_int)  :: i,j,size_var,size_dat,size_array
     

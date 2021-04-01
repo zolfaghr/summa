@@ -23,9 +23,9 @@ extern "C" {
 // var_i8 
     void* new_handle_var_i8();
     void  delete_handle_var_i8(void* handle);
-    void  set_data_var_i8(void* handle, const int* array, int size);
+    void  set_data_var_i8(void* handle, const long int* array, int size);
     void  get_size_data_var_i8(void* handle, int* size);
-    void  get_data_var_i8(void* handle, int* array);
+    void  get_data_var_i8(void* handle, long int* array);
 
 // var_d
     void* new_handle_var_d();
@@ -44,9 +44,9 @@ extern "C" {
 // i8length
     void* new_handle_i8length();
     void  delete_handle_i8length(void* handle);
-    void  set_data_i8length(void* handle, const int* array, int size);
+    void  set_data_i8length(void* handle, const long int* array, int size);
     void  get_size_data_i8length(void* handle, int* size);
-    void  get_data_i8length(void* handle, int* array);
+    void  get_data_i8length(void* handle, long int* array);
 
 // dlength
     void* new_handle_dlength();
@@ -74,10 +74,10 @@ extern "C" {
 // var_i8length
     void* new_handle_var_i8length();
     void  delete_handle_var_i8length(void* handle);
-    void  set_data_var_i8length(void* handle, const int* array, int num_row, const int* num_col, int num_elements);
+    void  set_data_var_i8length(void* handle, const long int* array, int num_row, const int* num_col, int num_elements);
     void  get_size_var_i8length(void* handle, int* num_var);
     void  get_size_data_var_i8length(void* handle, int* num_var, int* num_dat);
-    void  get_data_var_i8length(void* handle, int* array);
+    void  get_data_var_i8length(void* handle, long int* array);
 
 // var_dlength
     void* new_handle_var_dlength();
@@ -134,11 +134,11 @@ struct  VarInfo {
        set_data_var_d(handle, &arr_d[0], arr_d.size());
   }
   
-  void set_var_i8(const std::vector<int>& arr_i, void* handle) {
+  void set_var_i8(const std::vector<long int>& arr_i, void* handle) {
        ::set_data_var_i8(handle, &arr_i[0], arr_i.size());
   }
   
-  void set_i8length(const std::vector<int> &arr_i8length, void* handle) {
+  void set_i8length(const std::vector<long int> &arr_i8length, void* handle) {
        set_data_i8length(handle, &arr_i8length[0], arr_i8length.size());
   }
   
@@ -184,11 +184,11 @@ struct  VarInfo {
        set_data_var_ilength(handle, &array[0], num_row, &num_col[0], num_elements);
   }
   
-  void set_var_i8length(const std::vector<std::vector<int>> &mat, void* handle) {
+  void set_var_i8length(const std::vector<std::vector<long int>> &mat, void* handle) {
   
   	   size_t num_row = mat.size();
   	   std::vector<int> num_col( num_row );
-  	   std::vector<int> array;
+  	   std::vector<long int> array;
   	   
   	   int num_elements = 0;
   	   for(size_t i=0; i<num_row; i++) {
@@ -256,22 +256,22 @@ struct  VarInfo {
     return array;
   }
   
-  std::vector<int> get_var_i8(void* handle) {
+  std::vector<long int> get_var_i8(void* handle) {
     int size;
     get_size_data_var_i8(handle, &size);
-    if (size == 0) return std::vector<int>();
+    if (size == 0) return std::vector<long int>();
 
-    std::vector<int> array(size);
+    std::vector<long int> array(size);
     get_data_var_i8(handle, &array[0]);
     return array;
   }
   
-  std::vector<int> get_i8length(void* handle) {
+  std::vector<long int> get_i8length(void* handle) {
     int size;
     get_size_data_i8length(handle, &size);
-    if (size == 0) return std::vector<int>();
+    if (size == 0) return std::vector<long int>();
 
-    std::vector<int> array(size);
+    std::vector<long int> array(size);
     get_data_i8length(handle, &array[0]);
     return array;
   }
@@ -356,10 +356,10 @@ struct  VarInfo {
     return mat;
   }
   
-  std::vector<std::vector<int>> get_var_i8length(void* handle) {
+  std::vector<std::vector<long int>> get_var_i8length(void* handle) {
     int num_row;
     get_size_var_i8length(handle, &num_row);
-    if (num_row == 0) return std::vector<std::vector<int>>();
+    if (num_row == 0) return std::vector<std::vector<long int>>();
     
     std::vector<int> num_col(num_row);
     get_size_data_var_i8length(handle, &num_row, &num_col[0]);
@@ -368,13 +368,13 @@ struct  VarInfo {
     for(int i=0; i<num_row; i++)
     	num_elem += num_col[i];   	
 
-    std::vector<int> array(num_elem);
+    std::vector<long int> array(num_elem);
 
     get_data_var_i8length(handle, &array[0]);
     
-    std::vector<std::vector<int>> mat(num_row);
+    std::vector<std::vector<long int>> mat(num_row);
     for(size_t i=0; i<num_row; i++)
-    	mat[i] = std::vector<int>(num_col[i]);
+    	mat[i] = std::vector<long int>(num_col[i]);
 
     num_elem = 0;
     for(size_t i=0; i<num_row; i++){
