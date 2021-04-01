@@ -238,6 +238,8 @@ contains
  ! initialize error control
  err=0; message="coupled_em/"
  
+ print *, 'in coupled_em 0'
+ 
 
  ! This is the start of a data step for a local HRU
 
@@ -247,6 +249,8 @@ contains
   message=trim(message)//'expect "spatial_gw" decision to equal localColumn when "groundwatr" decision is bigBucket'
   err=20; return
  endif
+ 
+ print *, 'in coupled_em 1'
 
  ! check if the aquifer is included
  includeAquifer = (model_decisions(iLookDECISIONS%groundwatr)%iDecision==bigBucket)
@@ -260,6 +264,8 @@ contains
 
  ! link canopy depth to the information in the data structure
  canopy: associate(canopyDepth => diag_data%var(iLookDIAG%scalarCanopyDepth)%dat(1) )  ! intent(out): [dp] canopy depth (m)
+ 
+  print *, 'in coupled_em 2'
 
  ! start by NOT pausing
  pauseFlag=.false.
@@ -283,6 +289,8 @@ contains
 
  ! compute the total number of snow and soil layers
  nLayers = nSnow + nSoil
+ 
+ print *, 'in coupled_em 3'
 
  ! create temporary data structures for prognostic variables
  call resizeData(prog_meta(:),prog_data,prog_temp,err=err,message=cmessage)
