@@ -459,8 +459,8 @@ private:
     	int  	nGRU_;            	// number of grouped response units
     	int 	nHRU_;            	// number of global hydrologic response units
     	int 	hruCount_;          // number of local hydrologic response units
-//    	double 	greenVegFrac_monthly_[12];   // fraction of green vegetation in each month (0-1)
-//    	character(len=256)         :: summaFileManagerFile       ! path/name of file defining directories and files
+    	std::vector<double> greenVegFrac_monthly_;      // fraction of green vegetation in each month (0-1)
+    	char const*         summaFileManagerFile;       // path/name of file defining directories and files
 
 /*********************** others ****************************/
 		int     err_;			    // error conotrol
@@ -494,6 +494,8 @@ public:
     	handle_bvarStruct_ = new_handle_var_dlength();
         // ancillary data structures
     	handle_dparStruct_ = new_handle_var_d(); 
+    	// miscellaneous variables
+    	greenVegFrac_monthly_ = std::vector<double>(12); 
    }
    
   /*************** SET DATA **************/
