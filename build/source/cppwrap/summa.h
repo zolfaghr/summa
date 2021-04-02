@@ -422,127 +422,255 @@ struct  VarInfo {
 
 class Summa {
 
-private:
-  double dt_init_;				// initial time step
-  int	 veg_fluxflag_,			// flag to indicate if we are computing fluxes over vegetation
-     	 err_;					// error conotrol
-  void  *handle_type_,			// local classification of soil veg etc.
-  	    *handle_attr_,			// local attributes
-   		*handle_forc_,			// model forcing data
-   		*handle_mpar_,			// model parameters
-   		*handle_bvar_,			// basin-average model variables
-   		*handle_indx_,			// model indices
-   		*handle_prog_,			// model prognostic variables
-   		*handle_diag_,			// model diagnostic variables
-   		*handle_flux_,			// model fluxes
-   		*handle_indxmeta_;
+private: 
+/*********************** summa4chm_type ****************************/
+   // statistics structures
+  void  *handle_forcStat_,			// model forcing data	
+     	*handle_progStat_,			// model prognostic (state) variables                   
+        *handle_diagStat_,			// model diagnostic variables                  
+        *handle_fluxStat_,			// model fluxes                 
+        *handle_indxStat_,			// model indices            
+        *handle_bvarStat_,			// basin-average variables  
+   // primary data structures (scalars)
+        *handle_timeStruct_,		// model time data
+    	*handle_forcStruct_,		// model forcing data
+    	*handle_attrStruct_,		// local attributes for each HRU
+    	*handle_typeStruct_,		// local classification of soil veg etc. for each HRU
+    	*handle_idStruct_,		
+   // primary data structures (variable length vectors)
+    	*handle_indxStruct_,		// model indices
+    	*handle_mparStruct_,		// model parameters
+    	*handle_progStruct_,		// model prognostic (state) variables
+    	*handle_diagStruct_,		// model diagnostic variables
+    	*handle_fluxStruct_,		// model fluxes     
+   // basin-average structures
+    	*handle_bparStruct_,		// basin-average parameters
+    	*handle_bvarStruct_,		// basin-average variables
+   // ancillary data structures
+    	*handle_dparStruct_;		// default model parameters    	
+   // run-time variables
+    	int 	computeVegFlux_; 	// flag to indicate if we are computing fluxes over vegetation
+    	double  dt_init_;           // used to initialize the length of the sub-step for each HRU
+    	double	upArea_;            // area upslope of each HRU
+   // miscellaneous variables
+    	int 	summa1open_;        // flag to define if the summa file is open??
+    	int 	numout_;            // number of output variables??
+    	double 	ts_;            	// model time step ??
+    	int  	nGRU_;            	// number of grouped response units
+    	int 	nHRU_;            	// number of global hydrologic response units
+    	int 	hruCount_;          // number of local hydrologic response units
+//    	double 	greenVegFrac_monthly_[12];   // fraction of green vegetation in each month (0-1)
+//    	character(len=256)         :: summaFileManagerFile       ! path/name of file defining directories and files
+
+/*********************** others ****************************/
+		int     err_;			    // error conotrol
+		
 public:
 
+   Summa() {
+   
   /************** CONSTRUCTOR *************/
-  Summa()  {
-    	dt_init_ = 0;
-    	veg_fluxflag_ = false;
-    	err_ = 0;     
-  		handle_type_ = new_handle_var_i();
-  		handle_attr_ = new_handle_var_d();
-  		handle_forc_ = new_handle_var_d();
-  		handle_mpar_ = new_handle_var_dlength();
-  		handle_bvar_ = new_handle_var_dlength();
-  		handle_indx_ = new_handle_var_ilength();
-  		handle_prog_ = new_handle_var_dlength();
-  		handle_diag_ = new_handle_var_dlength();
-  		handle_flux_ = new_handle_var_dlength();
-  		handle_indxmeta_ = new_handle_var_info();
+        // statistics structures
+   		handle_forcStat_ = new_handle_var_dlength();	
+     	handle_progStat_ = new_handle_var_dlength();                   
+        handle_diagStat_ = new_handle_var_dlength();                
+        handle_fluxStat_ = new_handle_var_dlength();                 
+        handle_indxStat_ = new_handle_var_dlength();            
+        handle_bvarStat_ = new_handle_var_dlength();  
+        // primary data structures (scalars)
+        handle_timeStruct_ = new_handle_var_i();
+    	handle_forcStruct_ = new_handle_var_d();
+    	handle_attrStruct_ = new_handle_var_d();
+    	handle_typeStruct_ = new_handle_var_i();
+    	handle_idStruct_   = new_handle_var_i8();
+    	// primary data structures (variable length vectors)
+    	handle_indxStruct_ = new_handle_var_ilength();
+    	handle_mparStruct_ = new_handle_var_dlength();
+    	handle_progStruct_ = new_handle_var_dlength();
+    	handle_diagStruct_ = new_handle_var_dlength();
+    	handle_fluxStruct_ = new_handle_var_dlength();  
+    	// basin-average structures
+    	handle_bparStruct_ = new_handle_var_d();
+    	handle_bvarStruct_ = new_handle_var_dlength();
+        // ancillary data structures
+    	handle_dparStruct_ = new_handle_var_d(); 
+   }
+   
+  /*************** SET DATA **************/
+  // statistics structures
+  void set_forcStat(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_forcStat_); 
+  }  
+  
+  void set_progStat(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_progStat_); 
   }
   
+  void set_diagStat(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_diagStat_); 
+  }
   
-  /*************** SET DATA **************/
+  void set_fluxStat(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_fluxStat_); 
+  }
+  
+  void set_indxStat(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_indxStat_); 
+  }
+  
+  void set_bvarStat(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_bvarStat_); 
+  }
+  
+  // primary data structures (scalars)
+  void set_timeStruct(const std::vector<int>& arr) {
+     set_var_i(arr, handle_timeStruct_);
+  }
+  
+  void set_forcStruct(const std::vector<double>& arr) {
+     set_var_d(arr, handle_forcStruct_);
+  }
+  
+  void set_attrStruct(const std::vector<double>& arr) {
+     set_var_d(arr, handle_attrStruct_);
+  }
+  
+  void set_typeStruct(const std::vector<int>& arr) {
+     set_var_i(arr, handle_typeStruct_);
+  }
+  
+  void set_typeStruct(const std::vector<long int>& arr) {
+     set_var_i8(arr, handle_idStruct_);
+  }
+  
+  // primary data structures (variable length vectors)
+   void set_indxStruct(const std::vector<std::vector<int>> &mat) {
+  	  set_var_ilength(mat, handle_indxStruct_); 
+  }
+  
+   void set_mparStruct(const std::vector<std::vector<double>> &mat) {
+  	  set_var_dlength(mat, handle_mparStruct_); 
+  }
+  
+   void set_progStruct(const std::vector<std::vector<double>> &mat) {
+  	  set_var_dlength(mat, handle_progStruct_); 
+  }
+
+   void set_diagStruct(const std::vector<std::vector<double>> &mat) {
+  	  set_var_dlength(mat, handle_diagStruct_); 
+  }
+  
+   void set_fluxStruct(const std::vector<std::vector<double>> &mat) {
+  	  set_var_dlength(mat, handle_fluxStruct_); 
+  }
+  
+  // basin-average structures
+   void set_bparStruct(const std::vector<double>& arr) {
+     set_var_d(arr, handle_bparStruct_);
+  }
+  
+  void set_bvarStruct(const std::vector<std::vector<double>> &mat) {
+  	   set_var_dlength(mat, handle_bvarStruct_); 
+  } 
+  
+  // ancillary data structures
+   void set_dparStruct(const std::vector<double>& arr) {
+     set_var_d(arr, handle_dparStruct_);
+  }  
+  
+  // others
   
   void set_dt(double dt) {
   	dt_init_ = dt;
   }
   
   void set_veg_fluxflag(int flag) {
-  	veg_fluxflag_ = flag;
-  }
-  
-  void set_type(const std::vector<int>& arr_i) {
-     set_var_i(arr_i, handle_type_);
-  }
-  
-  void set_attr(const std::vector<double> &arr_d) {
-       set_var_d(arr_d, handle_attr_);
-  }
-  
-  void set_forc(const std::vector<double> &arr_d) {
-       set_var_d(arr_d, handle_forc_);
-  }
-    
-  void set_mpar(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_mpar_); 
-  } 
-  
-  void set_bvar(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_bvar_); 
-  } 
-  
-  void set_indx(const std::vector<std::vector<int>> &mat) {
-  	   set_var_ilength(mat, handle_indx_); 
-  }
-  
-  void set_prog(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_prog_); 
-  }
-  
-  void set_diag(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_diag_); 
-  }
-  
-  void set_flux(const std::vector<std::vector<double>> &mat) {
-  	   set_var_dlength(mat, handle_flux_); 
-  }
-  
-  void set_indxmeta(VarInfo &v) {
-  	   set_var_info(v, handle_indxmeta_);
+  	computeVegFlux_ = flag;
   }
   
   /*************** GET DATA **************/
+  // statistics structures
+  std::vector<std::vector<double>> get_forcStat() {
+    return get_var_dlength(handle_forcStat_);
+  }  
   
-  std::vector<int> get_type() {
-    return get_var_i(handle_type_);
+  std::vector<std::vector<double>> get_progStat() {
+    return get_var_dlength(handle_progStat_);
+  }
+  
+  std::vector<std::vector<double>> get_diagStat() {
+    return get_var_dlength(handle_diagStat_);
+  }
+  
+  std::vector<std::vector<double>> get_fluxStat() {
+    return get_var_dlength(handle_fluxStat_);
+  }
+  
+  std::vector<std::vector<double>> get_indxStat() {
+    return get_var_dlength(handle_indxStat_);
+  }
+  
+  std::vector<std::vector<double>> get_bvarStat() {
+    return get_var_dlength(handle_bvarStat_);
+  }
+  
+  // primary data structures (scalars)
+  std::vector<int> get_timeStruct() {
+    return get_var_i(handle_timeStruct_);
   }
     
-  std::vector<double> get_attr() {
-  	return get_var_d(handle_attr_);
+  std::vector<double> get_forcStruct() {
+  	return get_var_d(handle_forcStruct_);
   }
   
-  std::vector<double> get_forc() {
-	return get_var_d(handle_forc_);
+  std::vector<double> get_attrStruct() {
+  	return get_var_d(handle_attrStruct_);
   }
   
-  std::vector<std::vector<double>> get_mpar() {
-    return get_var_dlength(handle_mpar_);
+  std::vector<int> get_typeStruct() {
+  	return get_var_i(handle_typeStruct_);
   }
   
-  std::vector<std::vector<double>> get_bvar() {
-    return get_var_dlength(handle_bvar_);
+  std::vector<long int> get_idStruct() {
+  	return get_var_i8(handle_idStruct_);
   }
   
-  std::vector<std::vector<int>> get_indx() {
-    return get_var_ilength(handle_indx_);
+  // primary data structures (variable length vectors)
+  std::vector<std::vector<int>> get_indxStruct() {
+    return get_var_ilength(handle_indxStruct_);
   }
   
-  std::vector<std::vector<double>> get_prog() {
-    return get_var_dlength(handle_prog_);
+  std::vector<std::vector<double>> get_mparStruct() {
+    return get_var_dlength(handle_mparStruct_);
   }
   
-  std::vector<std::vector<double>> get_diag() {
-    return get_var_dlength(handle_diag_);
+  std::vector<std::vector<double>> get_progStruct() {
+    return get_var_dlength(handle_progStruct_);
   }
   
-  std::vector<std::vector<double>> get_flux() {
-    return get_var_dlength(handle_flux_);
+  std::vector<std::vector<double>> get_diagStruct() {
+    return get_var_dlength(handle_diagStruct_);
   }
+  
+  std::vector<std::vector<double>> get_fluxStruct() {
+    return get_var_dlength(handle_fluxStruct_);
+  }
+  
+  // basin-average structures
+  std::vector<double> get_pbarStruct() {
+  	return get_var_d(handle_bparStruct_);
+  }
+  
+  std::vector<std::vector<double>> get_bvarStruct() {
+    return get_var_dlength(handle_bvarStruct_);
+  }
+  
+  // ancillary data structures
+  std::vector<double> get_dparStruct() {
+  	return get_var_d(handle_dparStruct_);
+  }
+  
+  // others
   
   int get_err() { return err_; }
  
@@ -556,32 +684,46 @@ public:
    void coupled_em() {
    		SolveCoupledEM(
    					 &dt_init_,
-   					 &veg_fluxflag_,
-   					 handle_type_,
-    				 handle_attr_,
-    				 handle_forc_,
-    				 handle_mpar_,
-    				 handle_bvar_,
-    				 handle_indx_,
-    				 handle_prog_,
-    				 handle_diag_,
-    				 handle_flux_,
+   					 &computeVegFlux_,
+   					 handle_typeStruct_,
+    				 handle_attrStruct_,
+    				 handle_forcStruct_,
+    				 handle_mparStruct_,
+    				 handle_bvarStruct_,
+    				 handle_indxStruct_,
+    				 handle_progStruct_,
+    				 handle_diagStruct_,
+    				 handle_fluxStruct_,
     				 &err_
     				);
    }
   
   /************** DESTRUCTOR *************/
   ~Summa() { 
-  		delete_handle_var_i(handle_type_);
-  		delete_handle_var_d(handle_attr_);
-  		delete_handle_var_d(handle_forc_);
-  		delete_handle_var_dlength(handle_mpar_);
-  		delete_handle_var_dlength(handle_bvar_);
-  		delete_handle_var_ilength(handle_indx_);
-  		delete_handle_var_dlength(handle_prog_);
-  		delete_handle_var_dlength(handle_diag_);
-  		delete_handle_var_dlength(handle_flux_);
-  		delete_handle_var_info(handle_indxmeta_);
+  		 // statistics structures
+   		 delete_handle_var_dlength(handle_forcStat_);	
+     	 delete_handle_var_dlength(handle_progStat_);                   
+         delete_handle_var_dlength(handle_diagStat_);                
+         delete_handle_var_dlength(handle_fluxStat_);                 
+         delete_handle_var_dlength(handle_indxStat_);            
+         delete_handle_var_dlength(handle_bvarStat_);  
+         // primary data structures (scalars)
+         delete_handle_var_i(handle_timeStruct_);
+    	 delete_handle_var_d(handle_forcStruct_);
+    	 delete_handle_var_d(handle_attrStruct_);
+    	 delete_handle_var_i(handle_typeStruct_);
+    	 delete_handle_var_i8(handle_idStruct_);
+    	 // primary data structures (variable length vectors)
+    	 delete_handle_var_ilength(handle_indxStruct_);
+    	 delete_handle_var_dlength(handle_mparStruct_);
+    	 delete_handle_var_dlength(handle_progStruct_);
+    	 delete_handle_var_dlength(handle_diagStruct_);
+    	 delete_handle_var_dlength(handle_fluxStruct_);  
+    	 // basin-average structures
+    	 delete_handle_var_d(handle_bparStruct_);
+    	 delete_handle_var_dlength(handle_bvarStruct_);
+         // ancillary data structures
+    	 delete_handle_var_d(handle_dparStruct_); 
    }
 };
 
