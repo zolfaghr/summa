@@ -53,7 +53,7 @@ contains
  USE read_attrb_module,only:read_dimension                   ! module to read dimensions of GRU and HRU
  USE read_icond_module,only:read_icond_nlayers               ! module to read initial condition dimensions
  ! subroutines and functions: allocate space
- USE allocspace_module,only:allocGlobal                      ! module to allocate space for global data structures
+ USE allocspace4chm_module,only:allocGlobal4chm              ! module to allocate space for global data structures
  USE allocspace_module,only:allocLocal                       ! module to allocate space for local data structures
  ! timing variables
  USE globalData,only:startInit,endInit                       ! date/time for the start and end of the initialization
@@ -123,20 +123,9 @@ contains
 
   ! ancillary data structures
   dparStruct           => summa1_struc%dparStruct          , & ! x%var(:)     -- default model parameters
-
-  ! run time variables
-  computeVegFlux       => summa1_struc%computeVegFlux      , & ! flag to indicate if we are computing fluxes over vegetation (.false. means veg is buried with snow)
-  dt_init              => summa1_struc%dt_init             , & ! used to initialize the length of the sub-step for each HRU
-  upArea               => summa1_struc%upArea              , & ! area upslope of each HRU
-
   ! miscellaneous variables
-  summa1open           => summa1_struc%summa1open          , & ! flag to define if the summa file is open??
-  numout               => summa1_struc%numout              , & ! number of output variables??
-  ts                   => summa1_struc%ts                  , & ! model time step ??
   nGRU                 => summa1_struc%nGRU                , & ! number of grouped response units
   nHRU                 => summa1_struc%nHRU                , & ! number of global hydrologic response units
-  hruCount             => summa1_struc%hruCount            , & ! number of local hydrologic response units
-  greenVegFrac_monthly => summa1_struc%greenVegFrac_monthly, & ! fraction of green vegetation in each month (0-1)
   summaFileManagerFile => summa1_struc%summaFileManagerFile  & ! path/name of file defining directories and files
 
  ) ! assignment to variables in the data structures
@@ -214,18 +203,18 @@ contains
  do iStruct=1,size(structInfo)
   ! allocate space
   select case(trim(structInfo(iStruct)%structName))
-   case('time'); call allocGlobal(time_meta,  timeStruct,  err, cmessage)   ! model forcing data
-   case('forc'); call allocGlobal(forc_meta,  forcStruct,  err, cmessage)   ! model forcing data
-   case('attr'); call allocGlobal(attr_meta,  attrStruct,  err, cmessage)   ! local attributes for each HRU
-   case('type'); call allocGlobal(type_meta,  typeStruct,  err, cmessage)   ! local classification of soil veg etc. for each HRU
-   case('id'  ); call allocGlobal(id_meta,    idStruct,    err, message)    ! local values of hru and gru IDs
-   case('mpar'); call allocGlobal(mpar_meta,  mparStruct,  err, cmessage)   ! model parameters
-   case('indx'); call allocGlobal(indx_meta,  indxStruct,  err, cmessage)   ! model variables
-   case('prog'); call allocGlobal(prog_meta,  progStruct,  err, cmessage)   ! model prognostic (state) variables
-   case('diag'); call allocGlobal(diag_meta,  diagStruct,  err, cmessage)   ! model diagnostic variables
-   case('flux'); call allocGlobal(flux_meta,  fluxStruct,  err, cmessage)   ! model fluxes
-   case('bpar'); call allocGlobal(bpar_meta,  bparStruct,  err, cmessage)   ! basin-average parameters
-   case('bvar'); call allocGlobal(bvar_meta,  bvarStruct,  err, cmessage)   ! basin-average variables
+   case('time'); call allocGlobal4chm(time_meta,  timeStruct,  err, cmessage)   ! model forcing data
+   case('forc'); call allocGlobal4chm(forc_meta,  forcStruct,  err, cmessage)   ! model forcing data
+   case('attr'); call allocGlobal4chm(attr_meta,  attrStruct,  err, cmessage)   ! local attributes for each HRU
+   case('type'); call allocGlobal4chm(type_meta,  typeStruct,  err, cmessage)   ! local classification of soil veg etc. for each HRU
+   case('id'  ); call allocGlobal4chm(id_meta,    idStruct,    err, message)    ! local values of hru and gru IDs
+   case('mpar'); call allocGlobal4chm(mpar_meta,  mparStruct,  err, cmessage)   ! model parameters
+   case('indx'); call allocGlobal4chm(indx_meta,  indxStruct,  err, cmessage)   ! model variables
+   case('prog'); call allocGlobal4chm(prog_meta,  progStruct,  err, cmessage)   ! model prognostic (state) variables
+   case('diag'); call allocGlobal4chm(diag_meta,  diagStruct,  err, cmessage)   ! model diagnostic variables
+   case('flux'); call allocGlobal4chm(flux_meta,  fluxStruct,  err, cmessage)   ! model fluxes
+   case('bpar'); call allocGlobal4chm(bpar_meta,  bparStruct,  err, cmessage)   ! basin-average parameters
+   case('bvar'); call allocGlobal4chm(bvar_meta,  bvarStruct,  err, cmessage)   ! basin-average variables
    case('deriv'); cycle
    case default; err=20; message='unable to find structure name: '//trim(structInfo(iStruct)%structName)
   end select
@@ -238,28 +227,11 @@ contains
 
  ! allocate space for default model parameters
  ! NOTE: This is done here, rather than in the loop above, because dpar is not one of the "standard" data structures
- call allocGlobal(mpar_meta,dparStruct,err,cmessage)   ! default model parameters
+ call allocGlobal4chm(mpar_meta,dparStruct,err,cmessage)   ! default model parameters
  if(err/=0)then
   message=trim(message)//trim(cmessage)//' [problem allocating dparStruct]'
   return
  endif
-
- ! allocate space for the time step and computeVegFlux flags (recycled for each GRU for subsequent model calls)
- allocate(dt_init%gru(nGRU),upArea%gru(nGRU),computeVegFlux%gru(nGRU),stat=err)
- if(err/=0)then
-  message=trim(message)//'problem allocating space for dt_init, upArea, or computeVegFlux [GRU]'
-  return
- endif
-
- ! allocate space for the HRUs
- do iGRU=1,nGRU
-  hruCount = gru_struc(iGRU)%hruCount  ! gru_struc populated in "read_dimension"
-  allocate(dt_init%gru(iGRU)%hru(hruCount),upArea%gru(iGRU)%hru(hruCount),computeVegFlux%gru(iGRU)%hru(hruCount),stat=err)
-  if(err/=0)then
-   message='problem allocating space for dt_init, upArea, or computeVegFlux [HRU]'
-   return
-  endif
- end do
 
  ! *****************************************************************************
  ! *** allocate space for output statistics data structures
@@ -270,12 +242,12 @@ contains
 
   ! allocate space
   select case(trim(structInfo(iStruct)%structName))
-   case('forc'); call allocGlobal(statForc_meta(:)%var_info,forcStat,err,cmessage)   ! model forcing data
-   case('prog'); call allocGlobal(statProg_meta(:)%var_info,progStat,err,cmessage)   ! model prognostic (state) variables
-   case('diag'); call allocGlobal(statDiag_meta(:)%var_info,diagStat,err,cmessage)   ! model diagnostic variables
-   case('flux'); call allocGlobal(statFlux_meta(:)%var_info,fluxStat,err,cmessage)   ! model fluxes
-   case('indx'); call allocGlobal(statIndx_meta(:)%var_info,indxStat,err,cmessage)   ! index vars
-   case('bvar'); call allocGlobal(statBvar_meta(:)%var_info,bvarStat,err,cmessage)   ! basin-average variables
+   case('forc'); call allocGlobal4chm(statForc_meta(:)%var_info,forcStat,err,cmessage)   ! model forcing data
+   case('prog'); call allocGlobal4chm(statProg_meta(:)%var_info,progStat,err,cmessage)   ! model prognostic (state) variables
+   case('diag'); call allocGlobal4chm(statDiag_meta(:)%var_info,diagStat,err,cmessage)   ! model diagnostic variables
+   case('flux'); call allocGlobal4chm(statFlux_meta(:)%var_info,fluxStat,err,cmessage)   ! model fluxes
+   case('indx'); call allocGlobal4chm(statIndx_meta(:)%var_info,indxStat,err,cmessage)   ! index vars
+   case('bvar'); call allocGlobal4chm(statBvar_meta(:)%var_info,bvarStat,err,cmessage)   ! basin-average variables
    case default; cycle
   end select
 
