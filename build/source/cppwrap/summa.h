@@ -672,8 +672,7 @@ public:
   	return get_var_d(handle_dparStruct_);
   }
   
-  // others
-  
+  // others  
   int get_err() { return err_; }
  
   

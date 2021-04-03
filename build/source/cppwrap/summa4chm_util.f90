@@ -18,7 +18,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module summa_util
+module summa4chm_util
 ! utilities to manage summa simulation
 
 ! data types
@@ -410,4 +410,4 @@ contains
 
  end subroutine
 
-end module summa_util
+end module summa4chm_util
