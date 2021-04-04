@@ -17,7 +17,7 @@ module cppwrap_summa
 contains
 
   ! **********************************************************************************************************
-  ! public subroutine SolveCoupledEM: solving coupled energy-mass equations for one timestep
+  ! public subroutine DefineGlobalData: 
   ! **********************************************************************************************************
   subroutine DefineGlobalData() bind(C, name ='DefineGlobalData')
   
@@ -33,6 +33,25 @@ contains
   
   
   end subroutine DefineGlobalData
+  
+  
+  ! **********************************************************************************************************
+  ! public subroutine SummaInit: 
+  ! **********************************************************************************************************
+  subroutine SummaInit() bind(C, name ='SummaInit')
+  
+  use summa4chm_init,only:summa4chm_initialize           
+  
+  implicit none
+  integer(c_int)				   :: err
+  character(len=256)               :: message
+  
+  ! define global data (parameters, metadata)
+  call summa_defineGlobalData(err, message)
+  
+  
+  
+  end subroutine SummaInit
 
   ! **********************************************************************************************************
   ! public subroutine SolveCoupledEM: solving coupled energy-mass equations for one timestep
