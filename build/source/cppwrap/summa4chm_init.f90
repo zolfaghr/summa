@@ -63,8 +63,6 @@ contains
   								! ancillary data structures
   								dparStruct,				 & !  default model parameters
   								! miscellaneous variables
-  								nGRU,					 & ! number of grouped response units
-  								nHRU,					 & ! number of global hydrologic response units
   								summaFileManagerFile,	 & ! path/name of file defining directories and files
  								err, message)
  ! ---------------------------------------------------------------------------------------
@@ -133,17 +131,13 @@ contains
  type(var_dlength),intent(inout)          :: bvarStruct                 !  basin-average variables
  ! define the ancillary data structures
  type(var_d),intent(inout)                :: dparStruct                 !  default model parameters
-
- integer(i4b),intent(out)	              :: err                ! error code
- character(*),intent(out)	              :: message            ! error message
+ character(len=256),intent(inout)		  :: summaFileManagerFile       ! path/name of file defining directories and files
+ integer(i4b),intent(out)	              :: err                		! error code
+ character(*),intent(out)	              :: message            		! error message
  ! local variables
- character(LEN=256)		                  :: cmessage           ! error message of downwind routine
- character(len=256)                    	  :: restartFile        ! restart file name
- character(len=256)                    	  :: attrFile           ! attributes file name
- character(len=128)                       :: fmtGruOutput       ! a format string used to write start and end GRU in output file names
- integer(i4b)                             :: iStruct           ! looping variables
- integer(i4b)                             :: fileGRU            ! [used for filenames] number of GRUs in the input file
- integer(i4b)                             :: fileHRU            ! [used for filenames] number of HRUs in the input file
+ character(LEN=256)		                  :: cmessage           		! error message of downwind routine
+ character(len=256)                    	  :: restartFile        		! restart file name
+ integer(i4b)                             :: iStruct           			! looping variables
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_initialize/'
@@ -176,18 +170,6 @@ contains
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! *****************************************************************************
- ! *** read the number of GRUs and HRUs
- ! *****************************************************************************
- ! obtain the HRU and GRU dimensions in the LocalAttribute file
- attrFile = trim(SETTINGS_PATH)//trim(LOCAL_ATTRIBUTES)
- select case (iRunMode)
-  case(iRunModeFull); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage)
-  case(iRunModeGRU ); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage,startGRU=startGRU)
-  case(iRunModeHRU ); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage,checkHRU=checkHRU)
- end select
- if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
-
- ! *****************************************************************************
  ! *** read the number of snow and soil layers
  ! *****************************************************************************
  ! set restart filename and read the number of snow and soil layers from the initial conditions (restart) file
@@ -196,7 +178,7 @@ contains
  else
     restartFile = trim(STATE_PATH)//trim(MODEL_INITCOND)
  endif
- call read_icond_nlayers(trim(restartFile),nGRU,indx_meta,err,cmessage)
+ call read_icond_nlayers(trim(restartFile),1,indx_meta,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! *****************************************************************************
@@ -273,24 +255,6 @@ contains
   endif
 
  end do ! iStruct
-
- ! *****************************************************************************
- ! *** define the suffix for the model output file
- ! *****************************************************************************
-
- ! set up the output file names as: OUTPUT_PREFIX'_'output_fileSuffix'_'startGRU-endGRU_outfreq.nc or OUTPUT_PREFIX'_'output_fileSuffix'_'HRU_outfreq.nc;
- if (output_fileSuffix(1:1) /= '_') output_fileSuffix='_'//trim(output_fileSuffix)   ! separate output_fileSuffix from others by underscores
- if (output_fileSuffix(len_trim(output_fileSuffix):len_trim(output_fileSuffix)) == '_') output_fileSuffix(len_trim(output_fileSuffix):len_trim(output_fileSuffix)) = ' '
- select case (iRunMode)
-  case(iRunModeGRU)
-   ! left zero padding for startGRU and endGRU
-   write(fmtGruOutput,"(i0)") ceiling(log10(real(fileGRU)+0.1))                      ! maximum width of startGRU and endGRU
-   fmtGruOutput = "i"//trim(fmtGruOutput)//"."//trim(fmtGruOutput)                   ! construct the format string for startGRU and endGRU
-   fmtGruOutput = "('_G',"//trim(fmtGruOutput)//",'-',"//trim(fmtGruOutput)//")"
-   write(output_fileSuffix((len_trim(output_fileSuffix)+1):len(output_fileSuffix)),fmtGruOutput) startGRU,startGRU+nGRU-1
-  case(iRunModeHRU)
-   write(output_fileSuffix((len_trim(output_fileSuffix)+1):len(output_fileSuffix)),"('_H',i0)") checkHRU
- end select
 
  ! identify the end of the initialization
  call date_and_time(values=endInit)
