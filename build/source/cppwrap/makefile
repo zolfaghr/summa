@@ -19,7 +19,7 @@ compile_c:
 	@$(CC) -c $(CFILES)
 	
 link:
-	@$(CC) -L$(CURDIR) -o program test.o -lsumma4chm -llapack -l$(FC)
+	@$(CC) -L$(CURDIR) -o program test.o -lsumma4chm -llapack -lnetcdff -lnetcdf -l$(FC)
 	
 # make library available at runtime
 message:

@@ -35,6 +35,7 @@ EXE_PATH = $(F_MASTER)/bin
 # Define directories
 DRIVER_DIR = $(F_KORE_DIR)/driver
 HOOKUP_DIR = $(F_KORE_DIR)/hookup
+NETCDF_DIR = $(F_KORE_DIR)/netcdf
 DSHARE_DIR = $(F_KORE_DIR)/dshare
 NUMREC_DIR = $(F_KORE_DIR)/numrec
 NOAHMP_DIR = $(F_KORE_DIR)/noah-mp
@@ -123,6 +124,7 @@ SUMMA_PRELIM= \
 		conv_funcs.f90 \
 		sunGeomtry.f90 \
 		convE2Temp.f90 \
+		allocspace4chm.f90 \
 		allocspace.f90 \
 		checkStruc.f90 \
 		childStruc.f90 \
@@ -155,16 +157,26 @@ SUMMA_MODRUN = \
 		qTimeDelay.f90
 MODRUN = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_MODRUN))
 
+# Define NetCDF routines
+SUMMA_NETCDF = \
+		netcdf_util.f90 \
+		def_output.f90 \
+		modelwrite.f90 \
+		read_icond.f90
+NETCDF = $(patsubst %, $(NETCDF_DIR)/%, $(SUMMA_NETCDF))
 
 # ... stitch together common programs
 COMM_ALL = $(NRUTIL) $(NRPROC) $(HOOKUP) $(DATAMS) $(UTILMS)
 
 # ... stitch together SUMMA programs
-SUMMA_ALL = $(PRELIM) $(MODRUN) $(SOLVER) 
+SUMMA_ALL = $(NETCDF) $(PRELIM) $(MODRUN) $(SOLVER) 
 
 # Define the driver routine
 SUMMA_DRIVER= \
-		summa_globalData.f90 
+		summa4chm_type.f90 \
+		summa4chm_util.f90 \
+		summa_globalData.f90 \
+		summa4chm_init.f90
 		
 DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 

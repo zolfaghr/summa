@@ -74,29 +74,29 @@ contains
   ! calling variables
   
   ! statistics structures
-  type(c_ptr), intent(in), value    :: 	handle_forcStat, 				 & !  model forcing data
-  type(c_ptr), intent(in), value    ::	handle_progStat,				 & !  model prognostic (state) variables
-  type(c_ptr), intent(in), value    ::	handle_diagStat,				 & !  model diagnostic variables
-  type(c_ptr), intent(in), value    ::	handle_fluxStat,				 & !  model fluxes
-  type(c_ptr), intent(in), value    ::	handle_indxStat,				 & !  model indices
-  type(c_ptr), intent(in), value    ::	handle_bvarStat,				 & !  basin-average variables
+  type(c_ptr), intent(in), value    :: 	handle_forcStat !  model forcing data
+  type(c_ptr), intent(in), value    ::	handle_progStat !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    ::	handle_diagStat !  model diagnostic variables
+  type(c_ptr), intent(in), value    ::	handle_fluxStat !  model fluxes
+  type(c_ptr), intent(in), value    ::	handle_indxStat !  model indices
+  type(c_ptr), intent(in), value    ::	handle_bvarStat !  basin-average variables
   ! primary data structures (scalars)
-  type(c_ptr), intent(in), value    ::	handle_timeStruct,				 & !  model time data
-  type(c_ptr), intent(in), value    ::	handle_forcStruct,				 & !  model forcing data
-  type(c_ptr), intent(in), value    ::	handle_attrStruct,				 & !  local attributes for each HRU
-  type(c_ptr), intent(in), value    ::	handle_typeStruct,				 & !  local classification of soil veg etc. for each HRU
-  type(c_ptr), intent(in), value    ::	handle_idStruct,				 & ! 
+  type(c_ptr), intent(in), value    ::	handle_timeStruct !  model time data
+  type(c_ptr), intent(in), value    ::	handle_forcStruct !  model forcing data
+  type(c_ptr), intent(in), value    ::	handle_attrStruct !  local attributes for each HRU
+  type(c_ptr), intent(in), value    ::	handle_typeStruct !  local classification of soil veg etc. for each HRU
+  type(c_ptr), intent(in), value    ::	handle_idStruct ! 
   ! primary data structures (variable length vectors)
-  type(c_ptr), intent(in), value    ::	handle_indxStruct,				 & !  model indices
-  type(c_ptr), intent(in), value    ::	handle_mparStruct,				 & !  model parameters
-  type(c_ptr), intent(in), value    ::	handle_progStruct,				 & !  model prognostic (state) variables
-  type(c_ptr), intent(in), value    ::	handle_diagStruct,				 & !  model diagnostic variables
-  type(c_ptr), intent(in), value    ::	handle_fluxStruct,				 & !  model fluxes
+  type(c_ptr), intent(in), value    ::	handle_indxStruct !  model indices
+  type(c_ptr), intent(in), value    ::	handle_mparStruct !  model parameters
+  type(c_ptr), intent(in), value    ::	handle_progStruct !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    ::	handle_diagStruct !  model diagnostic variables
+  type(c_ptr), intent(in), value    ::	handle_fluxStruct !  model fluxes
   ! basin-average structures
-  type(c_ptr), intent(in), value    ::	handle_bparStruct,				 & !  basin-average parameters
-  type(c_ptr), intent(in), value    ::	handle_bvarStruct,				 & !  basin-average variables
+  type(c_ptr), intent(in), value    ::	handle_bparStruct !  basin-average parameters
+  type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
   ! ancillary data structures
-  type(c_ptr), intent(in), value    ::	handle_dparStruct,				 & !  default model parameters
+  type(c_ptr), intent(in), value    ::	handle_dparStruct !  default model parameters
   integer(c_int)				    :: err
  !---------------------------------------------------------------------------------------------------  
  ! local variables
