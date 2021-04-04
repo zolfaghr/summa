@@ -72,7 +72,7 @@ contains
  USE nrtype                                                  ! variable types, etc.
  USE summa4chm_type, only:summa4chm_type_dec                        ! master summa data type
  ! subroutines and functions: initial priming
- USE summa4chm_util, only:getCommandArguments                    ! process command line arguments
+ USE summa4chm_util, only:getCommandArguments4chm                    ! process command line arguments
  USE summaFileManager,only:summa_SetTimesDirsAndFiles       ! sets directories and filenames
  USE summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
  USE time_utils_module,only:elapsedSec                       ! calculate the elapsed time
@@ -158,7 +158,7 @@ contains
  elapsedPhysics=0._dp
 
  ! get the command line arguments
- call getCommandArguments(summa1_struc,err,cmessage)
+ call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! set directories and files -- summaFileManager used as command-line argument

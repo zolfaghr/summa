@@ -36,7 +36,7 @@ implicit none
 private
 
 ! routines to make public
-public::getCommandArguments
+public::getCommandArguments4chm
 public::stop_program
 public::handle_err
 contains
@@ -44,7 +44,7 @@ contains
  ! **************************************************************************************************
  ! * obtain the command line arguments
  ! **************************************************************************************************
- subroutine getCommandArguments(summa1_struc,err,message)
+ subroutine getCommandArguments4chm(summaFileManagerFile,err,message)
  ! data types
  USE summa4chm_type, only:summa4chm_type_dec                         ! master summa data type
  ! provide access to named parameters
@@ -62,10 +62,12 @@ contains
  USE globalData,only: output_fileSuffix ! suffix for the output file
  implicit none
  ! dummy variables
- type(summa4chm_type_dec),intent(inout)   :: summa1_struc        ! master summa data structure
+ character(len=256),intent(inout)		  :: summaFileManagerFile       ! path/name of file defining directories and files
  integer(i4b),intent(out)              :: err                 ! error code
  character(*),intent(out)              :: message             ! error message
  ! local variables
+ integer(i4b)               :: nGRU                       ! number of grouped response units
+ integer(i4b)               :: nHRU                       ! number of global hydrologic response units
  integer(i4b)                          :: iArgument           ! index of command line argument
  integer(i4b)                          :: nArgument           ! number of command line arguments
  character(len=256),allocatable        :: argString(:)        ! string to store command line arguments
@@ -74,15 +76,8 @@ contains
  ! version information generated during compiling
  INCLUDE 'summaversion.inc'
  ! ---------------------------------------------------------------------------------------
- ! associate to elements in the data structure
- summaVars: associate(&
-  nGRU                 => summa1_struc%nGRU                ,& ! number of grouped response units
-  nHRU                 => summa1_struc%nHRU                ,& ! number of global hydrologic response units
-  summaFileManagerFile => summa1_struc%summaFileManagerFile & ! path/name of file defining directories and files
- ) ! assignment to variables in the data structures
- ! ---------------------------------------------------------------------------------------
  ! initialize error control
- err=0; message='getCommandArguments/'
+ err=0; message='getCommandArguments4chm/'
 
  ! check number of command-line arguments
  nArgument = command_argument_count()
@@ -264,10 +259,7 @@ contains
  ! set startGRU for full run
  if (iRunMode==iRunModeFull) startGRU=1
 
- ! end associate statements
- end associate summaVars
-
- end subroutine getCommandArguments
+ end subroutine getCommandArguments4chm
 
  ! **************************************************************************************************
  ! print the correct command line usage of SUMMA

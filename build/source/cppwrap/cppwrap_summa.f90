@@ -11,6 +11,7 @@ module cppwrap_summa
   ! privacy
   implicit none
   public::DefineGlobalData
+  public::SummaInit
   public::SolveCoupledEM
 
 
@@ -38,18 +39,146 @@ contains
   ! **********************************************************************************************************
   ! public subroutine SummaInit: 
   ! **********************************************************************************************************
-  subroutine SummaInit() bind(C, name ='SummaInit')
+  subroutine SummaInit(&
+    					! statistics structures
+  						handle_forcStat, 				 & !  model forcing data
+  						handle_progStat,				 & !  model prognostic (state) variables
+  						handle_diagStat,				 & !  model diagnostic variables
+  						handle_fluxStat,				 & !  model fluxes
+  						handle_indxStat,				 & !  model indices
+  						handle_bvarStat,				 & !  basin-average variables
+  						! primary data structures (scalars)
+  						handle_timeStruct,				 & !  model time data
+  						handle_forcStruct,				 & !  model forcing data
+  						handle_attrStruct,				 & !  local attributes for each HRU
+  						handle_typeStruct,				 & !  local classification of soil veg etc. for each HRU
+  						handle_idStruct,				 & ! 
+						! primary data structures (variable length vectors)
+  						handle_indxStruct,				 & !  model indices
+  						handle_mparStruct,				 & !  model parameters
+  						handle_progStruct,				 & !  model prognostic (state) variables
+  						handle_diagStruct,				 & !  model diagnostic variables
+  						handle_fluxStruct,				 & !  model fluxes
+  						! basin-average structures
+  						handle_bparStruct,				 & !  basin-average parameters
+  						handle_bvarStruct,				 & !  basin-average variables
+  						! ancillary data structures
+  						handle_dparStruct,				 & !  default model parameters
+  						! miscellaneous variables
+  						! summaFileManagerFile,			 & ! path/name of file defining directories and files) bind(C, name ='SummaInit')
+  						err) bind(C,name='SummaInit')
   
   use summa4chm_init,only:summa4chm_initialize           
   
   implicit none
-  integer(c_int)				   :: err
-  character(len=256)               :: message
+  ! calling variables
+  
+  ! statistics structures
+  type(c_ptr), intent(in), value    :: 	handle_forcStat, 				 & !  model forcing data
+  type(c_ptr), intent(in), value    ::	handle_progStat,				 & !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    ::	handle_diagStat,				 & !  model diagnostic variables
+  type(c_ptr), intent(in), value    ::	handle_fluxStat,				 & !  model fluxes
+  type(c_ptr), intent(in), value    ::	handle_indxStat,				 & !  model indices
+  type(c_ptr), intent(in), value    ::	handle_bvarStat,				 & !  basin-average variables
+  ! primary data structures (scalars)
+  type(c_ptr), intent(in), value    ::	handle_timeStruct,				 & !  model time data
+  type(c_ptr), intent(in), value    ::	handle_forcStruct,				 & !  model forcing data
+  type(c_ptr), intent(in), value    ::	handle_attrStruct,				 & !  local attributes for each HRU
+  type(c_ptr), intent(in), value    ::	handle_typeStruct,				 & !  local classification of soil veg etc. for each HRU
+  type(c_ptr), intent(in), value    ::	handle_idStruct,				 & ! 
+  ! primary data structures (variable length vectors)
+  type(c_ptr), intent(in), value    ::	handle_indxStruct,				 & !  model indices
+  type(c_ptr), intent(in), value    ::	handle_mparStruct,				 & !  model parameters
+  type(c_ptr), intent(in), value    ::	handle_progStruct,				 & !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    ::	handle_diagStruct,				 & !  model diagnostic variables
+  type(c_ptr), intent(in), value    ::	handle_fluxStruct,				 & !  model fluxes
+  ! basin-average structures
+  type(c_ptr), intent(in), value    ::	handle_bparStruct,				 & !  basin-average parameters
+  type(c_ptr), intent(in), value    ::	handle_bvarStruct,				 & !  basin-average variables
+  ! ancillary data structures
+  type(c_ptr), intent(in), value    ::	handle_dparStruct,				 & !  default model parameters
+  integer(c_int)				    :: err
+ !---------------------------------------------------------------------------------------------------  
+ ! local variables
+ 
+ ! statistics structures
+ type(var_dlength),pointer          :: forcStat                   !  model forcing data
+ type(var_dlength),pointer          :: progStat                   !  model prognostic (state) variables
+ type(var_dlength),pointer          :: diagStat                   !  model diagnostic variables
+ type(var_dlength),pointer          :: fluxStat                   !  model fluxes
+ type(var_dlength),pointer          :: indxStat                   !  model indices
+ type(var_dlength),pointer          :: bvarStat                   !  basin-average variabl
+ ! define the primary data structures (scalars)
+ type(var_i),pointer                :: timeStruct                 !  model time data
+ type(var_d),pointer                :: forcStruct                 !  model forcing data
+ type(var_d),pointer                :: attrStruct                 !  local attributes for each HRU
+ type(var_i),pointer                :: typeStruct                 !  local classification of soil veg etc. for each HRU
+ type(var_i8),pointer               :: idStruct                   ! 
+ ! define the primary data structures (variable length vectors)
+ type(var_ilength),pointer          :: indxStruct                 !  model indices
+ type(var_dlength),pointer          :: mparStruct                 !  model parameters
+ type(var_dlength),pointer          :: progStruct                 !  model prognostic (state) variables
+ type(var_dlength),pointer          :: diagStruct                 !  model diagnostic variables
+ type(var_dlength),pointer          :: fluxStruct                 !  model fluxes
+ ! define the basin-average structures
+ type(var_d),pointer                :: bparStruct                 !  basin-average parameters
+ type(var_dlength),pointer          :: bvarStruct                 !  basin-average variables
+ ! define the ancillary data structures
+ type(var_d),pointer                :: dparStruct                 !  default model parameters
+ character(len=256)                 :: summaFileManagerFile       ! path/name of file defining directories and files
+ character(len=256)                 :: message
+
+  
+  ! getting data
+  call c_f_pointer(handle_forcStat, forcStat)
+  call c_f_pointer(handle_progStat, progStat)
+  call c_f_pointer(handle_diagStat, diagStat)
+  call c_f_pointer(handle_fluxStat, fluxStat)
+  call c_f_pointer(handle_indxStat, indxStat)
+  call c_f_pointer(handle_bvarStat, bvarStat)
+  call c_f_pointer(handle_timeStruct, timeStruct)
+  call c_f_pointer(handle_forcStruct, forcStruct)
+  call c_f_pointer(handle_attrStruct, attrStruct)
+  call c_f_pointer(handle_typeStruct, typeStruct)
+  call c_f_pointer(handle_idStruct, idStruct)
+  call c_f_pointer(handle_indxStruct, indxStruct)
+  call c_f_pointer(handle_mparStruct, mparStruct)
+  call c_f_pointer(handle_progStruct, progStruct)
+  call c_f_pointer(handle_diagStruct, diagStruct)
+  call c_f_pointer(handle_fluxStruct, fluxStruct)
+  call c_f_pointer(handle_bparStruct, bparStruct)
+  call c_f_pointer(handle_bvarStruct, bvarStruct)
+  call c_f_pointer(handle_dparStruct, dparStruct)
   
   ! define global data (parameters, metadata)
-  call summa_defineGlobalData(err, message)
-  
-  
+  call summa4chm_initialize(&
+  								! statistics structures
+  								forcStat, 				 & !  model forcing data
+  								progStat,				 & !  model prognostic (state) variables
+  								diagStat,				 & !  model diagnostic variables
+  								fluxStat,				 & !  model fluxes
+  								indxStat,				 & !  model indices
+  								bvarStat,				 & !  basin-average variables
+  								! primary data structures (scalars)
+  								timeStruct,				 & !  model time data
+  								forcStruct,				 & !  model forcing data
+  								attrStruct,				 & !  local attributes for each HRU
+  								typeStruct,				 & !  local classification of soil veg etc. for each HRU
+  								idStruct,				 & ! 
+								! primary data structures (variable length vectors)
+  								indxStruct,				 & !  model indices
+  								mparStruct,				 & !  model parameters
+  								progStruct,				 & !  model prognostic (state) variables
+  								diagStruct,				 & !  model diagnostic variables
+  								fluxStruct,				 & !  model fluxes
+  								! basin-average structures
+  								bparStruct,				 & !  basin-average parameters
+  								bvarStruct,				 & !  basin-average variables
+  								! ancillary data structures
+  								dparStruct,				 & !  default model parameters
+  								! miscellaneous variables
+  								summaFileManagerFile,	 & ! path/name of file defining directories and files
+ 								err, message)
   
   end subroutine SummaInit
 
