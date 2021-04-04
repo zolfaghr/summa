@@ -37,7 +37,36 @@ public::summa4chm_initialize
 contains
 
  ! used to declare and allocate summa data structures and initialize model state to known values
- subroutine summa4chm_initialize(summa1_struc, err, message)
+ subroutine summa4chm_initialize(&
+  								! statistics structures
+  								forcStat, 				 & !  model forcing data
+  								progStat,				 & !  model prognostic (state) variables
+  								diagStat,				 & !  model diagnostic variables
+  								fluxStat,				 & !  model fluxes
+  								indxStat,				 & !  model indices
+  								bvarStat,				 & !  basin-average variables
+  								! primary data structures (scalars)
+  								timeStruct,				 & !  model time data
+  								forcStruct,				 & !  model forcing data
+  								attrStruct,				 & !  local attributes for each HRU
+  								typeStruct,				 & !  local classification of soil veg etc. for each HRU
+  								idStruct,				 & ! 
+								! primary data structures (variable length vectors)
+  								indxStruct,				 & !  model indices
+  								mparStruct,				 & !  model parameters
+  								progStruct,				 & !  model prognostic (state) variables
+  								diagStruct,				 & !  model diagnostic variables
+  								fluxStruct,				 & !  model fluxes
+  								! basin-average structures
+  								bparStruct,				 & !  basin-average parameters
+  								bvarStruct,				 & !  basin-average variables
+  								! ancillary data structures
+  								dparStruct,				 & !  default model parameters
+  								! miscellaneous variables
+  								nGRU,					 & ! number of grouped response units
+  								nHRU,					 & ! number of global hydrologic response units
+  								summaFileManagerFile,	 & ! path/name of file defining directories and files
+ 								err, message)
  ! ---------------------------------------------------------------------------------------
  ! * desired modules
  ! ---------------------------------------------------------------------------------------
@@ -80,55 +109,41 @@ contains
  ! ---------------------------------------------------------------------------------------
  implicit none
  ! dummy variables
- type(summa4chm_type_dec),intent(inout)   :: summa1_struc       ! master summa data structure
- integer(i4b),intent(out)              :: err                ! error code
- character(*),intent(out)              :: message            ! error message
+ ! statistics structures
+ type(var_dlength),intent(inout)          :: forcStat                   !  model forcing data
+ type(var_dlength),intent(inout)          :: progStat                   !  model prognostic (state) variables
+ type(var_dlength),intent(inout)          :: diagStat                   !  model diagnostic variables
+ type(var_dlength),intent(inout)          :: fluxStat                   !  model fluxes
+ type(var_dlength),intent(inout)          :: indxStat                   !  model indices
+ type(var_dlength),intent(inout)          :: bvarStat                   !  basin-average variabl
+ ! define the primary data structures (scalars)
+ type(var_i),intent(inout)                :: timeStruct                 !  model time data
+ type(var_d),intent(inout)                :: forcStruct                 !  model forcing data
+ type(var_d),intent(inout)                :: attrStruct                 !  local attributes for each HRU
+ type(var_i),intent(inout)                :: typeStruct                 !  local classification of soil veg etc. for each HRU
+ type(var_i8),intent(inout)               :: idStruct                   ! 
+ ! define the primary data structures (variable length vectors)
+ type(var_ilength),intent(inout)          :: indxStruct                 !  model indices
+ type(var_dlength),intent(inout)          :: mparStruct                 !  model parameters
+ type(var_dlength),intent(inout)          :: progStruct                 !  model prognostic (state) variables
+ type(var_dlength),intent(inout)          :: diagStruct                 !  model diagnostic variables
+ type(var_dlength),intent(inout)          :: fluxStruct                 !  model fluxes
+ ! define the basin-average structures
+ type(var_d),intent(inout)                :: bparStruct                 !  basin-average parameters
+ type(var_dlength),intent(inout)          :: bvarStruct                 !  basin-average variables
+ ! define the ancillary data structures
+ type(var_d),intent(inout)                :: dparStruct                 !  default model parameters
+
+ integer(i4b),intent(out)	              :: err                ! error code
+ character(*),intent(out)	              :: message            ! error message
  ! local variables
- character(LEN=256)                    :: cmessage           ! error message of downwind routine
- character(len=256)                    :: restartFile        ! restart file name
- character(len=256)                    :: attrFile           ! attributes file name
- character(len=128)                    :: fmtGruOutput       ! a format string used to write start and end GRU in output file names
- integer(i4b)                          :: iStruct,iGRU       ! looping variables
- integer(i4b)                          :: fileGRU            ! [used for filenames] number of GRUs in the input file
- integer(i4b)                          :: fileHRU            ! [used for filenames] number of HRUs in the input file
- ! ---------------------------------------------------------------------------------------
- ! associate to elements in the data structure
- summaVars: associate(&
-
-  ! statistics structures
-  forcStat             => summa1_struc%forcStat            , & ! x%var(:)%dat -- model forcing data
-  progStat             => summa1_struc%progStat            , & ! x%var(:)%dat -- model prognostic (state) variables
-  diagStat             => summa1_struc%diagStat            , & ! x%var(:)%dat -- model diagnostic variables
-  fluxStat             => summa1_struc%fluxStat            , & ! x%var(:)%dat -- model fluxes
-  indxStat             => summa1_struc%indxStat            , & ! x%var(:)%dat -- model indices
-  bvarStat             => summa1_struc%bvarStat            , & ! x%var(:)%dat        -- basin-average variables
-
-  ! primary data structures (scalars)
-  timeStruct           => summa1_struc%timeStruct          , & ! x%var(:)                   -- model time data
-  forcStruct           => summa1_struc%forcStruct          , & ! x%var(:)     -- model forcing data
-  attrStruct           => summa1_struc%attrStruct          , & ! x%var(:)     -- local attributes for each HRU
-  typeStruct           => summa1_struc%typeStruct          , & ! x%var(:)     -- local classification of soil veg etc. for each HRU
-  idStruct             => summa1_struc%idStruct            , & ! x%var(:)     --
-
-  ! primary data structures (variable length vectors)
-  indxStruct           => summa1_struc%indxStruct          , & ! x%var(:)%dat -- model indices
-  mparStruct           => summa1_struc%mparStruct          , & ! x%var(:)%dat -- model parameters
-  progStruct           => summa1_struc%progStruct          , & ! x%var(:)%dat -- model prognostic (state) variables
-  diagStruct           => summa1_struc%diagStruct          , & ! x%var(:)%dat -- model diagnostic variables
-  fluxStruct           => summa1_struc%fluxStruct          , & ! x%var(:)%dat -- model fluxes
-
-  ! basin-average structures
-  bparStruct           => summa1_struc%bparStruct          , & ! x%var(:)            -- basin-average parameters
-  bvarStruct           => summa1_struc%bvarStruct          , & ! x%var(:)%dat        -- basin-average variables
-
-  ! ancillary data structures
-  dparStruct           => summa1_struc%dparStruct          , & ! x%var(:)     -- default model parameters
-  ! miscellaneous variables
-  nGRU                 => summa1_struc%nGRU                , & ! number of grouped response units
-  nHRU                 => summa1_struc%nHRU                , & ! number of global hydrologic response units
-  summaFileManagerFile => summa1_struc%summaFileManagerFile  & ! path/name of file defining directories and files
-
- ) ! assignment to variables in the data structures
+ character(LEN=256)		                  :: cmessage           ! error message of downwind routine
+ character(len=256)                    	  :: restartFile        ! restart file name
+ character(len=256)                    	  :: attrFile           ! attributes file name
+ character(len=128)                       :: fmtGruOutput       ! a format string used to write start and end GRU in output file names
+ integer(i4b)                             :: iStruct           ! looping variables
+ integer(i4b)                             :: fileGRU            ! [used for filenames] number of GRUs in the input file
+ integer(i4b)                             :: fileHRU            ! [used for filenames] number of HRUs in the input file
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_initialize/'
@@ -282,9 +297,6 @@ contains
 
  ! aggregate the elapsed time for the initialization
  elapsedInit = elapsedSec(startInit, endInit)
-
- ! end associate statements
- end associate summaVars
 
  end subroutine summa4chm_initialize
 
