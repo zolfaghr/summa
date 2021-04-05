@@ -88,7 +88,7 @@ contains
  USE read_pinit_module,only:read_pinit                       ! module to read initial model parameter values
  USE paramCheck_module,only:paramCheck                       ! module to check consistency of model parameters
  USE pOverwrite_module,only:pOverwrite                       ! module to overwrite default parameter values with info from the Noah tables
- USE read_param_module,only:read_param                       ! module to read model parameter sets
+ USE read_param4chm_module,only:read_param4chm                       ! module to read model parameter sets
  USE ConvE2Temp_module,only:E2T_lookup                       ! module to calculate a look-up table for the temperature-enthalpy conversion
  USE var_derive_module,only:fracFuture                       ! module to calculate the fraction of runoff in future time steps (time delay histogram)
  USE module_sf_noahmplsm,only:read_mp_veg_parameters         ! module to read NOAH vegetation tables
@@ -229,34 +229,32 @@ contains
   do iHRU=1,gru_struc(iGRU)%hruCount
 
    ! set parmameters to their default value
-   dparStruct%gru(iGRU)%hru(iHRU)%var(:) = localParFallback(:)%default_val         ! x%hru(:)%var(:)
+   dparStruct%var(:) = localParFallback(:)%default_val         ! x%hru(:)%var(:)
 
    ! overwrite default model parameters with information from the Noah-MP tables
    call pOverwrite(typeStruct%var(iLookTYPE%vegTypeIndex),  &  ! vegetation category
                    typeStruct%var(iLookTYPE%soilTypeIndex), &  ! soil category
-                   dparStruct%gru(iGRU)%hru(iHRU)%var,                          &  ! default model parameters
+                   dparStruct%var,                          &  ! default model parameters
                    err,cmessage)                                                   ! error control
    if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
    ! copy over to the parameter structure
    ! NOTE: constant for the dat(:) dimension (normally depth)
    do ivar=1,size(localParFallback)
-    mparStruct%gru(iGRU)%hru(iHRU)%var(ivar)%dat(:) = dparStruct%gru(iGRU)%hru(iHRU)%var(ivar)
+    mparStruct%var(ivar)%dat(:) = dparStruct%var(ivar)
    end do  ! looping through variables
 
   end do  ! looping through HRUs
 
   ! set default for basin-average parameters
-  bparStruct%gru(iGRU)%var(:) = basinParFallback(:)%default_val
+  bparStruct%var(:) = basinParFallback(:)%default_val
 
  end do  ! looping through GRUs
  
- ! reza: idStruct up to here
-
  ! *****************************************************************************
  ! *** read trial model parameter values for each HRU, and populate initial data structures
  ! *****************************************************************************
- call read_param(iRunMode,checkHRU,startGRU,nHRU,nGRU,idStruct,mparStruct,bparStruct,err,cmessage)
+ call read_param4chm(iRunMode,checkHRU,startGRU,nHRU,nGRU,idStruct,mparStruct,bparStruct,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! *****************************************************************************
@@ -266,8 +264,8 @@ contains
  do iGRU=1,nGRU
 
   ! calculate the fraction of runoff in future time steps
-  call fracFuture(bparStruct%gru(iGRU)%var,    &  ! vector of basin-average model parameters
-                  bvarStruct%gru(iGRU),        &  ! data structure of basin-average variables
+  call fracFuture(bparStruct%var,    &  ! vector of basin-average model parameters
+                  bvarStruct,        &  ! data structure of basin-average variables
                   err,cmessage)                   ! error control
   if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
@@ -277,7 +275,7 @@ contains
    kHRU=0
    ! check the network topology (only expect there to be one downslope HRU)
    do jHRU=1,gru_struc(iGRU)%hruCount
-    if(typeStruct%var(iLookTYPE%downHRUindex) == idStruct%gru(iGRU)%hru(jHRU)%var(iLookID%hruId))then
+    if(typeStruct%var(iLookTYPE%downHRUindex) == idStruct%var(iLookID%hruId))then
      if(kHRU==0)then  ! check there is a unique match
       kHRU=jHRU
      else
@@ -287,38 +285,38 @@ contains
    end do
 
    ! check that the parameters are consistent
-   call paramCheck(mparStruct%gru(iGRU)%hru(iHRU),err,cmessage)
+   call paramCheck(mparStruct,err,cmessage)
    if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
    ! calculate a look-up table for the temperature-enthalpy conversion
-   call E2T_lookup(mparStruct%gru(iGRU)%hru(iHRU),err,cmessage)
+   call E2T_lookup(mparStruct,err,cmessage)
    if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
    ! overwrite the vegetation height
-   HVT(typeStruct%var(iLookTYPE%vegTypeIndex)) = mparStruct%gru(iGRU)%hru(iHRU)%var(iLookPARAM%heightCanopyTop)%dat(1)
-   HVB(typeStruct%var(iLookTYPE%vegTypeIndex)) = mparStruct%gru(iGRU)%hru(iHRU)%var(iLookPARAM%heightCanopyBottom)%dat(1)
+   HVT(typeStruct%var(iLookTYPE%vegTypeIndex)) = mparStruct%var(iLookPARAM%heightCanopyTop)%dat(1)
+   HVB(typeStruct%var(iLookTYPE%vegTypeIndex)) = mparStruct%var(iLookPARAM%heightCanopyBottom)%dat(1)
 
    ! overwrite the tables for LAI and SAI
    if(model_decisions(iLookDECISIONS%LAI_method)%iDecision == specified)then
-    SAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%gru(iGRU)%hru(iHRU)%var(iLookPARAM%winterSAI)%dat(1)
-    LAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%gru(iGRU)%hru(iHRU)%var(iLookPARAM%summerLAI)%dat(1)*greenVegFrac_monthly
+    SAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%var(iLookPARAM%winterSAI)%dat(1)
+    LAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%var(iLookPARAM%summerLAI)%dat(1)*greenVegFrac_monthly
    endif
 
   end do ! HRU
 
   ! compute total area of the upstream HRUS that flow into each HRU
   do iHRU=1,gru_struc(iGRU)%hruCount
-   upArea%gru(iGRU)%hru(iHRU) = 0._dp
+   upArea = 0._dp
    do jHRU=1,gru_struc(iGRU)%hruCount
     ! check if jHRU flows into iHRU; assume no exchange between GRUs
     if(typeStruct%var(iLookTYPE%downHRUindex)==typeStruct%var(iLookID%hruId))then
-     upArea%gru(iGRU)%hru(iHRU) = upArea%gru(iGRU)%hru(iHRU) + attrStruct%var(iLookATTR%HRUarea)
+     upArea = upArea + attrStruct%var(iLookATTR%HRUarea)
     endif   ! (if jHRU is an upstream HRU)
    end do  ! jHRU
   end do  ! iHRU
 
   ! identify the total basin area for a GRU (m2)
-  associate(totalArea => bvarStruct%gru(iGRU)%var(iLookBVAR%basin__totalArea)%dat(1) )
+  associate(totalArea => bvarStruct%var(iLookBVAR%basin__totalArea)%dat(1) )
   totalArea = 0._dp
   do iHRU=1,gru_struc(iGRU)%hruCount
    totalArea = totalArea + attrStruct%var(iLookATTR%HRUarea)
