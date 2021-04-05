@@ -95,10 +95,12 @@ extern "C" {
 
 // cppwrappers of summa subroutines
 
-	void  DefineGlobalData();
 	void  SummaInit( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9, void* h10,
     				 void* h11, void* h12, void* h13, void* h14, void* h15, void* h16, void* h17, void* h18, void* h19,
     				 int* err);
+    				 
+	void  SetupParam( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, double* upArea, int* err);
+    				 
     void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
     					 int* err);
@@ -680,10 +682,6 @@ public:
  
   
   /***** METHODS FROM SUMMA SUBROUTINES ****/
-  
-   void summa_defineGlobalData() {
-   		DefineGlobalData();   
-   }
    
    void summa_initialize() {
 		SummaInit(
@@ -706,6 +704,21 @@ public:
   				handle_bparStruct_,				
   				handle_bvarStruct_,				
   				handle_dparStruct_,
+  				&err_
+  				);				   
+   }
+   
+   
+   void summa_paramSetup() {
+		SetupParam(
+  				handle_attrStruct_,				
+  				handle_typeStruct_,				
+  				handle_idStruct_,							
+  				handle_mparStruct_,				
+  				handle_bparStruct_,				
+  				handle_bvarStruct_,				
+  				handle_dparStruct_,
+  				&upArea_,
   				&err_
   				);				   
    }

@@ -58,21 +58,20 @@ USE mDecisions_module,only:&
 ! safety: set private unless specified otherwise
 implicit none
 private
-public::summa_paramSetup
+public::summa4chm_paramSetup
 contains
 
  ! initializes parameter data structures (e.g. vegetation and soil parameters).
- subroutine summa_paramSetup(&
+ subroutine summa4chm_paramSetup(&
    							! primary data structures (scalars)
   							attrStruct, 		& !  local attributes for each HRU
   							typeStruct, 		& !  local classification of soil veg etc. for each HRU
   							idStruct, 			& !  local classification of soil veg etc. for each HRU
   							! primary data structures (variable length vectors)
   							mparStruct, 		& !  model parameters
-  							dparStruct, 		& !  default model parameters
-  							! basin-average structures
   							bparStruct, 		& !  basin-average parameters
   							bvarStruct, 		& !  basin-average variables
+  							dparStruct, 		& !  default model parameters
   							! miscellaneous variables
   							upArea, 			& ! area upslope of each HRU,
   							err, message)
@@ -141,7 +140,7 @@ contains
  integer(i4b)               		   :: nHRU
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
- err=0; message='summa_paramSetup/'
+ err=0; message='summa4chm_paramSetup/'
  nGRU = 1
  nHRU = 1
 
@@ -331,7 +330,7 @@ contains
  ! aggregate the elapsed time for the initialization
  elapsedSetup = elapsedSec(startSetup, endSetup)
 
- end subroutine summa_paramSetup
+ end subroutine summa4chm_paramSetup
 
 
  ! =================================================================================================

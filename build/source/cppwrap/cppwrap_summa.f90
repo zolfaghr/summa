@@ -10,32 +10,13 @@ module cppwrap_summa
 
   ! privacy
   implicit none
-  public::DefineGlobalData
   public::SummaInit
+  public::SetupParam
   public::SolveCoupledEM
 
 
 contains
 
-  ! **********************************************************************************************************
-  ! public subroutine DefineGlobalData: 
-  ! **********************************************************************************************************
-  subroutine DefineGlobalData() bind(C, name ='DefineGlobalData')
-  
-  use summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
-  
-  implicit none
-  integer(c_int)				   :: err
-  character(len=256)               :: message
-  
-  ! define global data (parameters, metadata)
-  call summa_defineGlobalData(err, message)
-  
-  
-  
-  end subroutine DefineGlobalData
-  
-  
   ! **********************************************************************************************************
   ! public subroutine SummaInit: 
   ! **********************************************************************************************************
@@ -181,7 +162,79 @@ contains
  								err, message)
   
   end subroutine SummaInit
+  
+  
+  
+  ! **********************************************************************************************************
+  ! public subroutine SetupParam: initializes parameter data structures (e.g. vegetation and soil parameters).
+  ! **********************************************************************************************************
+ 
+   subroutine SetupParam(&
+   							! primary data structures (scalars)
+  							handle_attrStruct, 		& !  local attributes for each HRU
+  							handle_typeStruct, 		& !  local classification of soil veg etc. for each HRU
+  							handle_idStruct, 		& !  local classification of soil veg etc. for each HRU
+  							! primary data structures (variable length vectors)
+  							handle_mparStruct, 		& !  model parameters
+  							handle_bparStruct, 		& !  basin-average parameters
+  							handle_bvarStruct, 		& !  basin-average variables
+  							handle_dparStruct, 		& !  default model parameters
+  							! miscellaneous variables
+  							upArea, 			    & ! area upslope of each HRU,
+  							err)  bind(C,name='SetupParam')
+  
+  use summa4chm_setup,only:summa4chm_paramSetup           
+  
+  implicit none
+  ! calling variables
+  type(c_ptr), intent(in), value    ::	handle_attrStruct !  local attributes for each HRU
+  type(c_ptr), intent(in), value    ::	handle_typeStruct !  local classification of soil veg etc. for each HRU
+  type(c_ptr), intent(in), value    ::	handle_idStruct ! 
+  type(c_ptr), intent(in), value    ::	handle_mparStruct !  model parameters
+  type(c_ptr), intent(in), value    ::	handle_bparStruct !  basin-average parameters
+  type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
+  type(c_ptr), intent(in), value    ::	handle_dparStruct !  default model parameters
+  real(dp),intent(inout)			:: upArea
+  integer(c_int)				    :: err
+ !---------------------------------------------------------------------------------------------------  
+ ! local variables
+ type(var_d),pointer                :: attrStruct                 !  local attributes for each HRU
+ type(var_i),pointer                :: typeStruct                 !  local classification of soil veg etc. for each HRU
+ type(var_i8),pointer               :: idStruct                   ! 
+ type(var_dlength),pointer          :: mparStruct                 !  model parameters
+ type(var_d),pointer                :: bparStruct                 !  basin-average parameters
+ type(var_dlength),pointer          :: bvarStruct                 !  basin-average variables
+ type(var_d),pointer                :: dparStruct                 !  default model parameters
+ character(len=256)                 :: message
 
+  
+  ! getting data
+  call c_f_pointer(handle_attrStruct, attrStruct)
+  call c_f_pointer(handle_typeStruct, typeStruct)
+  call c_f_pointer(handle_idStruct, idStruct)
+  call c_f_pointer(handle_mparStruct, mparStruct)
+  call c_f_pointer(handle_bparStruct, bparStruct)
+  call c_f_pointer(handle_bvarStruct, bvarStruct)
+  call c_f_pointer(handle_dparStruct, dparStruct)
+  
+  call summa_paramSetup(&
+   							! primary data structures (scalars)
+  							attrStruct, 		& !  local attributes for each HRU
+  							typeStruct, 		& !  local classification of soil veg etc. for each HRU
+  							idStruct, 			& !  local classification of soil veg etc. for each HRU
+  							! primary data structures (variable length vectors)
+  							mparStruct, 		& !  model parameters
+  							bparStruct, 		& !  basin-average parameters
+  							bvarStruct, 		& !  basin-average variables
+  							dparStruct, 		& !  default model parameters
+  							! miscellaneous variables
+  							upArea, 			& ! area upslope of each HRU,
+  							err, message)
+  							
+  end subroutine SetupParam
+  
+  
+  
   ! **********************************************************************************************************
   ! public subroutine SolveCoupledEM: solving coupled energy-mass equations for one timestep
   ! **********************************************************************************************************

@@ -9,9 +9,6 @@ int main()  {
 
   Summa S;
   
-  // define global data
-  //S.summa_defineGlobalData();
-  
   S.summa_initialize();
   
   exit(0);
