@@ -128,6 +128,11 @@ SUMMA_PRELIM= \
 		allocspace.f90 \
 		checkStruc.f90 \
 		childStruc.f90 \
+		ffile_info.f90 \
+		read_attrb4chm.f90 \
+		read_pinit.f90 \
+		pOverwrite.f90 \
+		read_param4chm.f90 \
 		paramCheck.f90 \
 		check_icond.f90
 PRELIM = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_PRELIM))

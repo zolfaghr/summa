@@ -18,7 +18,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module read_param_module
+module read_param4chm_module
 
 ! missing values
 USE globalData,only:integerMissing  ! missing integer
@@ -35,20 +35,20 @@ USE netcdf_util_module,only:nc_file_open   ! open netcdf file
 USE netcdf_util_module,only:netcdf_err     ! netcdf error handling function
 
 ! data types
-USE data_types,only:gru_double             ! spatial double data type:  x%gru(:)%var(:)
-USE data_types,only:gru_hru_int8           ! spatial integer data type: x%gru(:)%hru(:)%var(:)
-USE data_types,only:gru_hru_doubleVec      ! spatial double data type:  x%gru(:)%hru(:)%var(:)%dat(:)
+USE data_types,only:var_d                  ! spatial double data type:  x%gru(:)%var(:)
+USE data_types,only:var_i8           ! spatial integer data type: x%gru(:)%hru(:)%var(:)
+USE data_types,only:var_dlength      ! spatial double data type:  x%gru(:)%hru(:)%var(:)%dat(:)
 
 implicit none
 private
-public::read_param
+public::read_param4chm
 contains
 
 
  ! ************************************************************************************************
- ! public subroutine read_param: read trial model parameter values
+ ! public subroutine read_param4chm: read trial model parameter values
  ! ************************************************************************************************
- subroutine read_param(iRunMode,checkHRU,startGRU,nHRU,nGRU,idStruct,mparStruct,bparStruct,err,message)
+ subroutine read_param4chm(iRunMode,checkHRU,startGRU,nHRU,nGRU,idStruct,mparStruct,bparStruct,err,message)
  ! used to read model initial conditions
  USE summaFileManager,only:SETTINGS_PATH             ! path for metadata files
  USE summaFileManager,only:PARAMETER_TRIAL           ! file with parameter trial values
@@ -62,10 +62,10 @@ contains
  integer(i4b),        intent(in)       :: startGRU         ! index of single GRU if runMode = startGRU
  integer(i4b),        intent(in)       :: nHRU             ! number of global HRUs
  integer(i4b),        intent(in)       :: nGRU             ! number of global GRUs
- type(gru_hru_int8),  intent(in)       :: idStruct         ! local labels for hru and gru IDs
+ type(var_i8),  	  intent(in)       :: idStruct         ! local labels for hru and gru IDs
  ! define output
- type(gru_hru_doubleVec),intent(inout) :: mparStruct       ! model parameters
- type(gru_double)    ,intent(inout)    :: bparStruct       ! basin parameters
+ type(var_dlength),intent(inout) 	   :: mparStruct       ! model parameters
+ type(var_d),intent(inout)    		   :: bparStruct       ! basin parameters
  integer(i4b),        intent(out)      :: err              ! error code
  character(*),        intent(out)      :: message          ! error message
  ! define local variables
@@ -95,7 +95,7 @@ contains
  integer(i4b)                          :: fHRU             ! index of HRU in input file
 
  ! Start procedure here
- err=0; message="read_param/"
+ err=0; message="read_param4chm/"
 
  ! **********************************************************************************************
  ! * open files, etc.
@@ -185,8 +185,8 @@ contains
     do iHRU=1,nHRU
      iGRU=index_map(iHRU)%gru_ix
      localHRU_ix=index_map(iHRU)%localHRU_ix
-     if((hruId(iHRU)>0).and.(hruId(iHRU)/=idStruct%gru(iGRU)%hru(localHRU_ix)%var(iLookID%hruId)))then
-      write(message,'(a,i0,a,i0,a)') trim(message)//'mismatch for HRU ', idStruct%gru(iGRU)%hru(localHRU_ix)%var(iLookID%hruId), '(param HRU = ', hruId(iHRU), ')'
+     if((hruId(iHRU)>0).and.(hruId(iHRU)/=idStruct%var(iLookID%hruId)))then
+      write(message,'(a,i0,a,i0,a)') trim(message)//'mismatch for HRU ', idStruct%var(iLookID%hruId), '(param HRU = ', hruId(iHRU), ')'
       err=20; return
      endif
     end do  ! looping through HRUs
@@ -196,8 +196,8 @@ contains
      iGRU=index_map(iHRU)%gru_ix
      localHRU_ix=index_map(iHRU)%localHRU_ix
      fHRU = gru_struc(iGRU)%hruInfo(localHRU_ix)%hru_nc
-     if(hruId(fHRU)/=idStruct%gru(iGRU)%hru(localHRU_ix)%var(iLookID%hruId))then
-     write(message,'(a,i0,a,i0,a)') trim(message)//'mismatch for HRU ', idStruct%gru(iGRU)%hru(localHRU_ix)%var(iLookID%hruId), '(param HRU = ', hruId(iHRU), ')'
+     if(hruId(fHRU)/=idStruct%var(iLookID%hruId))then
+     write(message,'(a,i0,a,i0,a)') trim(message)//'mismatch for HRU ', idStruct%var(iLookID%hruId), '(param HRU = ', hruId(iHRU), ')'
      err=20; return
     endif
    enddo
@@ -205,8 +205,8 @@ contains
    else if (iRunMode==iRunModeHRU) then
     iGRU=index_map(1)%gru_ix
     localHRU_ix=index_map(1)%localHRU_ix
-    if(hruId(checkHRU)/=idStruct%gru(iGRU)%hru(localHRU_ix)%var(iLookID%hruId))then
-     write(message,'(a,i0,a,i0,a)') trim(message)//'mismatch for HRU ', idStruct%gru(iGRU)%hru(localHRU_ix)%var(iLookID%hruId), '(param HRU = ', hruId(iHRU), ')'
+    if(hruId(checkHRU)/=idStruct%var(iLookID%hruId))then
+     write(message,'(a,i0,a,i0,a)') trim(message)//'mismatch for HRU ', idStruct%var(iLookID%hruId), '(param HRU = ', hruId(iHRU), ')'
      err=20; return
     endif
 
@@ -256,7 +256,7 @@ contains
     endif
 
     ! check that the dimension length is correct
-    if(size(mparStruct%gru(iGRU)%hru(localHRU_ix)%var(ixParam)%dat) /= nSoil_file)then
+    if(size(mparStruct%var(ixParam)%dat) /= nSoil_file)then
      message=trim(message)//'unexpected number of soil layers in parameter file'
      err=20; return
     endif
@@ -295,8 +295,8 @@ contains
 
     ! populate parameter structures
     select case(nDims)
-     case(1); mparStruct%gru(iGRU)%hru(localHRU_ix)%var(ixParam)%dat(:) = parVector(1)  ! also distributes scalar across depth dimension
-     case(2); mparStruct%gru(iGRU)%hru(localHRU_ix)%var(ixParam)%dat(:) = parVector(:)
+     case(1); mparStruct%var(ixParam)%dat(:) = parVector(1)  ! also distributes scalar across depth dimension
+     case(2); mparStruct%var(ixParam)%dat(:) = parVector(:)
      case default; err=20; message=trim(message)//'unexpected number of dimensions for parameter '//trim(parName)
     end select
 
@@ -336,11 +336,11 @@ contains
    ! populate parameter structures
    if (iRunMode==iRunModeGRU) then
     do iGRU=1,nGRU
-     bparStruct%gru(iGRU)%var(ixParam) = parVector(iGRU+startGRU-1)
+     bparStruct%var(ixParam) = parVector(iGRU+startGRU-1)
     end do  ! looping through GRUs
    else if (iRunMode==iRunModeFull) then
     do iGRU=1,nGRU
-     bparStruct%gru(iGRU)%var(ixParam) = parVector(iGRU)
+     bparStruct%var(ixParam) = parVector(iGRU)
     end do  ! looping through GRUs
    else if (iRunMode==iRunModeHRU) then
     err = 20; message='checkHRU run mode not working'; return;
@@ -357,6 +357,6 @@ contains
 
  end do ! (looping through the parameters in the NetCDF file)
 
- end subroutine read_param
+ end subroutine read_param4chm
 
-end module read_param_module
+end module read_param4chm_module

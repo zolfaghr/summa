@@ -18,12 +18,12 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module read_attrb_module
+module read_attrb4chm_module
 USE nrtype
 implicit none
 private
 public::read_dimension
-public::read_attrb
+public::read_attrb4chm
 contains
 
  ! ************************************************************************************************
@@ -190,18 +190,18 @@ end if ! not checkHRU
 end subroutine read_dimension
 
  ! ************************************************************************************************
- ! public subroutine read_attrb: read information on local attributes
+ ! public subroutine read_attrb4chm: read information on local attributes
  ! ************************************************************************************************
- subroutine read_attrb(attrFile,nGRU,attrStruct,typeStruct,idStruct,err,message)
+ subroutine read_attrb4chm(attrFile,nGRU,attrStruct,typeStruct,idStruct,err,message)
  ! provide access to subroutines
  USE netcdf
  USE netcdf_util_module,only:nc_file_open                   ! open netcdf file
  USE netcdf_util_module,only:nc_file_close                  ! close netcdf file
  USE netcdf_util_module,only:netcdf_err                     ! netcdf error handling function
  ! provide access to derived data types
- USE data_types,only:gru_hru_int                            ! x%gru(:)%hru(:)%var(:)     (i4b)
- USE data_types,only:gru_hru_int8                           ! x%gru(:)%hru(:)%var(:)     integer(8)
- USE data_types,only:gru_hru_double                         ! x%gru(:)%hru(:)%var(:)     (dp)
+ USE data_types,only:var_d                            ! x%var(:)     (i4b)
+ USE data_types,only:var_i                            ! x%var(:)     integer(8)
+ USE data_types,only:var_i8                           ! x%var(:)     (dp)
  ! provide access to global data
  USE globalData,only:gru_struc                              ! gru-hru mapping structure
  USE globalData,only:attr_meta,type_meta,id_meta            ! metadata structures
@@ -211,9 +211,9 @@ end subroutine read_dimension
  ! io vars
  character(*)                         :: attrFile           ! input filename
  integer(i4b),intent(in)              :: nGRU               ! number of grouped response units
- type(gru_hru_double),intent(inout)   :: attrStruct         ! local attributes for each HRU
- type(gru_hru_int),intent(inout)      :: typeStruct         ! local classification of soil veg etc. for each HRU
- type(gru_hru_int8),intent(inout)     :: idStruct           ! local classification of hru and gru IDs
+ type(var_d),intent(inout)            :: attrStruct                 !  local attributes for each HRU
+ type(var_i),intent(inout)            :: typeStruct                 !  local classification of soil veg etc. for each HRU
+ type(var_i8),intent(inout)           :: idStruct                   ! 
  integer(i4b),intent(out)             :: err                ! error code
  character(*),intent(out)             :: message            ! error message
 
@@ -245,7 +245,7 @@ end subroutine read_dimension
  ! define mapping variables
 
  ! Start procedure here
- err=0; message="read_attrb/"
+ err=0; message="read_attrb4chm/"
 
  ! **********************************************************************************************
  ! (1) prepare check vectors
@@ -297,7 +297,7 @@ end subroutine read_dimension
      do iHRU = 1,gru_struc(iGRU)%hruCount
       err = nf90_get_var(ncID,iVar,categorical_var,start=(/gru_struc(iGRU)%hruInfo(iHRU)%hru_nc/),count=(/1/))
       if(err/=nf90_noerr)then; message=trim(message)//'problem reading: '//trim(varName); return; end if
-      typeStruct%gru(iGRU)%hru(iHRU)%var(varIndx) = categorical_var(1)
+      typeStruct%var(varIndx) = categorical_var(1)
      end do
     end do
 
@@ -316,7 +316,7 @@ end subroutine read_dimension
      do iHRU = 1,gru_struc(iGRU)%hruCount
       err = nf90_get_var(ncID,iVar,idrelated_var,start=(/gru_struc(iGRU)%hruInfo(iHRU)%hru_nc/),count=(/1/))
       if(err/=nf90_noerr)then; message=trim(message)//'problem reading: '//trim(varName); return; end if
-      idStruct%gru(iGRU)%hru(iHRU)%var(varIndx) = idrelated_var(1)
+      idStruct%var(varIndx) = idrelated_var(1)
      end do
     end do
 
@@ -336,7 +336,7 @@ end subroutine read_dimension
      do iHRU = 1, gru_struc(iGRU)%hruCount
       err = nf90_get_var(ncID,iVar,numeric_var,start=(/gru_struc(iGRU)%hruInfo(iHRU)%hru_nc/),count=(/1/))
       if(err/=nf90_noerr)then; message=trim(message)//'problem reading: '//trim(varName); return; end if
-      attrStruct%gru(iGRU)%hru(iHRU)%var(varIndx) = numeric_var(1)
+      attrStruct%var(varIndx) = numeric_var(1)
      end do
     end do
 
@@ -387,6 +387,6 @@ end subroutine read_dimension
  deallocate(checkId)
  deallocate(checkAttr)
 
- end subroutine read_attrb
+ end subroutine read_attrb4chm
 
-end module read_attrb_module
+end module read_attrb4chm_module
