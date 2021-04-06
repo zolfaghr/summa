@@ -734,7 +734,7 @@ public:
   				handle_diagStruct_, 
   				handle_fluxStruct_, 
   				handle_bvarStruct_,
-  				handle_dt_init_,
+  				&dt_init_,
   				&err_
   				);				   
    }
