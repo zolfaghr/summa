@@ -86,4 +86,4 @@ contains
 
  end subroutine summa4chm_readForcing
 
-end module summa4chm_forcing
+end module summa_forcing

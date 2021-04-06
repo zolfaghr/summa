@@ -151,6 +151,7 @@ SUMMA_MODRUN = \
 		getVectorz.f90 \
 		updateVars.f90 \
 		var_derive.f90 \
+		read_force4chm.f90 \
 		derivforce.f90 \
 		snowAlbedo.f90 \
 		canopySnow.f90 \
@@ -183,7 +184,8 @@ SUMMA_DRIVER= \
 		summa_globalData.f90 \
 		summa4chm_init.f90 \
 		summa4chm_setup.f90 \
-		summa4chm_restart.f90 
+		summa4chm_restart.f90 \
+		summa4chm_forcing.f90
 		
 DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 
