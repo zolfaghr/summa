@@ -18,14 +18,14 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module read_icond_module
+module read_icond4chm_module
 USE nrtype
 USE netcdf
 USE globalData,only: ixHRUfile_min,ixHRUfile_max
 USE globalData,only: nTimeDelay   ! number of hours in the time delay histogram
 implicit none
 private
-public::read_icond
+public::read_icond4chm
 public::read_icond_nlayers
 ! define single HRU restart file
 integer(i4b), parameter :: singleHRU=1001
@@ -138,9 +138,9 @@ contains
 
 
  ! ************************************************************************************************
- ! public subroutine read_icond: read model initial conditions
+ ! public subroutine read_icond4chm: read model initial conditions
  ! ************************************************************************************************
- subroutine read_icond(iconFile,                      & ! intent(in):    name of initial conditions file
+ subroutine read_icond4chm(iconFile,                      & ! intent(in):    name of initial conditions file
                        nGRU,                          & ! intent(in):    number of GRUs
                        mparData,                      & ! intent(in):    model parameters
                        progData,                      & ! intent(inout): model prognostic variables
@@ -163,9 +163,7 @@ contains
  USE netcdf_util_module,only:nc_file_open               ! open netcdf file
  USE netcdf_util_module,only:nc_file_close              ! close netcdf file
  USE netcdf_util_module,only:netcdf_err                 ! netcdf error handling
- USE data_types,only:gru_hru_doubleVec                  ! full double precision structure
- USE data_types,only:gru_hru_intVec                     ! full integer structure
- USE data_types,only:gru_doubleVec                      ! gru-length double precision structure (basin variables)
+ USE data_types,only:var_ilength                     ! full integer structure
  USE data_types,only:var_dlength                        ! double precision structure for a single HRU
  USE data_types,only:var_info                           ! metadata
  USE get_ixName_module,only:get_varTypeName             ! to access type strings for error messages
@@ -178,10 +176,10 @@ contains
  ! dummies
  character(*)           ,intent(in)     :: iconFile     ! name of netcdf file containing the initial conditions
  integer(i4b)           ,intent(in)     :: nGRU         ! number of grouped response units in simulation domain
- type(gru_hru_doubleVec),intent(in)     :: mparData     ! model parameters
- type(gru_hru_doubleVec),intent(inout)  :: progData     ! model prognostic variables
- type(gru_doubleVec)    ,intent(inout)  :: bvarData     ! model basin (GRU) variables
- type(gru_hru_intVec)   ,intent(inout)  :: indxData     ! model indices
+ type(var_dlength),intent(in)		    :: mparData     ! model parameters
+ type(var_dlength),intent(inout)  		:: progData     ! model prognostic variables
+ type(var_dlength)    ,intent(inout)	:: bvarData     ! model basin (GRU) variables
+ type(var_ilength)   ,intent(inout)  	:: indxData     ! model indices
  integer(i4b)           ,intent(out)    :: err          ! error code
  character(*)           ,intent(out)    :: message      ! returned error message
 
@@ -217,7 +215,7 @@ contains
  ! --------------------------------------------------------------------------------------------------------
 
  ! Start procedure here
- err=0; message="read_icond/"
+ err=0; message="read_icond4chm/"
 
  ! --------------------------------------------------------------------------------------------------------
  ! (1) read the file
@@ -300,17 +298,17 @@ contains
     ! put the data into data structures and check that none of the values are set to nf90_fill_double
     select case (prog_meta(iVar)%varType)
      case (iLookVarType%scalarv)
-      progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(1)       = varData(ixFile,1)
-      if(abs(progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(1) - nf90_fill_double) < epsilon(varData))then; err=20; endif
+      progData%var(iVar)%dat(1)       = varData(ixFile,1)
+      if(abs(progData%var(iVar)%dat(1) - nf90_fill_double) < epsilon(varData))then; err=20; endif
      case (iLookVarType%midSoil)
-      progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(1:nSoil) = varData(ixFile,1:nSoil)
-      if(any(abs(progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(1:nSoil) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
+      progData%var(iVar)%dat(1:nSoil) = varData(ixFile,1:nSoil)
+      if(any(abs(progData%var(iVar)%dat(1:nSoil) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
      case (iLookVarType%midToto)
-      progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(1:nToto) = varData(ixFile,1:nToto)
-      if(any(abs(progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(1:nToto) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
+      progData%var(iVar)%dat(1:nToto) = varData(ixFile,1:nToto)
+      if(any(abs(progData%var(iVar)%dat(1:nToto) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
      case (iLookVarType%ifcToto)
-      progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(0:nToto) = varData(ixFile,1:nToto+1)
-      if(any(abs(progData%gru(iGRU)%hru(iHRU)%var(iVar)%dat(0:nToto) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
+      progData%var(iVar)%dat(0:nToto) = varData(ixFile,1:nToto+1)
+      if(any(abs(progData%var(iVar)%dat(0:nToto) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
      case default
       message=trim(message)//"unexpectedVariableType[name='"//trim(prog_meta(iVar)%varName)//"';type='"//trim(get_varTypeName(prog_meta(iVar)%varType))//"']"
       err=20; return
@@ -319,12 +317,12 @@ contains
     if(err==20)then; message=trim(message)//"data set to the fill value (name='"//trim(prog_meta(iVar)%varName)//"')"; return; endif
 
     ! fix the snow albedo
-    if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1) < 0._dp)then
-     progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMax)%dat(1)
+    if(progData%var(iLookPROG%scalarSnowAlbedo)%dat(1) < 0._dp)then
+     progData%var(iLookPROG%scalarSnowAlbedo)%dat(1) = mparData%var(iLookPARAM%albedoMax)%dat(1)
     endif
 
     ! initialize the spectral albedo
-    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1:nBand) = progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1)
+    progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1:nBand) = progData%var(iLookPROG%scalarSnowAlbedo)%dat(1)
 
    end do ! iHRU
   end do ! iGRU
@@ -342,13 +340,13 @@ contains
   do iHRU = 1,gru_struc(iGRU)%hruCount
 
    ! save the number of layers
-   indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%nSnow)%dat(1)   = gru_struc(iGRU)%hruInfo(iHRU)%nSnow
-   indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%nSoil)%dat(1)   = gru_struc(iGRU)%hruInfo(iHRU)%nSoil
-   indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%nLayers)%dat(1) = gru_struc(iGRU)%hruInfo(iHRU)%nSnow + gru_struc(iGRU)%hruInfo(iHRU)%nSoil
+   indxData%var(iLookINDEX%nSnow)%dat(1)   = gru_struc(iGRU)%hruInfo(iHRU)%nSnow
+   indxData%var(iLookINDEX%nSoil)%dat(1)   = gru_struc(iGRU)%hruInfo(iHRU)%nSoil
+   indxData%var(iLookINDEX%nLayers)%dat(1) = gru_struc(iGRU)%hruInfo(iHRU)%nSnow + gru_struc(iGRU)%hruInfo(iHRU)%nSoil
 
    ! set layer type
-   indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%layerType)%dat(1:gru_struc(iGRU)%hruInfo(iHRU)%nSnow) = iname_snow
-   indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%layerType)%dat((gru_struc(iGRU)%hruInfo(iHRU)%nSnow+1):(gru_struc(iGRU)%hruInfo(iHRU)%nSnow+gru_struc(iGRU)%hruInfo(iHRU)%nSoil)) = iname_soil
+   indxData%var(iLookINDEX%layerType)%dat(1:gru_struc(iGRU)%hruInfo(iHRU)%nSnow) = iname_snow
+   indxData%var(iLookINDEX%layerType)%dat((gru_struc(iGRU)%hruInfo(iHRU)%nSnow+1):(gru_struc(iGRU)%hruInfo(iHRU)%nSnow+gru_struc(iGRU)%hruInfo(iHRU)%nSoil)) = iname_soil
 
   end do
  end do
@@ -362,25 +360,25 @@ contains
   do iHRU = 1,gru_struc(iGRU)%hruCount
 
    ! loop through soil layers
-   do iLayer = 1,indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%nSoil)%dat(1)
+   do iLayer = 1,indxData%var(iLookINDEX%nSoil)%dat(1)
 
     ! get layer in the total vector
-    jLayer = iLayer+indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%nSnow)%dat(1)
+    jLayer = iLayer+indxData%var(iLookINDEX%nSnow)%dat(1)
 
     ! update soil layers
     call updateSoil(&
                     ! input
-                    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerTemp          )%dat(jLayer),& ! intent(in): temperature vector (K)
-                    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerMatricHead    )%dat(iLayer),& ! intent(in): matric head (m)
-                    mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%vGn_alpha          )%dat(iLayer),& ! intent(in): van Genutchen "alpha" parameter
-                    mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%vGn_n              )%dat(iLayer),& ! intent(in): van Genutchen "n" parameter
-                    mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%theta_sat          )%dat(iLayer),& ! intent(in): soil porosity (-)
-                    mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%theta_res          )%dat(iLayer),& ! intent(in): soil residual volumetric water content (-)
-                    1._dp - 1._dp/mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%vGn_n)%dat(iLayer),& ! intent(in): van Genutchen "m" parameter (-)
+                    progData%var(iLookPROG%mLayerTemp          )%dat(jLayer),& ! intent(in): temperature vector (K)
+                    progData%var(iLookPROG%mLayerMatricHead    )%dat(iLayer),& ! intent(in): matric head (m)
+                    mparData%var(iLookPARAM%vGn_alpha          )%dat(iLayer),& ! intent(in): van Genutchen "alpha" parameter
+                    mparData%var(iLookPARAM%vGn_n              )%dat(iLayer),& ! intent(in): van Genutchen "n" parameter
+                    mparData%var(iLookPARAM%theta_sat          )%dat(iLayer),& ! intent(in): soil porosity (-)
+                    mparData%var(iLookPARAM%theta_res          )%dat(iLayer),& ! intent(in): soil residual volumetric water content (-)
+                    1._dp - 1._dp/mparData%var(iLookPARAM%vGn_n)%dat(iLayer),& ! intent(in): van Genutchen "m" parameter (-)
                     ! output
-                    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracWat    )%dat(jLayer),& ! intent(out): volumetric fraction of total water (-)
-                    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracLiq    )%dat(jLayer),& ! intent(out): volumetric fraction of liquid water (-)
-                    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracIce    )%dat(jLayer),& ! intent(out): volumetric fraction of ice (-)
+                    progData%var(iLookPROG%mLayerVolFracWat    )%dat(jLayer),& ! intent(out): volumetric fraction of total water (-)
+                    progData%var(iLookPROG%mLayerVolFracLiq    )%dat(jLayer),& ! intent(out): volumetric fraction of liquid water (-)
+                    progData%var(iLookPROG%mLayerVolFracIce    )%dat(jLayer),& ! intent(out): volumetric fraction of ice (-)
                     err,message)                                                                   ! intent(out): error control
     if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
 
@@ -446,9 +444,9 @@ contains
     do iGRU = 1,nGRU
 
      ! put the data into data structures
-     bvarData%gru(iGRU)%var(iVar)%dat(1:nTDH) = varData((iGRU+startGRU-1),1:nTDH)
+     bvarData%dat(1:nTDH) = varData((iGRU+startGRU-1),1:nTDH)
      ! check whether the first values is set to nf90_fill_double
-     if(any(abs(bvarData%gru(iGRU)%var(iVar)%dat(1:nTDH) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
+     if(any(abs(bvarData%dat(1:nTDH) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
      if(err==20)then; message=trim(message)//"data set to the fill value (name='"//trim(bvar_meta(iVar)%varName)//"')"; return; endif
 
     end do ! end iGRU loop
@@ -461,6 +459,6 @@ contains
   endif  ! end if case for tdh variables being in init. cond. file
  endif  ! end if case for not being a singleHRU run
 
- end subroutine read_icond
+ end subroutine read_icond4chm
 
-end module read_icond_module
+end module read_icond4chm_module

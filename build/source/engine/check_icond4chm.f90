@@ -18,7 +18,7 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module check_icond_module
+module check_icond4chm_module
 USE nrtype
 
 ! access missing values
@@ -32,13 +32,13 @@ USE mDecisions_module,only:  &
 
 implicit none
 private
-public::check_icond
+public::check_icond4chm
 contains
 
  ! ************************************************************************************************
- ! public subroutine check_icond: read model initial conditions
+ ! public subroutine check_icond4chm: read model initial conditions
  ! ************************************************************************************************
- subroutine check_icond(nGRU,                          & ! number of GRUs and HRUs
+ subroutine check_icond4chm(nGRU,                          & ! number of GRUs and HRUs
                         progData,                      & ! model prognostic (state) variables
                         mparData,                      & ! model parameters
                         indxData,                      & ! layer index data
@@ -50,8 +50,8 @@ contains
  USE var_lookup,only:iLookProg                           ! variable lookup structure
  USE var_lookup,only:iLookIndex                          ! variable lookup structure
  USE globalData,only:gru_struc                           ! gru-hru mapping structures
- USE data_types,only:gru_hru_doubleVec                   ! actual data
- USE data_types,only:gru_hru_intVec                      ! actual data
+ USE data_types,only:var_dlength                   ! actual data
+ USE data_types,only:var_ilength                      ! actual data
  USE globaldata,only:iname_soil,iname_snow               ! named variables to describe the type of layer
  USE multiconst,only:&
                        LH_fus,    &                      ! latent heat of fusion                (J kg-1)
@@ -67,12 +67,12 @@ contains
  ! --------------------------------------------------------------------------------------------------------
  ! variable declarations
  ! dummies
- integer(i4b)           ,intent(in)    :: nGRU           ! number of grouped response units
- type(gru_hru_doubleVec),intent(inout) :: progData       ! prognostic vars
- type(gru_hru_doubleVec),intent(in)    :: mparData       ! parameters
- type(gru_hru_intVec)   ,intent(in)    :: indxData       ! layer indexes
- integer(i4b)           ,intent(out)   :: err            ! error code
- character(*)           ,intent(out)   :: message        ! returned error message
+ integer(i4b)           ,intent(in)    	:: nGRU           ! number of grouped response units
+ type(var_dlength),intent(inout) 		:: progData       ! prognostic vars
+ type(var_dlength),intent(in)    		:: mparData       ! parameters
+ type(var_ilength)   ,intent(in)    	:: indxData       ! layer indexes
+ integer(i4b)           ,intent(out)   	:: err            ! error code
+ character(*)           ,intent(out)   	:: message        ! returned error message
 
  ! locals
  character(len=256)                     :: cmessage      ! downstream error message
@@ -94,7 +94,7 @@ contains
  ! --------------------------------------------------------------------------------------------------------
 
  ! Start procedure here
- err=0; message="check_icond/"
+ err=0; message="check_icond4chm/"
 
  ! --------------------------------------------------------------------------------------------------------
  ! Check that the initial conditions do not conflict with parameters, structure, etc.
@@ -102,20 +102,20 @@ contains
  do iGRU = 1,nGRU
   do iHRU = 1,gru_struc(iGRU)%hruCount
    ! ensure the spectral average albedo is realistic
-   if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1) > mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMax)%dat(1)) &
-      progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMax)%dat(1)
-   if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1) < mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMinWinter)%dat(1)) &
-      progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSnowAlbedo)%dat(1) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMinWinter)%dat(1)
+   if(progData%var(iLookPROG%scalarSnowAlbedo)%dat(1) > mparData%var(iLookPARAM%albedoMax)%dat(1)) &
+      progData%var(iLookPROG%scalarSnowAlbedo)%dat(1) = mparData%var(iLookPARAM%albedoMax)%dat(1)
+   if(progData%var(iLookPROG%scalarSnowAlbedo)%dat(1) < mparData%var(iLookPARAM%albedoMinWinter)%dat(1)) &
+      progData%var(iLookPROG%scalarSnowAlbedo)%dat(1) = mparData%var(iLookPARAM%albedoMinWinter)%dat(1)
    ! ensure the visible albedo is realistic
-   if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) > mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMaxVisible)%dat(1)) &
-      progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMaxVisible)%dat(1)
-   if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) < mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMinVisible)%dat(1)) &
-      progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMinVisible)%dat(1)
+   if(progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) > mparData%var(iLookPARAM%albedoMaxVisible)%dat(1)) &
+      progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) = mparData%var(iLookPARAM%albedoMaxVisible)%dat(1)
+   if(progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) < mparData%var(iLookPARAM%albedoMinVisible)%dat(1)) &
+      progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(1) = mparData%var(iLookPARAM%albedoMinVisible)%dat(1)
    ! ensure the nearIR albedo is realistic
-   if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) > mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMaxNearIR)%dat(1)) &
-      progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMaxNearIR)%dat(1)
-   if(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) < mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMinNearIR)%dat(1)) &
-      progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) = mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%albedoMinNearIR)%dat(1)
+   if(progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) > mparData%var(iLookPARAM%albedoMaxNearIR)%dat(1)) &
+      progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) = mparData%var(iLookPARAM%albedoMaxNearIR)%dat(1)
+   if(progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) < mparData%var(iLookPARAM%albedoMinNearIR)%dat(1)) &
+      progData%var(iLookPROG%spectralSnowAlbedoDiffuse)%dat(2) = mparData%var(iLookPARAM%albedoMinNearIR)%dat(1)
   end do
  end do
 
@@ -126,23 +126,23 @@ contains
    ! associate local variables with variables in the data structures
    associate(&
    ! state variables in the vegetation canopy
-   scalarCanopyTemp  => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarCanopyTemp)%dat(1)   , & ! canopy temperature
-   scalarCanopyIce   => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarCanopyIce)%dat(1)    , & ! mass of ice on the vegetation canopy (kg m-2)
-   scalarCanopyLiq   => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarCanopyLiq)%dat(1)    , & ! mass of liquid water on the vegetation canopy (kg m-2)
+   scalarCanopyTemp  => progData%var(iLookPROG%scalarCanopyTemp)%dat(1)   , & ! canopy temperature
+   scalarCanopyIce   => progData%var(iLookPROG%scalarCanopyIce)%dat(1)    , & ! mass of ice on the vegetation canopy (kg m-2)
+   scalarCanopyLiq   => progData%var(iLookPROG%scalarCanopyLiq)%dat(1)    , & ! mass of liquid water on the vegetation canopy (kg m-2)
    ! state variables in the snow+soil domain
-   mLayerTemp        => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerTemp)%dat            , & ! temperature (K)
-   mLayerVolFracLiq  => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracLiq)%dat      , & ! volumetric fraction of liquid water in each snow layer (-)
-   mLayerVolFracIce  => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracIce)%dat      , & ! volumetric fraction of ice in each snow layer (-)
-   mLayerMatricHead  => progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerMatricHead)%dat      , & ! matric head (m)
-   mLayerLayerType   => indxData%gru(iGRU)%hru(iHRU)%var(iLookINDEX%layerType)%dat            , & ! type of layer (ix_soil or ix_snow)
+   mLayerTemp        => progData%var(iLookPROG%mLayerTemp)%dat            , & ! temperature (K)
+   mLayerVolFracLiq  => progData%var(iLookPROG%mLayerVolFracLiq)%dat      , & ! volumetric fraction of liquid water in each snow layer (-)
+   mLayerVolFracIce  => progData%var(iLookPROG%mLayerVolFracIce)%dat      , & ! volumetric fraction of ice in each snow layer (-)
+   mLayerMatricHead  => progData%var(iLookPROG%mLayerMatricHead)%dat      , & ! matric head (m)
+   mLayerLayerType   => indxData%var(iLookINDEX%layerType)%dat            , & ! type of layer (ix_soil or ix_snow)
    ! depth varying soil properties
-   vGn_alpha         => mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%vGn_alpha)%dat            , & ! van Genutchen "alpha" parameter (m-1)
-   vGn_n             => mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%vGn_n)%dat                , & ! van Genutchen "n" parameter (-)
-   theta_sat         => mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%theta_sat)%dat            , & ! soil porosity (-)
-   theta_res         => mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%theta_res)%dat            , & ! soil residual volumetric water content (-)
+   vGn_alpha         => mparData%var(iLookPARAM%vGn_alpha)%dat            , & ! van Genutchen "alpha" parameter (m-1)
+   vGn_n             => mparData%var(iLookPARAM%vGn_n)%dat                , & ! van Genutchen "n" parameter (-)
+   theta_sat         => mparData%var(iLookPARAM%theta_sat)%dat            , & ! soil porosity (-)
+   theta_res         => mparData%var(iLookPARAM%theta_res)%dat            , & ! soil residual volumetric water content (-)
    ! snow parameters
-   snowfrz_scale     => mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%snowfrz_scale)%dat(1)     , & ! scaling parameter for the snow freezing curve (K-1)
-   FCapil            => mparData%gru(iGRU)%hru(iHRU)%var(iLookPARAM%FCapil)%dat(1)              & ! fraction of pore space in tension storage (-)
+   snowfrz_scale     => mparData%var(iLookPARAM%snowfrz_scale)%dat(1)     , & ! scaling parameter for the snow freezing curve (K-1)
+   FCapil            => mparData%var(iLookPARAM%FCapil)%dat(1)              & ! fraction of pore space in tension storage (-)
    )  ! (associate local variables with model parameters)
 
    ! compute the constant in the freezing curve function (m K-1)
@@ -264,15 +264,15 @@ contains
 
    ! if snow layers exist, compute snow depth and SWE
    if(nSnow > 0)then
-    progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%scalarSWE)%dat(1)       = sum( (progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracLiq)%dat(1:nSnow)*iden_water + &
-                                                                               progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerVolFracIce)%dat(1:nSnow)*iden_ice)        * &
-                                                                               progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerDepth)%dat(1:nSnow) )
+    progData%var(iLookPROG%scalarSWE)%dat(1)       = sum( (progData%var(iLookPROG%mLayerVolFracLiq)%dat(1:nSnow)*iden_water + &
+                                                                               progData%var(iLookPROG%mLayerVolFracIce)%dat(1:nSnow)*iden_ice)        * &
+                                                                               progData%var(iLookPROG%mLayerDepth)%dat(1:nSnow) )
    end if  ! if snow layers exist
 
    ! check that the layering is consistent
    do iLayer=1,nLayers
-    h1 = sum(progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%mLayerDepth)%dat(1:iLayer)) ! sum of the depths up to the current layer
-    h2 = progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%iLayerHeight)%dat(iLayer) - progData%gru(iGRU)%hru(iHRU)%var(iLookPROG%iLayerHeight)%dat(0)  ! difference between snow-atm interface and bottom of layer
+    h1 = sum(progData%var(iLookPROG%mLayerDepth)%dat(1:iLayer)) ! sum of the depths up to the current layer
+    h2 = progData%var(iLookPROG%iLayerHeight)%dat(iLayer) - progData%var(iLookPROG%iLayerHeight)%dat(0)  ! difference between snow-atm interface and bottom of layer
     if(abs(h1 - h2) > 1.e-6_dp)then
      write(message,'(a,1x,i0)') trim(message)//'mis-match between layer depth and layer height; layer = ', iLayer, '; sum depths = ',h1,'; height = ',h2
      err=20; return
@@ -282,6 +282,6 @@ contains
   end do ! iHRU
  end do ! iGRU
 
- end subroutine check_icond
+ end subroutine check_icond4chm
 
-end module check_icond_module
+end module check_icond4chm_module

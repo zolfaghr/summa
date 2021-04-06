@@ -136,7 +136,7 @@ contains
  integer(i4b)                          :: jHRU,kHRU          ! HRU indices
  integer(i4b)                          :: iGRU,iHRU          ! looping variables
  integer(i4b)                          :: iVar               ! looping variables
- integer(i4b)               		   :: nGRU                       ! number of grouped response units
+ integer(i4b)               		   :: nGRU               
  integer(i4b)               		   :: nHRU
  ! ---------------------------------------------------------------------------------------
  ! initialize error control

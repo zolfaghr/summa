@@ -134,7 +134,7 @@ SUMMA_PRELIM= \
 		pOverwrite.f90 \
 		read_param4chm.f90 \
 		paramCheck.f90 \
-		check_icond.f90
+		check_icond4chm.f90
 PRELIM = $(patsubst %, $(ENGINE_DIR)/%, $(SUMMA_PRELIM))
 
 SUMMA_NOAHMP= \
@@ -167,7 +167,7 @@ SUMMA_NETCDF = \
 		netcdf_util.f90 \
 		def_output.f90 \
 		modelwrite.f90 \
-		read_icond.f90
+		read_icond4chm.f90
 NETCDF = $(patsubst %, $(NETCDF_DIR)/%, $(SUMMA_NETCDF))
 
 # ... stitch together common programs
@@ -182,7 +182,8 @@ SUMMA_DRIVER= \
 		summa4chm_util.f90 \
 		summa_globalData.f90 \
 		summa4chm_init.f90 \
-		summa4chm_setup.f90 
+		summa4chm_setup.f90 \
+		summa4chm_restart.f90 
 		
 DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 

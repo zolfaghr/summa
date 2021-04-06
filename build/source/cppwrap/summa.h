@@ -100,6 +100,8 @@ extern "C" {
     				 int* err);
     				 
 	void  SetupParam( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, double* upArea, int* err);
+	
+	void  Restart( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, double* upArea, int* err);
     				 
     void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
@@ -722,6 +724,21 @@ public:
   				&err_
   				);				   
    }
+   
+   
+   void summa_readRestart() {
+		Restart(
+  				handle_indxStruct_,
+  				handle_mparStruct_, 
+  				handle_progStruct_, 
+  				handle_diagStruct_, 
+  				handle_fluxStruct_, 
+  				handle_bvarStruct_,
+  				handle_dt_init_,
+  				&err_
+  				);				   
+   }
+   
   
    void coupled_em() {
    		SolveCoupledEM(
