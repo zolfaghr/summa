@@ -444,9 +444,9 @@ contains
     do iGRU = 1,nGRU
 
      ! put the data into data structures
-     bvarData%dat(1:nTDH) = varData((iGRU+startGRU-1),1:nTDH)
+     bvarData%var(iVar)%dat(1:nTDH) = varData((iGRU+startGRU-1),1:nTDH)
      ! check whether the first values is set to nf90_fill_double
-     if(any(abs(bvarData%dat(1:nTDH) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
+     if(any(abs(bvarData%var(iVar)%dat(1:nTDH) - nf90_fill_double) < epsilon(varData)))then; err=20; endif
      if(err==20)then; message=trim(message)//"data set to the fill value (name='"//trim(bvar_meta(iVar)%varName)//"')"; return; endif
 
     end do ! end iGRU loop

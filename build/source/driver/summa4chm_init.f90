@@ -85,7 +85,7 @@ contains
  USE summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
  USE time_utils_module,only:elapsedSec                       ! calculate the elapsed time
  ! subroutines and functions: read dimensions (NOTE: NetCDF)
- USE read_icond_module,only:read_icond_nlayers               ! module to read initial condition dimensions
+ USE read_icond4chm_module,only:read_icond_nlayers               ! module to read initial condition dimensions
  ! subroutines and functions: allocate space
  USE allocspace4chm_module,only:allocGlobal4chm              ! module to allocate space for global data structures
  USE allocspace_module,only:allocLocal                       ! module to allocate space for local data structures

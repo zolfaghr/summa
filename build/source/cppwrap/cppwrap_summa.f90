@@ -247,7 +247,7 @@ contains
   						handle_fluxStruct,				 & !  model fluxes
   						! basin-average structures
   						handle_bvarStruct,				 & !  basin-average variables
-						dt_init,		
+						dt_init,						 &		
   						err) bind(C,name='Restart')
   
   use summa4chm_restart,only:summa4chm_readRestart           
