@@ -10,7 +10,7 @@ module cppwrap_summa
 
   ! privacy
   implicit none
-  public::SummaInit
+  public::Initialize
   public::SetupParam
   public::Restart
   public::Forcing
@@ -20,9 +20,9 @@ module cppwrap_summa
 contains
 
   ! **********************************************************************************************************
-  ! public subroutine SummaInit: 
+  ! public subroutine Initialize: 
   ! **********************************************************************************************************
-  subroutine SummaInit(&
+  subroutine Initialize(&
     					! statistics structures
   						handle_forcStat, 				 & !  model forcing data
   						handle_progStat,				 & !  model prognostic (state) variables
@@ -48,8 +48,8 @@ contains
   						! ancillary data structures
   						handle_dparStruct,				 & !  default model parameters
   						! miscellaneous variables
-  						! summaFileManagerFile,			 & ! path/name of file defining directories and files) bind(C, name ='SummaInit')
-  						err) bind(C,name='SummaInit')
+  						! summaFileManagerFile,			 & ! path/name of file defining directories and files)
+  						err) bind(C,name='Initialize')
   
   use summa4chm_init,only:summa4chm_initialize           
   
@@ -163,7 +163,7 @@ contains
   								summaFileManagerFile,	 & ! path/name of file defining directories and files
  								err, message)
   
-  end subroutine SummaInit
+  end subroutine Initialize
   
   
   

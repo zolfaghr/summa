@@ -95,7 +95,7 @@ extern "C" {
 
 // cppwrappers of summa subroutines
 
-	void  SummaInit( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9, void* h10,
+	void  Initialize( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9, void* h10,
     				 void* h11, void* h12, void* h13, void* h14, void* h15, void* h16, void* h17, void* h18, void* h19,
     				 int* err);
     				 
@@ -688,7 +688,7 @@ public:
   /***** METHODS FROM SUMMA SUBROUTINES ****/
    
    void summa_initialize() {
-		SummaInit(
+		Initialize(
   				handle_forcStat_, 				 
   				handle_progStat_,				 
   				handle_diagStat_,				
