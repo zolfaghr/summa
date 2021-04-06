@@ -218,7 +218,7 @@ contains
   call c_f_pointer(handle_bvarStruct, bvarStruct)
   call c_f_pointer(handle_dparStruct, dparStruct)
   
-  call summa_paramSetup(&
+  call summa4chm_paramSetup(&
    							! primary data structures (scalars)
   							attrStruct, 		& !  local attributes for each HRU
   							typeStruct, 		& !  local classification of soil veg etc. for each HRU
