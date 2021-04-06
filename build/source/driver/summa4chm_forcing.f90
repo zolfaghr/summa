@@ -18,26 +18,26 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-module summa_forcing
+module summa4chm_forcing
 ! used to read model forcing data
 
 ! safety: set private unless specified otherwise
 implicit none
 private
-public::summa_readForcing
+public::summa4chm_readForcing
 contains
 
  ! used to read model forcing data
- subroutine summa_readForcing(modelTimeStep, summa1_struc, err, message)
+ subroutine summa4chm_readForcing(modelTimeStep, timeStruct, forcStruct, err, message)
  ! ---------------------------------------------------------------------------------------
  ! * desired modules
  ! ---------------------------------------------------------------------------------------
  ! data types
  USE nrtype                                                  ! variable types, etc.
- USE summa_type, only:summa1_type_dec                        ! master summa data type
  ! subroutines and functions
- USE read_force_module,only:read_force                       ! module to read model forcing data
+ USE read_force4chm_module,only:read_force4chm               ! module to read model forcing data
  USE time_utils_module,only:elapsedSec                       ! calculate the elapsed time
+ USE data_types,only:var_i,var_d
  ! indices in forcing file
  USE globalData,only:iFile                                   ! index of current forcing file from forcing file list
  USE globalData,only:forcingStep                             ! index of current time step in current forcing file
@@ -51,26 +51,21 @@ contains
  implicit none
  ! dummy variables
  integer(i4b),intent(in)               :: modelTimeStep      ! time step index
- type(summa1_type_dec),intent(inout)   :: summa1_struc       ! master summa data structure
+ type(var_i),intent(out)               :: timeStruct                 !  model time data
+ type(var_d),intent(out)               :: forcStruct                 !  model forcing data
  integer(i4b),intent(out)              :: err                ! error code
  character(*),intent(out)              :: message            ! error message
  ! local variables
  character(LEN=256)                    :: cmessage           ! error message of downwind routine
- ! ---------------------------------------------------------------------------------------
- ! associate to elements in the data structure
- summaVars: associate(&
-  timeStruct           => summa1_struc%timeStruct          , & ! x%var(:)                   -- model time data
-  forcStruct           => summa1_struc%forcStruct            & ! x%gru(:)%hru(:)%var(:)     -- model forcing data
- ) ! assignment to variables in the data structures
- ! ---------------------------------------------------------------------------------------
+ ! ----------------------------------------------------------------------------------------
  ! initialize error control
- err=0; message='summa_readForcing/'
+ err=0; message='summa4chm_readForcing/'
 
  ! initialize the start of the data read
  call date_and_time(values=startRead)
 
  ! read forcing data
- call read_force(&
+ call read_force4chm(&
                  ! input
                  modelTimeStep,      & ! intent(in):    time step index
                  ! input-output
@@ -80,7 +75,7 @@ contains
                  ! output
                  timeStruct%var,     & ! intent(out):   time data structure (integer)
                  forcStruct,         & ! intent(out):   forcing data structure (double precision)
-                 err, cmessage)         ! intent(out):   error control
+                 err, cmessage)        ! intent(out):   error control
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! identify the end of the data read
@@ -89,9 +84,6 @@ contains
  ! aggregate the elapsed time for the data read
  elapsedRead = elapsedRead + elapsedSec(startRead, endRead)
 
- ! end associate statements
- end associate summaVars
-
- end subroutine summa_readForcing
+ end subroutine summa4chm_readForcing
 
 end module summa_forcing
