@@ -102,6 +102,8 @@ extern "C" {
 	void  SetupParam( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, double* upArea, int* err);
 	
 	void  Restart( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, double* upArea, int* err);
+	
+	void  Forcing( int* index, void* h1, void* h2, int* err);
     				 
     void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
@@ -738,6 +740,18 @@ public:
   				&err_
   				);				   
    }
+   
+   
+   
+   void summa_readForcing(int step_index) {
+			Forcing(
+  					&step_index,		    
+  					handle_timeStruct_, 	
+  					handle_forcStruct_,
+  					&err_);   
+   }
+   
+   
    
   
    void coupled_em() {

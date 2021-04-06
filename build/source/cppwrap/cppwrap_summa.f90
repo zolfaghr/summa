@@ -13,6 +13,7 @@ module cppwrap_summa
   public::SummaInit
   public::SetupParam
   public::Restart
+  public::Forcing
   public::SolveCoupledEM
 
 
@@ -301,6 +302,49 @@ contains
  							err, message)
   
   end subroutine Restart
+  
+  
+  
+  ! **********************************************************************************************************
+  ! public subroutine Forcing: 
+  ! **********************************************************************************************************
+  subroutine Forcing(& 
+  					step_index,		    	&
+  					handle_timeStruct, 		&
+  					handle_forcStruct, 		&
+  					err) bind(C,name='Forcing')
+  
+  use summa4chm_forcing,only:summa4chm_readForcing           
+  
+  implicit none
+  ! calling variables
+  
+  ! primary data structures (variable length vectors)
+  integer(c_int)					::  step_index
+  type(c_ptr), intent(in), value    ::	handle_timeStruct !  model indices
+  type(c_ptr), intent(in), value    ::	handle_forcStruct !  model parameters
+  integer(c_int)				    :: err
+ !---------------------------------------------------------------------------------------------------  
+ ! local variables
+ 
+ ! define the primary data structures (variable length vectors)
+ type(var_i),pointer                :: timeStruct                 !  model time data
+ type(var_d),pointer                :: forcStruct                 !  model forcing data
+ character(len=256)                 :: message
+
+  
+  ! getting data
+  call c_f_pointer(handle_timeStruct, timeStruct)
+  call c_f_pointer(handle_forcStruct, forcStruct)
+  
+  ! define global data (parameters, metadata)
+  call summa4chm_readForcing(&
+  							step_index,		    &
+  							timeStruct, 		&
+  							forcStruct, 		&
+ 							err, message)
+  
+  end subroutine Forcing
   
   
   
