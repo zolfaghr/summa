@@ -10,29 +10,26 @@ int main()  {
   Summa S;
   
   S.summa_initialize();
+  std::cout << "initialization done" << std::endl;
+  
+  S.summa_paramSetup();
+  std::cout << "paramSetup done" << std::endl;
+  
+  S.summa_readRestart();
+  std::cout << "readRestart done" << std::endl;
+  
+  S.summa_readForcing(1);
+  std::cout << "readForcing done" << std::endl;
   
   exit(0);
   
-  std::vector<int> vec_i1{1,-2,3,-4,5}, vec_i2;
-  std::vector<double> vec_d1{1.1,-2.2,3.3,-4.4,5.5}, vec_d2, vec_d3;
-  std::vector<std::vector<int>> mat_i1{ { 11, 12, 13, 14 }, { 21, 22, 23 }, {31} }, mat_i2;
-  std::vector<std::vector<double>> mat_d1{ { 1.1, 1.2, 1.3, 1.4 }, { 2.1, 2.2, 2.3 }, {3.1} }, mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
-
-  S.set_dt(60);
-  S.set_veg_fluxflag(true); 
-  
-  S.set_typeStruct(vec_i1);
-  S.set_attrStruct(vec_d1);
-  S.set_forcStruct(vec_d1);
-  S.set_mparStruct(mat_d1);
-  S.set_bvarStruct(mat_d1);
-  S.set_indxStruct(mat_i1);
-  S.set_progStruct(mat_d1);
-  S.set_diagStruct(mat_d1);
-  S.set_fluxStruct(mat_d1);
+  std::vector<int>  vec_i2;
+  std::vector<double>  vec_d2, vec_d3;
+  std::vector<std::vector<int>>  mat_i2;
+  std::vector<std::vector<double>>  mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
 
   
-  S.coupled_em();
+//  S.coupled_em();
   
   
    
