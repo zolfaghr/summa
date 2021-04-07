@@ -77,6 +77,7 @@ contains
  ! ************************************************************************************************
  subroutine allocGlobal4chm(metaStruct,dataStruct,err,message)
  ! NOTE: safety -- ensure only used in allocGlobal4chm
+ USE globalData,only: gru_struc     ! gru-hru mapping structures
  implicit none
  ! input
  type(var_info),intent(in)       :: metaStruct(:)  ! metadata structure
@@ -89,20 +90,28 @@ contains
  character(len=256)              :: cmessage       ! error message of the downwind routine
  ! initialize error control
  err=0; message='allocGlobal4chm/'
+ 
+   ! get the number of snow and soil layers
+   associate(&
+   nSnow => gru_struc(1)%hruInfo(1)%nSnow, & ! number of snow layers for each HRU
+   nSoil => gru_struc(1)%hruInfo(1)%nSoil  ) ! number of soil layers for each HRU
 
  ! * allocate local data structures where there is no spatial dimension
  select type(dataStruct)
-  class is (var_i);         call allocLocal(metaStruct,dataStruct,err=err,message=cmessage)
-  class is (var_i8);        call allocLocal(metaStruct,dataStruct,err=err,message=cmessage)
-  class is (var_d);         call allocLocal(metaStruct,dataStruct,err=err,message=cmessage)
-  class is (var_ilength);   call allocLocal(metaStruct,dataStruct,err=err,message=cmessage)
-  class is (var_dlength);   call allocLocal(metaStruct,dataStruct,err=err,message=cmessage)
+  class is (var_i);         call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
+  class is (var_i8);        call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
+  class is (var_d);         call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
+  class is (var_ilength);   call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
+  class is (var_dlength);   call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
   ! check identified the data type
-  class default; if(.not.spatial)then; err=20; message=trim(message)//'unable to identify derived data type'; return; end if
+  class default; if(.not.spatial)then; print *,'RIIDII'; err=20; message=trim(message)//'unable to identify derived data type'; return; end if
  end select
 
  ! error check
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; end if
+ 
+  ! end association to info in data structures
+  end associate
 
  end subroutine allocGlobal4chm
 
