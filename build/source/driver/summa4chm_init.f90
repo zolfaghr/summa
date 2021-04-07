@@ -85,7 +85,8 @@ contains
  USE summa_globalData,only:summa_defineGlobalData            ! used to define global summa data structures
  USE time_utils_module,only:elapsedSec                       ! calculate the elapsed time
  ! subroutines and functions: read dimensions (NOTE: NetCDF)
- USE read_icond4chm_module,only:read_icond_nlayers               ! module to read initial condition dimensions
+ USE read_attrb4chm_module,only:read_dimension               ! module to read dimensions of GRU and HRU
+ USE read_icond4chm_module,only:read_icond_nlayers           ! module to read initial condition dimensions
  ! subroutines and functions: allocate space
  USE allocspace4chm_module,only:allocGlobal4chm              ! module to allocate space for global data structures
  USE allocspace_module,only:allocLocal                       ! module to allocate space for local data structures
@@ -144,10 +145,18 @@ contains
  ! local variables
  character(LEN=256)		                  :: cmessage           		! error message of downwind routine
  character(len=256)                    	  :: restartFile        		! restart file name
- integer(i4b)                             :: iStruct           			! looping variables
+ character(len=256)                    :: attrFile           ! attributes file name
+ character(len=128)                    :: fmtGruOutput       ! a format string used to write start and end GRU in output file names
+ integer(i4b)                          :: iStruct,iGRU       ! looping variables
+ integer(i4b)                          :: fileGRU            ! [used for filenames] number of GRUs in the input file
+ integer(i4b)                          :: fileHRU            ! [used for filenames] number of HRUs in the input file
+ integer(i4b)							:: nGRU
+ integer(i4b)							:: nHRU
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_initialize/'
+ 
+ print *, 'summa4chm_initialize 0'
 
  ! initialize the start of the initialization
  call date_and_time(values=startInit)
@@ -165,16 +174,38 @@ contains
  elapsedPhysics=0._dp
 
  ! get the command line arguments
- call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
- if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+! call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
+! if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+ 
+ summaFileManagerFile = '/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
 
+  print *, 'summa4chm_initialize 1'
  ! set directories and files -- summaFileManager used as command-line argument
  call summa_SetTimesDirsAndFiles(summaFileManagerFile,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+ 
+  print *, 'summa4chm_initialize 2'
 
  ! define global data (parameters, metadata)
  call summa_defineGlobalData(err, cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+ 
+  print *, 'summa4chm_initialize 3'
+  
+ ! *****************************************************************************
+ ! *** read the number of GRUs and HRUs
+ ! *****************************************************************************
+ ! obtain the HRU and GRU dimensions in the LocalAttribute file
+ attrFile = trim(SETTINGS_PATH)//trim(LOCAL_ATTRIBUTES)
+ select case (iRunMode)
+  case(iRunModeFull); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage)
+  case(iRunModeGRU ); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage,startGRU=startGRU)
+  case(iRunModeHRU ); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage,checkHRU=checkHRU)
+ end select
+ if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+ 
+ print *, 'nGRU = ', nGRU
+ print *, 'nHRU = ', nHRU
 
  ! *****************************************************************************
  ! *** read the number of snow and soil layers
@@ -191,7 +222,7 @@ contains
  ! *****************************************************************************
  ! *** allocate space for data structures
  ! *****************************************************************************
-
+  print *, 'summa4chm_initialize 4'
  ! allocate time structures
  do iStruct=1,4
   select case(iStruct)
@@ -202,6 +233,8 @@ contains
   end select
   if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
  end do  ! looping through time structures
+ 
+  print *, 'summa4chm_initialize 5'
 
  ! allocate other data structures
  do iStruct=1,size(structInfo)
@@ -228,6 +261,8 @@ contains
    return
   endif
  end do  ! looping through data structures
+ 
+  print *, 'summa4chm_initialize 6'
 
  ! allocate space for default model parameters
  ! NOTE: This is done here, rather than in the loop above, because dpar is not one of the "standard" data structures
@@ -236,6 +271,8 @@ contains
   message=trim(message)//trim(cmessage)//' [problem allocating dparStruct]'
   return
  endif
+ 
+  print *, 'summa4chm_initialize 7'
 
  ! *****************************************************************************
  ! *** allocate space for output statistics data structures
@@ -262,6 +299,8 @@ contains
   endif
 
  end do ! iStruct
+ 
+  print *, 'summa4chm_initialize 8'
 
  ! identify the end of the initialization
  call date_and_time(values=endInit)

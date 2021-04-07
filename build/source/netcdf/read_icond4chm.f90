@@ -75,10 +75,14 @@ contains
  ! initialize error message
  err=0
  message = 'read_icond_nlayers/'
+ 
+ print *, 'read_icond_nlayers 0'
 
  ! open netcdf file
  call nc_file_open(iconFile,nf90_nowrite,ncid,err,cmessage);
  if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
+ 
+  print *, 'read_icond_nlayers 1'
 
  ! get number of HRUs in file (the GRU variable(s), if present, are processed at the end)
  err = nf90_inq_dimid(ncID,"hru",dimId);               if(err/=nf90_noerr)then; message=trim(message)//'problem finding hru dimension/'//trim(nf90_strerror(err)); return; end if
@@ -93,6 +97,8 @@ contains
  ! get netcdf ids for the variables holding number of snow and soil layers in each hru
  err = nf90_inq_varid(ncid,trim(indx_meta(iLookIndex%nSnow)%varName),snowid); call netcdf_err(err,message)
  err = nf90_inq_varid(ncid,trim(indx_meta(iLookIndex%nSoil)%varName),soilid); call netcdf_err(err,message)
+ 
+  print *, 'read_icond_nlayers 2'
 
  ! get nSnow and nSoil data (reads entire state file)
  err = nf90_get_var(ncid,snowid,snowData); call netcdf_err(err,message)
@@ -107,6 +113,8 @@ contains
    if(gru_struc(iGRU)%hruInfo(iHRU)%hru_nc > ixHRUfile_max) ixHRUfile_max = gru_struc(iGRU)%hruInfo(iHRU)%hru_nc
   end do
  end do
+ 
+  print *, 'read_icond_nlayers 3'
 
  ! loop over grus in current run to update snow/soil layer information
  do iGRU = 1,nGRU
@@ -126,6 +134,8 @@ contains
 
   end do
  end do
+ 
+  print *, 'read_icond_nlayers 4'
 
  ! close file
  call nc_file_close(ncid,err,cmessage)
