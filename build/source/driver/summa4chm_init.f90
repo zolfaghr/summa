@@ -174,10 +174,12 @@ contains
  elapsedPhysics=0._dp
 
  ! get the command line arguments
-! call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
-! if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+ call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
+ if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
  
  summaFileManagerFile = '/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
+ nGRU = 1
+ nHRU = 1
 
   print *, 'summa4chm_initialize 1'
  ! set directories and files -- summaFileManager used as command-line argument
@@ -216,7 +218,7 @@ contains
  else
     restartFile = trim(STATE_PATH)//trim(MODEL_INITCOND)
  endif
- call read_icond_nlayers(trim(restartFile),1,indx_meta,err,cmessage)
+ call read_icond_nlayers(trim(restartFile),nGRU,indx_meta,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! *****************************************************************************
