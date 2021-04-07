@@ -177,9 +177,9 @@ contains
  call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
  
- summaFileManagerFile = '/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
- nGRU = 1
- nHRU = 1
+! summaFileManagerFile = '/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
+! nGRU = 1
+! nHRU = 1
 
   print *, 'summa4chm_initialize 1'
  ! set directories and files -- summaFileManager used as command-line argument
@@ -205,9 +205,6 @@ contains
   case(iRunModeHRU ); call read_dimension(trim(attrFile),fileGRU,fileHRU,nGRU,nHRU,err,cmessage,checkHRU=checkHRU)
  end select
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
- 
- print *, 'nGRU = ', nGRU
- print *, 'nHRU = ', nHRU
 
  ! *****************************************************************************
  ! *** read the number of snow and soil layers
