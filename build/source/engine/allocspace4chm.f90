@@ -104,7 +104,7 @@ contains
   class is (var_ilength);   call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
   class is (var_dlength);   call allocLocal(metaStruct,dataStruct,nSnow,nSoil,err,cmessage); spatial=.true.
   ! check identified the data type
-  class default; if(.not.spatial)then; print *,'RIIDII'; err=20; message=trim(message)//'unable to identify derived data type'; return; end if
+  class default; if(.not.spatial)then; err=20; message=trim(message)//'unable to identify derived data type'; return; end if
  end select
 
  ! error check
