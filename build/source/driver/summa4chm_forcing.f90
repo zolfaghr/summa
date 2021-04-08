@@ -63,6 +63,8 @@ contains
 
  ! initialize the start of the data read
  call date_and_time(values=startRead)
+ 
+ print *, 'modelTimeStep = ', modelTimeStep
 
  ! read forcing data
  call read_force4chm(&

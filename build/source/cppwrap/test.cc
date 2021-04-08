@@ -21,7 +21,10 @@ int main()  {
   S.summa_readForcing(1);
   std::cout << "readForcing done" << std::endl;
   
+  
   exit(0);
+  
+
   
   std::vector<int>  vec_i2;
   std::vector<double>  vec_d2, vec_d3;
