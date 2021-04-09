@@ -122,22 +122,22 @@ contains
  type(var_dlength),intent(inout)          :: fluxStat                   !  model fluxes
  type(var_dlength),intent(inout)          :: indxStat                   !  model indices
  type(var_dlength),intent(inout)          :: bvarStat                   !  basin-average variabl
- ! define the primary data structures (scalars)
+ ! primary data structures (scalars)
  type(var_i),intent(inout)                :: timeStruct                 !  model time data
  type(var_d),intent(inout)                :: forcStruct                 !  model forcing data
  type(var_d),intent(inout)                :: attrStruct                 !  local attributes for each HRU
  type(var_i),intent(inout)                :: typeStruct                 !  local classification of soil veg etc. for each HRU
  type(var_i8),intent(inout)               :: idStruct                   ! 
- ! define the primary data structures (variable length vectors)
+ ! primary data structures (variable length vectors)
  type(var_ilength),intent(inout)          :: indxStruct                 !  model indices
  type(var_dlength),intent(inout)          :: mparStruct                 !  model parameters
  type(var_dlength),intent(inout)          :: progStruct                 !  model prognostic (state) variables
  type(var_dlength),intent(inout)          :: diagStruct                 !  model diagnostic variables
  type(var_dlength),intent(inout)          :: fluxStruct                 !  model fluxes
- ! define the basin-average structures
+ ! basin-average structures
  type(var_d),intent(inout)                :: bparStruct                 !  basin-average parameters
  type(var_dlength),intent(inout)          :: bvarStruct                 !  basin-average variables
- ! define the ancillary data structures
+ ! ancillary data structures
  type(var_d),intent(inout)                :: dparStruct                 !  default model parameters
  character(len=256),intent(inout)		  :: summaFileManagerFile       ! path/name of file defining directories and files
  integer(i4b),intent(out)	              :: err                		! error code

@@ -185,7 +185,8 @@ SUMMA_DRIVER= \
 		summa4chm_init.f90 \
 		summa4chm_setup.f90 \
 		summa4chm_restart.f90 \
-		summa4chm_forcing.f90
+		summa4chm_forcing.f90 \
+		summa4chm_modelRun.f90
 		
 DRIVER = $(patsubst %, $(DRIVER_DIR)/%, $(SUMMA_DRIVER))
 
