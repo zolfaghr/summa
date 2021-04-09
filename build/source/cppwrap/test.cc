@@ -9,16 +9,27 @@ int main()  {
 
   Summa S;
   
+  std::vector<int>  vec_i2, vec_i3, vec_i4, vec_i5;
+  
   S.summa_initialize();
   std::cout << "initialization done" << std::endl;
+  
+  vec_i2 = S.get_timeStruct();
+  std::cout << "size of timeStruct after summa_init = " <<  vec_i2.size() << std::endl;
   
   S.summa_paramSetup();
   std::cout << "paramSetup done" << std::endl;
   
+  vec_i3 = S.get_timeStruct();
+  std::cout << "size of timeStruct after summa_setup = " <<  vec_i3.size() << std::endl;
+  
   S.summa_readRestart();
   std::cout << "readRestart done" << std::endl;
   
-  S.summa_readForcing(1);
+  vec_i4 = S.get_timeStruct();
+  std::cout << "size of timeStruct after summa_restart = " <<  vec_i4.size() << std::endl;
+  
+  S.summa_readForcing(2);
   std::cout << "readForcing done" << std::endl;
   
   
@@ -26,7 +37,7 @@ int main()  {
   
 
   
-  std::vector<int>  vec_i2;
+//  std::vector<int>  vec_i2;
   std::vector<double>  vec_d2, vec_d3;
   std::vector<std::vector<int>>  mat_i2;
   std::vector<std::vector<double>>  mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;

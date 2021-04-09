@@ -320,7 +320,7 @@ contains
   ! calling variables
   
   ! primary data structures (variable length vectors)
-  integer(c_int)					::  step_index
+  integer(c_int), intent(in)    	::  step_index
   type(c_ptr), intent(in), value    ::	handle_timeStruct !  model indices
   type(c_ptr), intent(in), value    ::	handle_forcStruct !  model parameters
   integer(c_int)				    :: err

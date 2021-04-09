@@ -51,8 +51,8 @@ contains
  implicit none
  ! dummy variables
  integer(i4b),intent(in)               :: modelTimeStep      ! time step index
- type(var_i),intent(out)               :: timeStruct                 !  model time data
- type(var_d),intent(out)               :: forcStruct                 !  model forcing data
+ type(var_i),intent(inout)             :: timeStruct                 !  model time data
+ type(var_d),intent(inout)             :: forcStruct                 !  model forcing data
  integer(i4b),intent(out)              :: err                ! error code
  character(*),intent(out)              :: message            ! error message
  ! local variables
@@ -63,8 +63,6 @@ contains
 
  ! initialize the start of the data read
  call date_and_time(values=startRead)
- 
- print *, 'modelTimeStep = ', modelTimeStep
 
  ! read forcing data
  call read_force4chm(&

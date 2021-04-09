@@ -262,6 +262,7 @@ contains
   endif
  end do  ! looping through data structures
  
+ 
   print *, 'summa4chm_initialize 6'
  ! allocate space for default model parameters
  ! NOTE: This is done here, rather than in the loop above, because dpar is not one of the "standard" data structures
