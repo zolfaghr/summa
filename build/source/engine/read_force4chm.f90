@@ -101,8 +101,6 @@ contains
  ! Start procedure here
  err=0; message="read_force4chm/"
  
- print *, 'read_force4chm 0'
-
  ! get the number of HRUs in the local simulation
  nHRUlocal = sum(gru_struc(:)%hruCount)
 
@@ -113,8 +111,6 @@ contains
   currentJulDay = dJulianStart + (data_step*real(iStep-1,dp))/secprday
  end if
  
- print *, 'read_force4chm 1'
-
  ! **********************************************************************************************
  ! ***** part 0: if initial step, then open first file and find initial model time step
  ! *****         loop through as many forcing files as necessary to find the initial model step
@@ -128,8 +124,6 @@ contains
 
  end if  ! if the file is not yet open
  
- print *, 'read_force4chm 2'
-
  ! **********************************************************************************************
  ! ***** part 1: if file open, check to see if we've reached the end of the file, if so close it,
  ! *****         and open new file
@@ -163,21 +157,16 @@ contains
 
   end if  ! if we've passed the end of the NetCDF file
   
-  print *, 'before readForcingData4chm'
   ! read forcing data
   call readForcingData4chm(currentJulday,ncId,iFile,iRead,nHRUlocal,time_data,forcStruct,err,message)
   if(err/=0)then; message=trim(message)//trim(cmessage); return; end if
   
-  print *, 'after readForcingData4chm'
-
  ! check that the file was in fact open
  else
   message=trim(message)//'expect the file to be open'
   err=20; return
  end if  ! end ncid open check
  
- print *, 'read_force4chm 3'
-
  ! **********************************************************************************************
  ! ***** part 2: compute time
  ! **********************************************************************************************
@@ -188,8 +177,6 @@ contains
                  startJulDay,err,cmessage)                 ! output = julian day (fraction of day) + error control
  if(err/=0)then; message=trim(message)//trim(cmessage); return; end if
  
- print *, 'read_force4chm 4'
-
  ! compute the fractional julian day for the current time step
  call compjulday(time_data(iLookTIME%iyyy),           & ! input  = year
                  time_data(iLookTIME%im),             & ! input  = month
@@ -208,7 +195,6 @@ contains
   end do  ! looping through HRUs
  end do  ! looping through GRUs
  
- print *, 'read_force4chm 5'
 
  ! compute the number of days in the current year
  yearLength = 365
@@ -234,8 +220,6 @@ contains
   !pause ' checking time'
  end if
  
- print *, 'read_force4chm 6'
-
  end subroutine read_force4chm
 
  ! *******************************************************************************************************************
@@ -457,18 +441,14 @@ contains
  logical(lgt),parameter            :: simultaneousRead=.true. ! flag to denote reading all HRUs at once
  ! Start procedure here
  err=0; message="readForcingData4chm/"
- 
- print *, 'readForcingData4chm 0'
 
  ! initialize time and forcing data structures
  time_data(:) = integerMissing
- print *, '1'
 
  ! read time data from iRead location in netcdf file
  err = nf90_inq_varid(ncid,'time',varId);                   if(err/=nf90_noerr)then; message=trim(message)//'trouble finding time variable/'//trim(nf90_strerror(err)); return; endif
  err = nf90_get_var(ncid,varId,varTime,start=(/iRead/));    if(err/=nf90_noerr)then; message=trim(message)//'trouble reading time variable/'//trim(nf90_strerror(err)); return; endif
  
- print *, '2'
 
  ! check that the computed julian day matches the time information in the NetCDF file
  dataJulDay = varTime(1)/forcFileInfo(iFile)%convTime2Days + refJulday_data
@@ -477,8 +457,6 @@ contains
   err=40; return
  end if
  
- print *, 'readForcingData4chm 1'
-
  ! convert julian day to time vector
  ! NOTE: use small offset to force ih=0 at the start of the day
  call compcalday(dataJulDay+smallOffset,         & ! input  = julian day
@@ -490,8 +468,6 @@ contains
                  err,cmessage)                     ! output = error control
  if(err/=0)then; message=trim(message)//trim(cmessage); return; end if
  
- print *, 'readForcingData4chm 2'
-
  ! check to see if any of the time data is missing -- note that it is OK if ih_tz or imin_tz are missing
  if((time_data(iLookTIME%iyyy)==integerMissing) .or. (time_data(iLookTIME%im)==integerMissing) .or. (time_data(iLookTIME%id)==integerMissing) .or. (time_data(iLookTIME%ih)==integerMissing) .or. (time_data(iLookTIME%imin)==integerMissing))then
   do iline=1,size(time_data)
@@ -499,8 +475,6 @@ contains
   end do
  end if
  
- print *, 'readForcingData4chm 3'
-
  ! initialize flags for forcing data
  checkForce(:) = .false.
  checkForce(iLookFORCE%time) = .true.  ! time is handled separately
@@ -525,11 +499,8 @@ contains
    if(err/=nf90_noerr)then; message=trim(message)//'problem reading forcing data: '//trim(varName)//'/'//trim(nf90_strerror(err)); return; endif
   endif
   
-  print *, 'size(gru_struc) = ', size(gru_struc)
-
   ! loop through GRUs and HRUs
   do iGRU=1,size(gru_struc)
-   print *, 'gru_struc(iGRU)%hruCount = ', gru_struc(iGRU)%hruCount
    do iHRU=1,gru_struc(iGRU)%hruCount
 
     ! define global HRU
@@ -558,8 +529,6 @@ contains
      write(message,'(a,f13.5)') trim(message)//'forcing data for variable '//trim(varname)//' is less than minimum allowable value ', dataMin
      err=20; return
     endif
-    
-     print *, 'readForcingData4chm 4'
 
     ! put the data into structures
     forcStruct%var(ivar) = dataVal(1)
@@ -569,8 +538,6 @@ contains
 
  end do  ! loop through forcing variables
  
- print *, 'readForcingData4chm 5'
-
  ! check if any forcing data is missing
  if(count(checkForce)<size(forc_meta))then
   do iline=1,size(forc_meta)

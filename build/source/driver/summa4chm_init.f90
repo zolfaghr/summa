@@ -155,8 +155,6 @@ contains
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_initialize/'
- 
- print *, 'summa4chm_initialize 0'
 
  ! initialize the start of the initialization
  call date_and_time(values=startInit)
@@ -177,18 +175,15 @@ contains
  call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
-  print *, 'summa4chm_initialize 1'
  ! set directories and files -- summaFileManager used as command-line argument
  call summa_SetTimesDirsAndFiles(summaFileManagerFile,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
  
-  print *, 'summa4chm_initialize 2'
 
  ! define global data (parameters, metadata)
  call summa_defineGlobalData(err, cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
  
-  print *, 'summa4chm_initialize 3'
   
  ! *****************************************************************************
  ! *** read the number of GRUs and HRUs
@@ -217,7 +212,6 @@ contains
  ! *****************************************************************************
  ! *** allocate space for data structures
  ! *****************************************************************************
-  print *, 'summa4chm_initialize 4'
  ! allocate time structures
  do iStruct=1,4
   select case(iStruct)
@@ -228,8 +222,6 @@ contains
   end select
   if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
  end do  ! looping through time structures
- 
-  print *, 'summa4chm_initialize 5'
   
    ! get the number of snow and soil layers
    associate(&
@@ -262,8 +254,6 @@ contains
   endif
  end do  ! looping through data structures
  
- 
-  print *, 'summa4chm_initialize 6'
  ! allocate space for default model parameters
  ! NOTE: This is done here, rather than in the loop above, because dpar is not one of the "standard" data structures
  call allocLocal(mpar_meta,dparStruct,nSnow,nSoil,err,cmessage);    ! default model parameters
@@ -272,7 +262,6 @@ contains
   return
  endif
  
-  print *, 'summa4chm_initialize 7'
 
  ! *****************************************************************************
  ! *** allocate space for output statistics data structures
@@ -299,8 +288,6 @@ contains
   endif
 
  end do ! iStruct
- 
-  print *, 'summa4chm_initialize 8'
 
  ! identify the end of the initialization
  call date_and_time(values=endInit)
