@@ -316,6 +316,8 @@ contains
  do iVar=1,size(averageFlux_meta)
   flux_mean%var(iVar)%dat(:) = 0._dp
  end do
+ 
+  print *, 'in coupled_em 4'
 
  ! associate local variables with information in the data structures
  associate(&
@@ -360,6 +362,8 @@ contains
 
  ! end association of local variables with information in the data structures
  end associate
+ 
+  print *, 'in coupled_em 5'
 
  ! short-cut to the algorithmic control parameters
  ! NOTE - temporary assignment of minstep to foce something reasonable
@@ -384,6 +388,8 @@ contains
 
  ! *** compute phenology...
  ! ------------------------
+ 
+  print *, 'in coupled_em 6'
 
  ! compute the temperature of the root zone: used in vegetation phenology
  diag_data%var(iLookDIAG%scalarRootZoneTemp)%dat(1) = sum(prog_data%var(iLookPROG%mLayerTemp)%dat(nSnow+1:nSnow+nLayersRoots)) / real(nLayersRoots, kind(dp))
@@ -406,6 +412,8 @@ contains
                  exposedVAI,                  & ! intent(out): exposed vegetation area index (m2 m-2)
                  err,cmessage)                  ! intent(out): error control
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; end if
+ 
+  print *, 'in coupled_em 7'
 
  ! check
  if(computeVegFlux)then
@@ -435,7 +443,7 @@ contains
  end select ! identifying option for maximum branch interception capacity
  !print*, 'diag_data%var(iLookDIAG%scalarCanopyLiqMax)%dat(1) = ', diag_data%var(iLookDIAG%scalarCanopyLiqMax)%dat(1)
  !print*, 'diag_data%var(iLookDIAG%scalarCanopyIceMax)%dat(1) = ', diag_data%var(iLookDIAG%scalarCanopyIceMax)%dat(1)
-
+  print *, 'in coupled_em 8'
  ! compute wetted fraction of the canopy
  ! NOTE: assume that the wetted fraction is constant over the substep for the radiation calculations
  if(computeVegFlux)then
@@ -467,6 +475,8 @@ contains
   dCanopyWetFraction_dWat                                 = 0._dp
   dCanopyWetFraction_dT                                   = 0._dp
  end if
+ 
+  print *, 'in coupled_em 9'
 
  ! *** compute snow albedo...
  ! --------------------------
@@ -487,6 +497,7 @@ contains
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; end if
 
 
+  print *, 'in coupled_em 10'
  ! *** compute canopy sw radiation fluxes...
  ! -----------------------------------------
  call vegSWavRad(&
@@ -502,7 +513,7 @@ contains
                  err,cmessage)                   ! intent(out):   error control
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; end if
 
-
+  print *, 'in coupled_em 11'
  ! *** compute canopy throughfall and unloading...
  ! -----------------------------------------------
  ! NOTE 1: this needs to be done before solving the energy and liquid water equations, to account for the heat advected with precipitation (and throughfall/unloading)
@@ -536,6 +547,8 @@ contains
                   err,cmessage)                  ! intent(out): error control
                   if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; end if
   endif ! if computing fluxes over vegetation
+  
+   print *, 'in coupled_em 12'
 
  ! initialize drainage and throughfall
  ! NOTE 1: this needs to be done before solving the energy and liquid water equations, to account for the heat advected with precipitation
@@ -620,6 +633,8 @@ contains
   nSnow   = count(indx_data%var(iLookINDEX%layerType)%dat==iname_snow)
   nSoil   = count(indx_data%var(iLookINDEX%layerType)%dat==iname_soil)
   nLayers = nSnow+nSoil
+  
+   print *, 'in coupled_em 13'
 
   ! *** merge/sub-divide snow layers...
   ! -----------------------------------
@@ -681,6 +696,8 @@ contains
 
   ! define the number of state variables
   nState = indx_data%var(iLookINDEX%nState)%dat(1)
+  
+   print *, 'in coupled_em 14'
 
   ! *** compute diagnostic variables for each layer...
   ! --------------------------------------------------
@@ -724,6 +741,8 @@ contains
   ! save input step
   dtSave = dt_sub
   !write(*,'(a,1x,3(f12.5,1x))') trim(message)//'before opSplittin: dt_init, dt_sub, dt_solv = ', dt_init, dt_sub, dt_solv
+  
+   print *, 'in coupled_em 15'
 
   ! get the new solution
   call opSplittin(&
@@ -757,6 +776,8 @@ contains
   if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; end if
   !print*, 'completed step'
   !print*, 'PAUSE: '; read(*,*)
+  
+   print *, 'in coupled_em 16'
 
   ! process the flag for too much melt
   if(tooMuchMelt)then
