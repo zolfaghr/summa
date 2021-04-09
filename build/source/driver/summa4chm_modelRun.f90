@@ -35,6 +35,12 @@ USE globalData,only:realMissing      ! missing double precision number
 
 ! named variables
 USE globalData,only:yes,no           ! .true. and .false.
+! provide access to the named variables that describe elements of parameter structures
+USE var_lookup,only:iLookTYPE          ! look-up values for classification of veg, soils etc.
+USE var_lookup,only:iLookID            ! look-up values for hru and gru IDs
+USE var_lookup,only:iLookATTR          ! look-up values for local attributes
+USE var_lookup,only:iLookFLUX          ! look-up values for local column model fluxes
+USE var_lookup,only:iLookBVAR          ! look-up values for basin-average model variables
 USE var_lookup,only:iLookTIME        ! named variables for time data structure
 USE var_lookup,only:iLookDIAG        ! look-up values for local column model diagnostic variables
 USE var_lookup,only:iLookINDEX       ! look-up values for local column index variables
@@ -159,6 +165,19 @@ contains
  call date_and_time(values=startPhysics)
 
  !----- run simulation for a single GRU ----------------------------------------
+ ! ----- basin initialization --------------------------------------------------------------------------------------------
+
+ ! initialize runoff variables
+ bvarStruct%var(iLookBVAR%basin__SurfaceRunoff)%dat(1)    = 0._dp  ! surface runoff (m s-1)
+ bvarStruct%var(iLookBVAR%basin__ColumnOutflow)%dat(1)    = 0._dp  ! outflow from all "outlet" HRUs (those with no downstream HRU)
+
+ ! initialize baseflow variables
+ bvarStruct%var(iLookBVAR%basin__AquiferRecharge)%dat(1)  = 0._dp ! recharge to the aquifer (m s-1)
+ bvarStruct%var(iLookBVAR%basin__AquiferBaseflow)%dat(1)  = 0._dp ! baseflow from the aquifer (m s-1)
+ bvarStruct%var(iLookBVAR%basin__AquiferTranspire)%dat(1) = 0._dp ! transpiration loss from the aquifer (m s-1)
+
+ ! initialize total inflow for each layer in a soil column
+ fluxStruct%var(iLookFLUX%mLayerColumnInflow)%dat(:) = 0._dp
 
   ! check errors
   call handle_err(err, cmessage)
