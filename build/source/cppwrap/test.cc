@@ -32,13 +32,23 @@ int main()  {
   S.summa_readForcing(2);
   std::cout << "readForcing done" << std::endl;
   
+  vec_i5 = S.get_timeStruct();
+  std::cout << "size of timeStruct after summa_forcing = " <<  vec_i5.size() << std::endl;
+  std::vector<double>  vec_d2, vec_d3;
+  vec_d2 = S.get_forcStruct();
+  std::cout << vec_d2.size() << std::endl;
+  std::cout << "forcStruct = ";
+  for(size_t i=0; i<vec_d2.size(); i++)
+  	std::cout << vec_d2[i] << "  ";
+  std::cout << std::endl; 
+  
   
   exit(0);
   
 
   
 //  std::vector<int>  vec_i2;
-  std::vector<double>  vec_d2, vec_d3;
+//  std::vector<double>  vec_d2, vec_d3;
   std::vector<std::vector<int>>  mat_i2;
   std::vector<std::vector<double>>  mat_d2, mat_d3, mat_d4, mat_d5, mat_d6;
 

@@ -86,8 +86,8 @@ contains
  integer(i4b),intent(inout)        :: iRead            ! index of read position in time dimension in current netcdf file
  integer(i4b),intent(inout)        :: ncid             ! netcdf file identifier
  ! define output variables
- integer(i4b),intent(out)          :: time_data(:)     ! vector of time data for a given time step
- type(var_d),intent(out)           :: forcStruct       ! x%var(:)     -- model forcing data
+ integer(i4b),intent(inout)          :: time_data(:)     ! vector of time data for a given time step
+ type(var_d),intent(inout)           :: forcStruct       ! x%var(:)     -- model forcing data
  integer(i4b),intent(out)          :: err              ! error code
  character(*),intent(out)          :: message          ! error message
  ! define local variables
@@ -431,8 +431,8 @@ contains
  integer(i4b) ,intent(in)          :: iFile            ! index of forcing file
  integer(i4b) ,intent(in)          :: iRead            ! index in data file
  integer(i4b) ,intent(in)          :: nHRUlocal        ! number of HRUs in the local simulation
- integer(i4b),intent(out)          :: time_data(:)     ! vector of time data for a given time step
- type(var_d)                       :: forcStruct       ! x%var(:)     -- model forcing data
+ integer(i4b),intent(inout)        :: time_data(:)     ! vector of time data for a given time step
+ type(var_d),intent(inout)         :: forcStruct       ! x%var(:)     -- model forcing data
  integer(i4b) ,intent(out)         :: err              ! error code
  character(*) ,intent(out)         :: message          ! error message
  ! local variables
