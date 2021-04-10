@@ -33,6 +33,9 @@ USE data_types,only:&
 USE globalData,only:integerMissing   ! missing integer
 USE globalData,only:realMissing      ! missing double precision number
 
+! provide access to Noah-MP constants
+USE module_sf_noahmplsm,only:isWater       ! parameter for water land cover type
+
 ! named variables
 USE globalData,only:yes,no           ! .true. and .false.
 ! provide access to the named variables that describe elements of parameter structures
@@ -44,6 +47,7 @@ USE var_lookup,only:iLookBVAR          ! look-up values for basin-average model 
 USE var_lookup,only:iLookTIME        ! named variables for time data structure
 USE var_lookup,only:iLookDIAG        ! look-up values for local column model diagnostic variables
 USE var_lookup,only:iLookINDEX       ! look-up values for local column index variables
+USE var_lookup,only:iLookPROG              ! look-up values for local column model prognostic (state) variables
 USE summa4chm_util,only:handle_err
 
 ! safety: set private unless specified otherwise
@@ -125,6 +129,7 @@ contains
  integer(i4b)                            :: nSnow                  ! number of snow layers
  integer(i4b)                            :: nSoil                  ! number of soil layers
  integer(i4b)                            :: nLayers                ! total number of layers
+ real(dp), allocatable   				 :: zSoilReverseSign(:) ! height at bottom of each soil layer, negative downwards (m)
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_runPhysics/'
@@ -166,8 +171,9 @@ contains
 
  ! initialize the start of the physics
  call date_and_time(values=startPhysics)
-
- !----- run simulation for a single GRU ----------------------------------------
+ 
+ 
+ !****************************** From run_oneGRU *******************************
  ! ----- basin initialization --------------------------------------------------------------------------------------------
 
  ! initialize runoff variables
@@ -187,6 +193,25 @@ contains
  nSoil   = indxStruct%var(iLookINDEX%nSoil)%dat(1)    ! number of soil layers
  nLayers = indxStruct%var(iLookINDEX%nLayers)%dat(1)  ! total number of layers
 
+ !****************************** From run_oneHRU *******************************
+ ! water pixel: do nothing
+ if (typeStruct%var(iLookTYPE%vegTypeIndex) == isWater) return
+
+ ! get height at bottom of each soil layer, negative downwards (used in Noah MP)
+ allocate(zSoilReverseSign(nSoil),stat=err)
+ if(err/=0)then
+  message=trim(message)//'problem allocating space for zSoilReverseSign'
+  err=20; return
+ endif
+ zSoilReverseSign(:) = -progStruct%var(iLookPROG%iLayerHeight)%dat(nSnow+1:nLayers)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ !******************************************************************************
   ! check errors
   call handle_err(err, cmessage)
 
