@@ -255,6 +255,16 @@ contains
   LAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%var(iLookPARAM%summerLAI)%dat(1)*greenVegFrac_monthly
  end if
  
+ ! compute derived forcing variables
+ call derivforce(timeStruct%var,     & ! vector of time information
+                 forcStruct%var,     & ! vector of model forcing data
+                 attrStruct%var,     & ! vector of model attributes
+                 mparStruct,         & ! data structure of model parameters
+                 progStruct,         & ! data structure of model prognostic variables
+                 diagStruct,         & ! data structure of model diagnostic variables
+                 fluxStruct,         & ! data structure of model fluxes
+                 err,cmessage)       ! error control
+ if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif
  
  
  
