@@ -150,6 +150,7 @@ contains
  integer(i4b)                            :: nSoil                  ! number of soil layers
  integer(i4b)                            :: nLayers                ! total number of layers
  real(dp), allocatable   				 :: zSoilReverseSign(:) ! height at bottom of each soil layer, negative downwards (m)
+ integer(8) :: hruId
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_runPhysics/'
@@ -256,7 +257,8 @@ contains
  end if
  
  ! compute derived forcing variables
- call derivforce(timeStruct%var,     & ! vector of time information
+ call derivforce(&
+ 				 timeStruct%var,     & ! vector of time information
                  forcStruct%var,     & ! vector of model forcing data
                  attrStruct%var,     & ! vector of model attributes
                  mparStruct,         & ! data structure of model parameters
@@ -265,7 +267,30 @@ contains
                  fluxStruct,         & ! data structure of model fluxes
                  err,cmessage)       ! error control
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif
- 
+
+ ! initialize the number of flux calls
+ diagStruct%var(iLookDIAG%numFluxCalls)%dat(1) = 0._dp
+ hruId = 101
+ ! run the model for a single HRU
+ call coupled_em(&
+                 ! model control
+                 hruId,            & ! intent(in):    hruId
+                 dt_init,          & ! intent(inout): initial time step
+                 computeVegFluxFlag,   & ! intent(inout): flag to indicate if we are computing fluxes over vegetation
+                 ! data structures (input)
+                 typeStruct,         & ! intent(in):    local classification of soil veg etc. for each HRU
+                 attrStruct,         & ! intent(in):    local attributes for each HRU
+                 forcStruct,         & ! intent(in):    model forcing data
+                 mparStruct,         & ! intent(in):    model parameters
+                 bvarStruct,         & ! intent(in):    basin-average model variables
+                 ! data structures (input-output)
+                 indxStruct,         & ! intent(inout): model indices
+                 progStruct,         & ! intent(inout): model prognostic variables for a local HRU
+                 diagStruct,         & ! intent(inout): model diagnostic variables for a local HRU
+                 fluxStruct,         & ! intent(inout): model fluxes for a local HRU
+                 ! error control
+                 err,cmessage)       ! intent(out): error control
+ if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif 
  
  
  
