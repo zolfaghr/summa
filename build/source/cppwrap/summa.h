@@ -104,6 +104,11 @@ extern "C" {
 	void  Restart( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, double* upArea, int* err);
 	
 	void  Forcing( int* index, void* h1, void* h2, int* err);
+	
+	void  RunPhysics( int* index, void* h1, void* h2, void* h3, void* h4, void* h5, void* h6,
+	                 void* h7, void* h8, void* h9, void* h10, void* h11, void* h12,
+	                 const double* v, int flag, int* dt, int* err);
+	                             
     				 
     void  SolveCoupledEM(const double* dt, int* flag,
     					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
@@ -750,6 +755,30 @@ public:
   					handle_forcStruct_,
   					&err_);   
    }
+   
+   
+   void summa_runPhysics(int step_index) {
+   			  RunPhysics(
+  					    &step_index,
+  						handle_timeStruct_,
+  						handle_forcStruct_,
+  						handle_attrStruct_,
+  						handle_typeStruct_,
+  						handle_idStruct_,
+  						handle_indxStruct_,
+  						handle_mparStruct_, 
+  						handle_progStruct_,
+  						handle_diagStruct_,
+  						handle_fluxStruct_,
+  						handle_bparStruct_,
+  						handle_bvarStruct_,
+  						greenVegFrac_monthly_,
+  						computeVegFlux_,
+  						&dt_init_,
+  					  	&err_);      
+   }
+   
+
    
    
    

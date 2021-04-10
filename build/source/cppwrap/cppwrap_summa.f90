@@ -14,6 +14,7 @@ module cppwrap_summa
   public::SetupParam
   public::Restart
   public::Forcing
+  public::RunPhysics
   public::SolveCoupledEM
 
 
@@ -91,22 +92,22 @@ contains
  type(var_dlength),pointer          :: fluxStat                   !  model fluxes
  type(var_dlength),pointer          :: indxStat                   !  model indices
  type(var_dlength),pointer          :: bvarStat                   !  basin-average variabl
- ! define the primary data structures (scalars)
+ ! primary data structures (scalars)
  type(var_i),pointer                :: timeStruct                 !  model time data
  type(var_d),pointer                :: forcStruct                 !  model forcing data
  type(var_d),pointer                :: attrStruct                 !  local attributes for each HRU
  type(var_i),pointer                :: typeStruct                 !  local classification of soil veg etc. for each HRU
  type(var_i8),pointer               :: idStruct                   ! 
- ! define the primary data structures (variable length vectors)
+ ! primary data structures (variable length vectors)
  type(var_ilength),pointer          :: indxStruct                 !  model indices
  type(var_dlength),pointer          :: mparStruct                 !  model parameters
  type(var_dlength),pointer          :: progStruct                 !  model prognostic (state) variables
  type(var_dlength),pointer          :: diagStruct                 !  model diagnostic variables
  type(var_dlength),pointer          :: fluxStruct                 !  model fluxes
- ! define the basin-average structures
+ ! basin-average structures
  type(var_d),pointer                :: bparStruct                 !  basin-average parameters
  type(var_dlength),pointer          :: bvarStruct                 !  basin-average variables
- ! define the ancillary data structures
+ ! ancillary data structures
  type(var_d),pointer                :: dparStruct                 !  default model parameters
  character(len=256)                 :: summaFileManagerFile       ! path/name of file defining directories and files
  character(len=256)                 :: message
@@ -345,6 +346,116 @@ contains
  							err, message)
   
   end subroutine Forcing
+  
+  
+  ! **********************************************************************************************************
+  ! public subroutine RunPhysics: solving coupled energy-mass equations for one timestep
+  ! **********************************************************************************************************
+  subroutine RunPhysics(& 
+  					    step_index,		    	&
+ 					    ! primary data structures (scalars)
+  						handle_timeStruct, 		& ! x%var(:)                   -- model time data
+  						handle_forcStruct, 		& ! x%var(:)     -- model forcing data
+  						handle_attrStruct, 		& ! x%var(:)     -- local attributes for each HRU
+  						handle_typeStruct, 		& ! x%var(:)     -- local classification of soil veg etc. for each HRU
+  						handle_idStruct, 			& ! x%var(:)     -- local classification of soil veg etc. for each HRU
+  						! primary data structures (variable length vectors)
+  						handle_indxStruct, 		& ! x%var(:)%dat -- model indices
+  						handle_mparStruct, 		& ! x%var(:)%dat -- model parameters
+  						handle_progStruct, 		& ! x%var(:)%dat -- model prognostic (state) variables
+  						handle_diagStruct, 		& ! x%var(:)%dat -- model diagnostic variables
+  						handle_fluxStruct, 		& ! x%var(:)%dat -- model fluxes
+  						! basin-average structures
+  						handle_bparStruct, 		& ! x%var(:)            -- basin-average parameters
+  						handle_bvarStruct, 		& ! x%var(:)%dat        -- basin-average variables
+  						! run time variables
+  						greenVegFrac_monthly,   & ! fraction of green vegetation in each month (0-1)
+  						computeVegFlux, 	    & ! flag to indicate if we are computing fluxes over vegetation
+  						dt_init, 			    & ! used to initialize the length of the sub-step for each HRU
+  					  	err) bind(C, name='RunPhysics')
+  
+  use summa4chm_modelRun,only:summa4chm_runPhysics
+
+    !======= Declarations =========
+    implicit none
+   ! calling variables  
+  integer(c_int), intent(in)    	::  step_index
+  ! primary data structures (scalars)
+  type(c_ptr), intent(in), value    ::	handle_timeStruct !  model time data
+  type(c_ptr), intent(in), value    ::	handle_forcStruct !  model forcing data
+  type(c_ptr), intent(in), value    ::	handle_attrStruct !  local attributes for each HRU
+  type(c_ptr), intent(in), value    ::	handle_typeStruct !  local classification of soil veg etc. for each HRU
+  type(c_ptr), intent(in), value    ::	handle_idStruct ! 
+  ! primary data structures (variable length vectors)
+  type(c_ptr), intent(in), value    ::	handle_indxStruct !  model indices
+  type(c_ptr), intent(in), value    ::	handle_mparStruct !  model parameters
+  type(c_ptr), intent(in), value    ::	handle_progStruct !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    ::	handle_diagStruct !  model diagnostic variables
+  type(c_ptr), intent(in), value    ::	handle_fluxStruct !  model fluxes
+  ! basin-average structures
+  type(c_ptr), intent(in), value    ::	handle_bparStruct !  basin-average parameters
+  type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
+  real(dp),dimension(12),intent(in) ::  greenVegFrac_monthly       ! fraction of green vegetation in each month (0-1)
+  integer(i4b),intent(inout)        ::  computeVegFlux             ! flag to indicate if we are computing fluxes over vegetation
+  real(dp),intent(inout)			::  dt_init
+  integer(c_int), intent(out)		::  err
+
+ ! local variables
+ ! primary data structures (scalars)
+ type(var_i),pointer                :: timeStruct                 !  model time data
+ type(var_d),pointer                :: forcStruct                 !  model forcing data
+ type(var_d),pointer                :: attrStruct                 !  local attributes for each HRU
+ type(var_i),pointer                :: typeStruct                 !  local classification of soil veg etc. for each HRU
+ type(var_i8),pointer               :: idStruct                   ! 
+ ! primary data structures (variable length vectors)
+ type(var_ilength),pointer          :: indxStruct                 !  model indices
+ type(var_dlength),pointer          :: mparStruct                 !  model parameters
+ type(var_dlength),pointer          :: progStruct                 !  model prognostic (state) variables
+ type(var_dlength),pointer          :: diagStruct                 !  model diagnostic variables
+ type(var_dlength),pointer          :: fluxStruct                 !  model fluxes
+ ! basin-average structures
+ type(var_d),pointer                :: bparStruct                 !  basin-average parameters
+ type(var_dlength),pointer          :: bvarStruct                 !  basin-average variables 
+ character(len=256)                     :: message
+    
+  call c_f_pointer(handle_timeStruct, timeStruct)
+  call c_f_pointer(handle_forcStruct, forcStruct)
+  call c_f_pointer(handle_attrStruct, attrStruct)
+  call c_f_pointer(handle_typeStruct, typeStruct)
+  call c_f_pointer(handle_idStruct, idStruct)
+  call c_f_pointer(handle_indxStruct, indxStruct)
+  call c_f_pointer(handle_mparStruct, mparStruct)
+  call c_f_pointer(handle_progStruct, progStruct)
+  call c_f_pointer(handle_diagStruct, diagStruct)
+  call c_f_pointer(handle_fluxStruct, fluxStruct)
+  call c_f_pointer(handle_bparStruct, bparStruct)
+  call c_f_pointer(handle_bvarStruct, bvarStruct)
+    
+ call summa4chm_runPhysics(&
+ 						step_index,			&
+ 						! primary data structures (scalars)
+  						timeStruct, 		& ! x%var(:)                   -- model time data
+  						forcStruct, 		& ! x%var(:)     -- model forcing data
+  						attrStruct, 		& ! x%var(:)     -- local attributes for each HRU
+  						typeStruct, 		& ! x%var(:)     -- local classification of soil veg etc. for each HRU
+  						idStruct, 			& ! x%var(:)     -- local classification of soil veg etc. for each HRU
+  						! primary data structures (variable length vectors)
+  						indxStruct, 		& ! x%var(:)%dat -- model indices
+  						mparStruct, 		& ! x%var(:)%dat -- model parameters
+  						progStruct, 		& ! x%var(:)%dat -- model prognostic (state) variables
+  						diagStruct, 		& ! x%var(:)%dat -- model diagnostic variables
+  						fluxStruct, 		& ! x%var(:)%dat -- model fluxes
+  						! basin-average structures
+  						bparStruct, 		& ! x%var(:)            -- basin-average parameters
+  						bvarStruct, 		& ! x%var(:)%dat        -- basin-average variables
+  						! run time variables
+  						greenVegFrac_monthly, & ! fraction of green vegetation in each month (0-1)
+  						computeVegFlux, 	  & ! flag to indicate if we are computing fluxes over vegetation
+  						dt_init, 			& ! used to initialize the length of the sub-step for each HRU
+  						err, message)
+    
+
+ end subroutine RunPhysics
   
   
   
