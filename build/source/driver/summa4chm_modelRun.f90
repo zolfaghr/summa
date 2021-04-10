@@ -122,6 +122,9 @@ contains
  logical(lgt)                          :: computeVegFluxFlag    ! flag to indicate if we are computing fluxes over vegetation (.false. means veg is buried with snow)
  real(dp)                              :: notUsed_canopyDepth   ! NOT USED: canopy depth (m)
  real(dp)                              :: notUsed_exposedVAI    ! NOT USED: exposed vegetation area index (m2 m-2)
+ integer(i4b)                            :: nSnow                  ! number of snow layers
+ integer(i4b)                            :: nSoil                  ! number of soil layers
+ integer(i4b)                            :: nLayers                ! total number of layers
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_runPhysics/'
@@ -178,6 +181,11 @@ contains
 
  ! initialize total inflow for each layer in a soil column
  fluxStruct%var(iLookFLUX%mLayerColumnInflow)%dat(:) = 0._dp
+ 
+ ! update the number of layers
+ nSnow   = indxStruct%var(iLookINDEX%nSnow)%dat(1)    ! number of snow layers
+ nSoil   = indxStruct%var(iLookINDEX%nSoil)%dat(1)    ! number of soil layers
+ nLayers = indxStruct%var(iLookINDEX%nLayers)%dat(1)  ! total number of layers
 
   ! check errors
   call handle_err(err, cmessage)
