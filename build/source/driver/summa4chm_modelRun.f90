@@ -38,6 +38,10 @@ USE module_sf_noahmplsm,only:isWater       ! parameter for water land cover type
 
 ! named variables
 USE globalData,only:yes,no           ! .true. and .false.
+USE globalData,only:overwriteRSMIN         ! flag to overwrite RSMIN
+USE globalData,only:maxSoilLayers          ! Maximum Number of Soil Layers
+! urban vegetation category (could be local)
+USE globalData,only:urbanVegCategory       ! vegetation category for urban areas
 ! provide access to the named variables that describe elements of parameter structures
 USE var_lookup,only:iLookTYPE          ! look-up values for classification of veg, soils etc.
 USE var_lookup,only:iLookID            ! look-up values for hru and gru IDs
@@ -48,7 +52,13 @@ USE var_lookup,only:iLookTIME        ! named variables for time data structure
 USE var_lookup,only:iLookDIAG        ! look-up values for local column model diagnostic variables
 USE var_lookup,only:iLookINDEX       ! look-up values for local column index variables
 USE var_lookup,only:iLookPROG              ! look-up values for local column model prognostic (state) variables
+USE var_lookup,only:iLookPARAM             ! look-up values for local column model parameters
 USE summa4chm_util,only:handle_err
+
+! Noah-MP parameters
+USE NOAHMP_VEG_PARAMETERS,only:SAIM,LAIM   ! 2-d tables for stem area index and leaf area index (vegType,month)
+USE NOAHMP_VEG_PARAMETERS,only:HVT,HVB     ! height at the top and bottom of vegetation (vegType)
+USE noahmp_globals,only:RSMIN     
 
 ! safety: set private unless specified otherwise
 implicit none
@@ -83,16 +93,19 @@ contains
  ! * desired modules
  ! ---------------------------------------------------------------------------------------
  ! data types
- USE nrtype                                                     ! variable types, etc.
+ USE nrtype                                   ! variable types, etc.
  ! subroutines and functions
- USE nr_utility_module,only:indexx                              ! sort vectors in ascending order
- USE vegPhenlgy_module,only:vegPhenlgy                          ! module to compute vegetation phenology
- USE time_utils_module,only:elapsedSec                          ! calculate the elapsed time
+ USE nr_utility_module,only:indexx            ! sort vectors in ascending order
+ USE vegPhenlgy_module,only:vegPhenlgy        ! module to compute vegetation phenology
+ USE time_utils_module,only:elapsedSec        ! calculate the elapsed time
+ USE module_sf_noahmplsm,only:redprm          ! module to assign more Noah-MP parameters
+ USE derivforce_module,only:derivforce        ! module to compute derived forcing data
+ USE coupled_em_module,only:coupled_em        ! module to run the coupled energy and mass model
  ! global data
- USE globalData,only:gru_struc                                  ! gru-hru mapping structures
- USE globalData,only:model_decisions                            ! model decision structure
- USE globalData,only:startPhysics,endPhysics                    ! date/time for the start and end of the initialization
- USE globalData,only:elapsedPhysics                             ! elapsed time for the initialization
+ USE globalData,only:gru_struc                ! gru-hru mapping structures
+ USE globalData,only:model_decisions          ! model decision structure
+ USE globalData,only:startPhysics,endPhysics  ! date/time for the start and end of the initialization
+ USE globalData,only:elapsedPhysics           ! elapsed time for the initialization
  ! ---------------------------------------------------------------------------------------
  ! * variables
  ! ---------------------------------------------------------------------------------------
@@ -205,6 +218,25 @@ contains
  endif
  zSoilReverseSign(:) = -progStruct%var(iLookPROG%iLayerHeight)%dat(nSnow+1:nLayers)
  
+ ! populate parameters in Noah-MP modules
+ ! Passing a maxSoilLayer in order to pass the check for NROOT, that is done to avoid making any changes to Noah-MP code.
+ !  --> NROOT from Noah-MP veg tables (as read here) is not used in SUMMA
+ call REDPRM(typeStruct%var(iLookTYPE%vegTypeIndex),      & ! vegetation type index
+             typeStruct%var(iLookTYPE%soilTypeIndex),     & ! soil type
+             typeStruct%var(iLookTYPE%slopeTypeIndex),    & ! slope type index
+             zSoilReverseSign,                          & ! * not used: height at bottom of each layer [NOTE: negative] (m)
+             maxSoilLayers,                             & ! number of soil layers
+             urbanVegCategory)                            ! vegetation category for urban areas
+
+ ! deallocate height at bottom of each soil layer(used in Noah MP)
+ deallocate(zSoilReverseSign,stat=err)
+ if(err/=0)then
+  message=trim(message)//'problem deallocating space for zSoilReverseSign'
+  err=20; return
+ endif
+
+ ! overwrite the minimum resistance
+ if(overwriteRSMIN) RSMIN = mparStruct%var(iLookPARAM%minStomatalResistance)%dat(1)
  
  
  
