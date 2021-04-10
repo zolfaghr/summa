@@ -64,7 +64,9 @@ USE noahmp_globals,only:RSMIN
 ! provide access to the named variables that describe model decisions
 USE mDecisions_module,only:&               ! look-up values for LAI decisions
  monthlyTable,& ! LAI/SAI taken directly from a monthly table for different vegetation classes
- specified      ! LAI/SAI computed from green vegetation fraction and winterSAI and summerLAI parameters     
+ specified,&    ! LAI/SAI computed from green vegetation fraction and winterSAI and summerLAI parameters   
+ localColumn, & ! separate groundwater representation in each local soil column
+ singleBasin    ! single groundwater store over the entire basin  
 
 
 ! safety: set private unless specified otherwise
@@ -108,6 +110,7 @@ contains
  USE module_sf_noahmplsm,only:redprm          ! module to assign more Noah-MP parameters
  USE derivforce_module,only:derivforce        ! module to compute derived forcing data
  USE coupled_em_module,only:coupled_em        ! module to run the coupled energy and mass model
+ USE qTimeDelay_module,only:qOverland                        ! module to route water through an "unresolved" river network
  ! global data
  USE globalData,only:gru_struc                ! gru-hru mapping structures
  USE globalData,only:model_decisions          ! model decision structure
@@ -193,8 +196,9 @@ contains
  ! initialize the start of the physics
  call date_and_time(values=startPhysics)
  
- 
+ !****************************************************************************** 
  !****************************** From run_oneGRU *******************************
+ !******************************************************************************
  ! ----- basin initialization --------------------------------------------------------------------------------------------
 
  ! initialize runoff variables
@@ -213,8 +217,10 @@ contains
  nSnow   = indxStruct%var(iLookINDEX%nSnow)%dat(1)    ! number of snow layers
  nSoil   = indxStruct%var(iLookINDEX%nSoil)%dat(1)    ! number of soil layers
  nLayers = indxStruct%var(iLookINDEX%nLayers)%dat(1)  ! total number of layers
-
+ 
+ !******************************************************************************
  !****************************** From run_oneHRU *******************************
+ !******************************************************************************
  ! water pixel: do nothing
  if (typeStruct%var(iLookTYPE%vegTypeIndex) == isWater) return
 
@@ -292,10 +298,36 @@ contains
                  err,cmessage)       ! intent(out): error control
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif 
  
+ !************************************* End of run_oneHRU *****************************************
+ ! save the flag for computing the vegetation fluxes
+ if(computeVegFluxFlag)      ComputeVegFlux = yes
+ if(.not.computeVegFluxFlag) ComputeVegFlux = no
+
+ ! compute water balance for the basin aquifer
+ if(model_decisions(iLookDECISIONS%spatial_gw)%iDecision == singleBasin)then
+  message=trim(message)//'multi_driver/bigBucket groundwater code not transferred from old code base yet'
+  err=20; return
+ end if
+
+ ! perform the routing
+ associate(totalArea => bvarStruct%var(iLookBVAR%basin__totalArea)%dat(1) )
+ call qOverland(&
+                ! input
+                model_decisions(iLookDECISIONS%subRouting)%iDecision,          &  ! intent(in): index for routing method
+                bvarStruct%var(iLookBVAR%basin__SurfaceRunoff)%dat(1),           &  ! intent(in): surface runoff (m s-1)
+                bvarStruct%var(iLookBVAR%basin__ColumnOutflow)%dat(1)/totalArea, &  ! intent(in): outflow from all "outlet" HRUs (those with no downstream HRU)
+                bvarStruct%var(iLookBVAR%basin__AquiferBaseflow)%dat(1),         &  ! intent(in): baseflow from the aquifer (m s-1)
+                bvarStruct%var(iLookBVAR%routingFractionFuture)%dat,             &  ! intent(in): fraction of runoff in future time steps (m s-1)
+                bvarStruct%var(iLookBVAR%routingRunoffFuture)%dat,               &  ! intent(in): runoff in future time steps (m s-1)
+                ! output
+                bvarStruct%var(iLookBVAR%averageInstantRunoff)%dat(1),           &  ! intent(out): instantaneous runoff (m s-1)
+                bvarStruct%var(iLookBVAR%averageRoutedRunoff)%dat(1),            &  ! intent(out): routed runoff (m s-1)
+                err,message)                                                                  ! intent(out): error control
+ if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif
+ end associate
  
+ !************************************* End of run_oneGRU *****************************************
  
- 
- !******************************************************************************
   ! check errors
   call handle_err(err, cmessage)
 
