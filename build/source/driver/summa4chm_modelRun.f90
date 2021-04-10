@@ -53,12 +53,19 @@ USE var_lookup,only:iLookDIAG        ! look-up values for local column model dia
 USE var_lookup,only:iLookINDEX       ! look-up values for local column index variables
 USE var_lookup,only:iLookPROG              ! look-up values for local column model prognostic (state) variables
 USE var_lookup,only:iLookPARAM             ! look-up values for local column model parameters
+USE var_lookup,only:iLookDECISIONS         ! look-up values for model decisions
 USE summa4chm_util,only:handle_err
 
 ! Noah-MP parameters
 USE NOAHMP_VEG_PARAMETERS,only:SAIM,LAIM   ! 2-d tables for stem area index and leaf area index (vegType,month)
 USE NOAHMP_VEG_PARAMETERS,only:HVT,HVB     ! height at the top and bottom of vegetation (vegType)
-USE noahmp_globals,only:RSMIN     
+USE noahmp_globals,only:RSMIN
+
+! provide access to the named variables that describe model decisions
+USE mDecisions_module,only:&               ! look-up values for LAI decisions
+ monthlyTable,& ! LAI/SAI taken directly from a monthly table for different vegetation classes
+ specified      ! LAI/SAI computed from green vegetation fraction and winterSAI and summerLAI parameters     
+
 
 ! safety: set private unless specified otherwise
 implicit none
@@ -237,6 +244,16 @@ contains
 
  ! overwrite the minimum resistance
  if(overwriteRSMIN) RSMIN = mparStruct%var(iLookPARAM%minStomatalResistance)%dat(1)
+ 
+ ! overwrite the vegetation height
+ HVT(typeStruct%var(iLookTYPE%vegTypeIndex)) = mparStruct%var(iLookPARAM%heightCanopyTop)%dat(1)
+ HVB(typeStruct%var(iLookTYPE%vegTypeIndex)) = mparStruct%var(iLookPARAM%heightCanopyBottom)%dat(1)
+
+ ! overwrite the tables for LAI and SAI
+ if(model_decisions(iLookDECISIONS%LAI_method)%iDecision == specified)then
+  SAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%var(iLookPARAM%winterSAI)%dat(1)
+  LAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%var(iLookPARAM%summerLAI)%dat(1)*greenVegFrac_monthly
+ end if
  
  
  
