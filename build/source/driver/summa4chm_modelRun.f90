@@ -157,8 +157,6 @@ contains
  ! initialize error control
  err=0; message='summa4chm_runPhysics/'
  
- print *, 'summa4chm_runPhysics 0'
-
  ! *******************************************************************************************
  ! *** initialize computeVegFlux (flag to indicate if we are computing fluxes over vegetation)
  ! *******************************************************************************************
@@ -181,7 +179,7 @@ contains
                     notUsed_exposedVAI,             & ! intent(out): NOT USED: exposed vegetation area index (m2 m-2)
                     err,cmessage)                     ! intent(out): error control
     if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
-    print *, 'summa4chm_runPhysics 1'
+  
     ! save the flag for computing the vegetation fluxes
     if(computeVegFluxFlag)      computeVegFlux = yes
     if(.not.computeVegFluxFlag) computeVegFlux = no
@@ -221,7 +219,6 @@ contains
  nSoil   = indxStruct%var(iLookINDEX%nSoil)%dat(1)    ! number of soil layers
  nLayers = indxStruct%var(iLookINDEX%nLayers)%dat(1)  ! total number of layers
  
- print *, 'summa4chm_runPhysics 2'
  
  !******************************************************************************
  !****************************** From run_oneHRU *******************************
@@ -254,7 +251,6 @@ contains
   err=20; return
  endif
  
- print *, 'summa4chm_runPhysics 3'
 
  ! overwrite the minimum resistance
  if(overwriteRSMIN) RSMIN = mparStruct%var(iLookPARAM%minStomatalResistance)%dat(1)
@@ -269,7 +265,6 @@ contains
   LAIM(typeStruct%var(iLookTYPE%vegTypeIndex),:) = mparStruct%var(iLookPARAM%summerLAI)%dat(1)*greenVegFrac_monthly
  end if
  
- print *, 'summa4chm_runPhysics 4'
  
  ! compute derived forcing variables
  call derivforce(&
@@ -283,7 +278,6 @@ contains
                  err,cmessage)       ! error control
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif
  
- print *, 'summa4chm_runPhysics 5'
 
  ! initialize the number of flux calls
  diagStruct%var(iLookDIAG%numFluxCalls)%dat(1) = 0._dp
@@ -309,7 +303,6 @@ contains
                  err,cmessage)       ! intent(out): error control
  if(err/=0)then; err=20; message=trim(message)//trim(cmessage); return; endif 
  
- print *, 'summa4chm_runPhysics 6'
  
  !************************************* End of run_oneHRU *****************************************
  ! save the flag for computing the vegetation fluxes
