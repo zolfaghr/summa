@@ -16,23 +16,23 @@ int main()  {
   S.summa_paramSetup();
   
   S.summa_readRestart();
-
-  S.set_dt(60);
-  S.set_veg_fluxflag(false);
   
   for(int i=1; i<3; i++) {
   	S.summa_readForcing(i);
   	S.summa_runPhysics(i);
   }
   		
+
+  bool print = false;
+  if(print) {  
+  	vector<vector<double>> prog;
+  	prog = S.get_progStruct();
   
-  vector<vector<double>> prog;
-  prog = S.get_progStruct();
-  
-  for(size_t i=0; i<prog.size(); ++i) {
-  	for(size_t j=0; j<prog[i].size(); ++j) 
-  		cout << prog[i][j] << "  ";
-  	cout << endl;
+  	for(size_t i=0; i<prog.size(); ++i) {
+  		for(size_t j=0; j<prog[i].size(); ++j) 
+  			cout << prog[i][j] << "  ";
+  		cout << endl;
+  	}
   }
   	
   

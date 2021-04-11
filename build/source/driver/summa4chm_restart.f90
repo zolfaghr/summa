@@ -219,6 +219,7 @@ contains
 
   ! initialize time step length
    dt_init = progStruct%var(iLookPROG%dt_init)%dat(1) ! seconds
+   
 
  ! *****************************************************************************
  ! *** finalize

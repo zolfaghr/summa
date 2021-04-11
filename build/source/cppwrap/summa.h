@@ -108,11 +108,6 @@ extern "C" {
 	void  RunPhysics( int* index, void* h1, void* h2, void* h3, void* h4, void* h5, void* h6,
 	                 void* h7, void* h8, void* h9, void* h10, void* h11, void* h12,
 	                 int* flag, double* dt, int* err);
-	                             
-    				 
-    void  SolveCoupledEM(const double* dt, int* flag,
-    					 void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9,
-    					 int* err);
 
  } // extern "C"
  
@@ -467,13 +462,7 @@ private:
     	double  dt_init_;           // used to initialize the length of the sub-step for each HRU
     	double	upArea_;            // area upslope of each HRU
    // miscellaneous variables
-    	int 	summa1open_;        // flag to define if the summa file is open??
-    	int 	numout_;            // number of output variables??
-    	double 	ts_;            	// model time step ??
-    	int  	nGRU_;            	// number of grouped response units
-    	int 	nHRU_;            	// number of global hydrologic response units
-    	int 	hruCount_;          // number of local hydrologic response units
-    	char const*         summaFileManagerFile;       // path/name of file defining directories and files
+    	char const*         summaFileManagerFile_;       // path/name of file defining directories and files
 
 /*********************** others ****************************/
 		int     err_;			    // error conotrol
@@ -772,28 +761,6 @@ public:
   						&computeVegFlux_,
   						&dt_init_,
   					  	&err_);      
-   }
-   
-
-   
-   
-   
-  
-   void coupled_em() {
-   		SolveCoupledEM(
-   					 &dt_init_,
-   					 &computeVegFlux_,
-   					 handle_typeStruct_,
-    				 handle_attrStruct_,
-    				 handle_forcStruct_,
-    				 handle_mparStruct_,
-    				 handle_bvarStruct_,
-    				 handle_indxStruct_,
-    				 handle_progStruct_,
-    				 handle_diagStruct_,
-    				 handle_fluxStruct_,
-    				 &err_
-    				);
    }
   
   /************** DESTRUCTOR *************/
