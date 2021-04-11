@@ -17,11 +17,14 @@ int main()  {
   
   S.summa_readRestart();
 
-  S.summa_readForcing(1);
-
   S.set_dt(60);
   S.set_veg_fluxflag(false);
-  S.summa_runPhysics(1);
+  
+  for(int i=1; i<3; i++) {
+  	S.summa_readForcing(i);
+  	S.summa_runPhysics(i);
+  }
+  		
   
   vector<vector<double>> prog;
   prog = S.get_progStruct();

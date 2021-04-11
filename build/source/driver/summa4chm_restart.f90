@@ -104,14 +104,11 @@ contains
  ! local variables
  character(LEN=256)                    	  :: cmessage           ! error message of downwind routine
  character(LEN=256)                       :: restartFile        ! restart file name
- integer(i4b)                             :: iGRU,iHRU          ! looping variables
  integer(i4b)               		      :: nGRU               
- integer(i4b)               		      :: nHRU
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_readRestart/'
  nGRU = 1
- nHRU = 1
 
  ! identify the start of the writing
  call date_and_time(values=startRestart)
@@ -128,7 +125,7 @@ contains
  endif
 
  ! read initial conditions
- call read_icond4chm(restartFile,                   & ! intent(in):    name of initial conditions file
+ call read_icond4chm(restartFile,               & ! intent(in):    name of initial conditions file
                  nGRU,                          & ! intent(in):    number of response units
                  mparStruct,                    & ! intent(in):    model parameters
                  progStruct,                    & ! intent(inout): model prognostic variables
@@ -145,15 +142,10 @@ contains
                   err,cmessage)                   ! intent(out):   error control
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
- ! loop through GRUs
- do iGRU=1,nGRU
 
   ! *****************************************************************************
   ! *** compute ancillary variables
   ! *****************************************************************************
-
-  ! loop through HRUs
-  do iHRU=1,gru_struc(iGRU)%hruCount
 
    ! re-calculate height of each layer
    call calcHeight(indxStruct,   & ! layer type
@@ -187,8 +179,6 @@ contains
    ! NOTE: canopy drip from the previous time step is used to compute throughfall for the current time step
    fluxStruct%var(iLookFLUX%scalarCanopyLiqDrainage)%dat(1) = 0._dp  ! not used
 
-  end do  ! end looping through HRUs
-
   ! *****************************************************************************
   ! *** initialize aquifer storage
   ! *****************************************************************************
@@ -214,9 +204,7 @@ contains
    ! (i.e., where multiple HRUs drain to a basin-average aquifer)
    case(singleBasin)
     bvarStruct%var(iLookBVAR%basin__AquiferStorage)%dat(1) = 1._dp
-    do iHRU=1,gru_struc(iGRU)%hruCount
-     progStruct%var(iLookPROG%scalarAquiferStorage)%dat(1) = 0._dp  ! set to zero to be clear that there is no local aquifer storage in this configuration
-    end do
+    progStruct%var(iLookPROG%scalarAquiferStorage)%dat(1) = 0._dp  ! set to zero to be clear that there is no local aquifer storage in this configuration
 
    ! error check
    case default
@@ -229,12 +217,8 @@ contains
   ! *** initialize time step
   ! *****************************************************************************
 
-  ! initialize time step length for each HRU
-  do iHRU=1,gru_struc(iGRU)%hruCount
+  ! initialize time step length
    dt_init = progStruct%var(iLookPROG%dt_init)%dat(1) ! seconds
-  end do
-
- end do  ! end looping through GRUs
 
  ! *****************************************************************************
  ! *** finalize
