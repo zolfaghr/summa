@@ -42,6 +42,7 @@ USE globalData,only:overwriteRSMIN         ! flag to overwrite RSMIN
 USE globalData,only:maxSoilLayers          ! Maximum Number of Soil Layers
 ! urban vegetation category (could be local)
 USE globalData,only:urbanVegCategory       ! vegetation category for urban areas
+ USE globalData,only:greenVegFrac_monthly                    ! fraction of green vegetation in each month (0-1)
 ! provide access to the named variables that describe elements of parameter structures
 USE var_lookup,only:iLookTYPE          ! look-up values for classification of veg, soils etc.
 USE var_lookup,only:iLookID            ! look-up values for hru and gru IDs
@@ -94,7 +95,6 @@ contains
   								bparStruct, 		& ! x%var(:)            -- basin-average parameters
   								bvarStruct, 		& ! x%var(:)%dat        -- basin-average variables
   								! run time variables
-  								greenVegFrac_monthly, & ! fraction of green vegetation in each month (0-1)
   								computeVegFlux, 	  & ! flag to indicate if we are computing fluxes over vegetation
   								dt_init, 			& ! used to initialize the length of the sub-step for each HRU
   								err, message)
@@ -137,7 +137,6 @@ contains
  ! basin-average structures
  type(var_d),intent(inout)                :: bparStruct                 !  basin-average parameters
  type(var_dlength),intent(inout)          :: bvarStruct                 !  basin-average variables
- real(dp),dimension(12),intent(in)        :: greenVegFrac_monthly       ! fraction of green vegetation in each month (0-1)
  integer(i4b),intent(inout)               :: computeVegFlux             ! flag to indicate if we are computing fluxes over vegetation
  real(dp),intent(inout)					  :: dt_init
  integer(i4b),intent(out)              	  :: err                   ! error code

@@ -369,7 +369,6 @@ contains
   						handle_bparStruct, 		& ! x%var(:)            -- basin-average parameters
   						handle_bvarStruct, 		& ! x%var(:)%dat        -- basin-average variables
   						! run time variables
-  						greenVegFrac_monthly,   & ! fraction of green vegetation in each month (0-1)
   						computeVegFlux, 	    & ! flag to indicate if we are computing fluxes over vegetation
   						dt_init, 			    & ! used to initialize the length of the sub-step for each HRU
   					  	err) bind(C, name='RunPhysics')
@@ -395,7 +394,6 @@ contains
   ! basin-average structures
   type(c_ptr), intent(in), value    ::	handle_bparStruct !  basin-average parameters
   type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
-  real(dp),dimension(12),intent(in) ::  greenVegFrac_monthly       ! fraction of green vegetation in each month (0-1)
   integer(i4b),intent(inout)        ::  computeVegFlux             ! flag to indicate if we are computing fluxes over vegetation
   real(dp),intent(inout)			::  dt_init
   integer(c_int), intent(out)		::  err
@@ -449,7 +447,6 @@ contains
   						bparStruct, 		& ! x%var(:)            -- basin-average parameters
   						bvarStruct, 		& ! x%var(:)%dat        -- basin-average variables
   						! run time variables
-  						greenVegFrac_monthly, & ! fraction of green vegetation in each month (0-1)
   						computeVegFlux, 	  & ! flag to indicate if we are computing fluxes over vegetation
   						dt_init, 			& ! used to initialize the length of the sub-step for each HRU
   						err, message)
