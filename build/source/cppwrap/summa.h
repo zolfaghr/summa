@@ -107,7 +107,7 @@ extern "C" {
 	
 	void  RunPhysics( int* index, void* h1, void* h2, void* h3, void* h4, void* h5, void* h6,
 	                 void* h7, void* h8, void* h9, void* h10, void* h11, void* h12,
-	                 int flag, double* dt, int* err);
+	                 int* flag, double* dt, int* err);
 	                             
     				 
     void  SolveCoupledEM(const double* dt, int* flag,
@@ -769,7 +769,7 @@ public:
   						handle_fluxStruct_,
   						handle_bparStruct_,
   						handle_bvarStruct_,
-  						computeVegFlux_,
+  						&computeVegFlux_,
   						&dt_init_,
   					  	&err_);      
    }

@@ -16,11 +16,10 @@ int main()  {
   S.summa_readRestart();
 
   S.summa_readForcing(1);
-  
-//  exit(0);
+
   S.set_dt(60);
   S.set_veg_fluxflag(false);
-  S.coupled_em();
+  S.summa_runPhysics(1);
   
 
   return 0;
