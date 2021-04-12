@@ -48,7 +48,7 @@ contains
   						! ancillary data structures
   						handle_dparStruct,				 & !  default model parameters
   						! miscellaneous variables
-  						! summaFileManagerFile,			 & ! path/name of file defining directories and files)
+  					    file_manager_path,			     & ! path of file defining directories and files)
   						err) bind(C,name='Initialize')
   
   use summa4chm_init,only:summa4chm_initialize           
@@ -80,6 +80,7 @@ contains
   type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
   ! ancillary data structures
   type(c_ptr), intent(in), value    ::	handle_dparStruct !  default model parameters
+  character(kind=c_char,len=1),intent(in)		:: file_manager_path(*)
   integer(c_int)				    :: err
  !---------------------------------------------------------------------------------------------------  
  ! local variables

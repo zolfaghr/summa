@@ -97,7 +97,7 @@ extern "C" {
 
 	void  Initialize( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, void* h8, void* h9, void* h10,
     				 void* h11, void* h12, void* h13, void* h14, void* h15, void* h16, void* h17, void* h18, void* h19,
-    				 int* err);
+    				 char const *str1, int* err);
     				 
 	void  SetupParam( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, double* upArea, int* err);
 	
@@ -462,7 +462,7 @@ private:
     	double  dt_init_;           // used to initialize the length of the sub-step for each HRU
     	double	upArea_;            // area upslope of each HRU
    // miscellaneous variables
-    	char const*         summaFileManagerFile_;       // path/name of file defining directories and files
+    	char const*         file_manager_path_;       // path/name of file defining directories and files
 
 /*********************** others ****************************/
 		int     err_;			    // error conotrol
@@ -699,6 +699,7 @@ public:
   				handle_bparStruct_,				
   				handle_bvarStruct_,				
   				handle_dparStruct_,
+  				file_manager_path_,
   				&err_
   				);				   
    }
