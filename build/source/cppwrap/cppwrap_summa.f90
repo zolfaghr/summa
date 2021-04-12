@@ -51,7 +51,8 @@ contains
   					    file_manager_path,			     & ! path of file defining directories and files)
   						err) bind(C,name='Initialize')
   
-  use summa4chm_init,only:summa4chm_initialize           
+  use summa4chm_init,only:summa4chm_initialize
+  use cppwrap_auxiliary,only:c_f_string           
   
   implicit none
   ! calling variables

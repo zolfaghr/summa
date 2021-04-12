@@ -4,15 +4,14 @@ module cppwrap_auxiliary
 use, intrinsic :: iso_c_binding
 use data_types
 
-implicit none
   
-contains
+
   ! privacy
   implicit none
   public::comp_len_string
   public::c_f_string
   
-
+ contains
 ! ***************** Auxiliary functions and subroutines ***********************
 
   function comp_len_string(c_str) result(length)
