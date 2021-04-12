@@ -135,6 +135,8 @@ contains
   call c_f_pointer(handle_bvarStruct, bvarStruct)
   call c_f_pointer(handle_dparStruct, dparStruct)
   
+  call c_f_string(file_manager_path, summaFileManagerFile, 256)
+  
   ! define global data (parameters, metadata)
   call summa4chm_initialize(&
   								! statistics structures
