@@ -74,7 +74,6 @@ contains
  character(len=256),allocatable        :: argString(:)        ! string to store command line arguments
  integer(i4b)                          :: nLocalArgument      ! number of command line arguments to read for a switch
  character(len=70), parameter          :: spaces = ''         ! setting a blank string
- logical(lgt)	:: from_command
  ! version information generated during compiling
  INCLUDE 'summaversion.inc'
  ! ---------------------------------------------------------------------------------------
@@ -88,38 +87,7 @@ contains
   argString(3) =  '-s'
   argString(4) = '_testSumma'
   argString(5) = '-m'
-  argString(6) = file_manager_path !'/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
-  
-from_command = .false.
-if(from_command)then  ! reza temporary
-  
-   ! check number of command-line arguments
-  nArgument = command_argument_count()
-  
- if (nArgument < 1) then
-  call printCommandHelp()
- end if
-
- ! read command line arguments
- allocate(argString(nArgument))
- do iArgument = 1,nArgument
-  call get_command_argument(iArgument,argString(iArgument))
-
-  ! print versions if needed
-  if (trim(argString(iArgument)) == '-v' .or. trim(argString(iArgument)) == '--version') then
-   print "(A)", '----------------------------------------------------------------------'
-   print "(A)", '     SUMMA - Structure for Unifying Multiple Modeling Alternatives    '
-   print "(A)", spaces(1:int(real(70 - len_trim(summaVersion) - 9) / 2))//'Version: '   //trim(summaVersion)
-   print "(A)", spaces(1:int(real(70 - len_trim(buildTime) - 12) / 2))  //'Build Time: '//trim(buildTime)
-   print "(A)", spaces(1:int(real(70 - len_trim(gitBranch) - 12) / 2))  //'Git Branch: '//trim(gitBranch)
-   print "(A)", spaces(1:int(real(70 - len_trim(gitHash) - 10) / 2))    //'Git Hash: '  //trim(gitHash)
-   print "(A)", '----------------------------------------------------------------------'
-   if (nArgument == 1) stop
-  end if
-
- end do ! reading command-line arguments
- 
-end if !form_command
+  argString(6) = file_manager_path   
 
  ! initialize command line argument variables
  startGRU = integerMissing; checkHRU = integerMissing

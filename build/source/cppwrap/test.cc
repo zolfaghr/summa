@@ -9,7 +9,11 @@ using namespace std;
 
 int main()  {
 
+  const char *path = "/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt";
+
   Summa S;
+  
+  S.set_file_manager(path);
   
   S.summa_initialize();
   
