@@ -23,7 +23,7 @@ int main()  {
   }
   		
 
-  bool print = false;
+  bool print = true;
   if(print) {  
   	vector<vector<double>> prog;
   	prog = S.get_progStruct();

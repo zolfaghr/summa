@@ -495,7 +495,8 @@ public:
     	handle_bparStruct_ = new_handle_var_d();
     	handle_bvarStruct_ = new_handle_var_dlength();
         // ancillary data structures
-    	handle_dparStruct_ = new_handle_var_d();  
+    	handle_dparStruct_ = new_handle_var_d(); 
+    	file_manager_path_ = "/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt"; 
    }
    
   /*************** SET DATA **************/

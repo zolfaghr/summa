@@ -71,7 +71,7 @@ contains
   								! ancillary data structures
   								dparStruct,				 & !  default model parameters
   								! miscellaneous variables
-  								summaFileManagerFile,	 & ! path/name of file defining directories and files
+  								file_manager_path,	     & ! path/name of file defining directories and files
  								err, message)
  ! ---------------------------------------------------------------------------------------
  ! * desired modules
@@ -139,7 +139,7 @@ contains
  type(var_dlength),intent(inout)          :: bvarStruct                 !  basin-average variables
  ! ancillary data structures
  type(var_d),intent(inout)                :: dparStruct                 !  default model parameters
- character(len=256),intent(inout)		  :: summaFileManagerFile       ! path/name of file defining directories and files
+ character(len=256),intent(in)	    	  :: file_manager_path       ! path/name of file defining directories and files
  integer(i4b),intent(out)	              :: err                		! error code
  character(*),intent(out)	              :: message            		! error message
  ! local variables
@@ -152,6 +152,7 @@ contains
  integer(i4b)                          :: fileHRU            ! [used for filenames] number of HRUs in the input file
  integer(i4b)							:: nGRU
  integer(i4b)							:: nHRU
+ character(len=256)          		  :: summaFileManagerFile       ! path/name of file defining directories and files
  ! ---------------------------------------------------------------------------------------
  ! initialize error control
  err=0; message='summa4chm_initialize/'
@@ -172,7 +173,7 @@ contains
  elapsedPhysics=0._dp
 
  ! get the command line arguments
- call getCommandArguments4chm(summaFileManagerFile,err,cmessage)
+ call getCommandArguments4chm(file_manager_path,summaFileManagerFile,err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
 
  ! set directories and files -- summaFileManager used as command-line argument

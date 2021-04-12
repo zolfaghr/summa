@@ -44,7 +44,7 @@ contains
  ! **************************************************************************************************
  ! * obtain the command line arguments
  ! **************************************************************************************************
- subroutine getCommandArguments4chm(summaFileManagerFile,err,message)
+ subroutine getCommandArguments4chm(file_manager_path,summaFileManagerFile,err,message)
  ! data types
  USE summa4chm_type, only:summa4chm_type_dec                         ! master summa data type
  ! provide access to named parameters
@@ -62,7 +62,8 @@ contains
  USE globalData,only: output_fileSuffix ! suffix for the output file
  implicit none
  ! dummy variables
- character(len=256),intent(inout)		  :: summaFileManagerFile       ! path/name of file defining directories and files
+ character(len=256),intent(in)		   :: file_manager_path       ! path/name of file defining directories and files
+ character(len=256),intent(inout)	   :: summaFileManagerFile    ! path/name of file defining directories and files
  integer(i4b),intent(out)              :: err                 ! error code
  character(*),intent(out)              :: message             ! error message
  ! local variables
@@ -87,7 +88,7 @@ contains
   argString(3) =  '-s'
   argString(4) = '_testSumma'
   argString(5) = '-m'
-  argString(6) = '/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
+  argString(6) = file_manager_path !'/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt'
   
 from_command = .false.
 if(from_command)then  ! reza temporary
