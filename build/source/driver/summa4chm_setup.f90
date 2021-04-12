@@ -74,6 +74,7 @@ contains
   							dparStruct, 		& !  default model parameters
   							! miscellaneous variables
   							upArea, 			& ! area upslope of each HRU,
+  							numTimeSteps,       & ! number of time steps
   							err, message)
  ! ---------------------------------------------------------------------------------------
  ! * desired modules
@@ -97,6 +98,7 @@ contains
  USE globalData,only:basinParFallback                        ! basin-average default parameters
  USE globalData,only:model_decisions                         ! model decision structure
  USE globalData,only:greenVegFrac_monthly                    ! fraction of green vegetation in each month (0-1)
+ USE globalData,only:numtim                 ! number of time steps in the simulation
  ! run time options
  USE globalData,only:startGRU                                ! index of the starting GRU for parallelization run
  USE globalData,only:checkHRU                                ! index of the HRU for a single HRU run
@@ -128,6 +130,7 @@ contains
  type(var_dlength),intent(inout)          :: bvarStruct                 !  basin-average variables
  type(var_d),intent(inout)                :: dparStruct                 !  default model parameters
  real(dp),intent(inout)                   :: upArea                     ! area upslope of each HRU
+ integer(i4b),intent(out)				  :: numTimeSteps
  integer(i4b),intent(out)              :: err                ! error code
  character(*),intent(out)              :: message            ! error message
  ! local variables
@@ -159,6 +162,8 @@ contains
  ! NOTE: Must be after ffile_info because mDecisions uses the data_step
  call mDecisions(err,cmessage)
  if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+ 
+ numTimeSteps = numtim
 
  ! get the maximum number of snow layers
  select case(model_decisions(iLookDECISIONS%snowLayers)%iDecision)

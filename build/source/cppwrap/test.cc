@@ -21,13 +21,15 @@ int main()  {
   
   S.summa_readRestart();
   
-  for(int i=1; i<3; i++) {
-  	S.summa_readForcing(i);
-  	S.summa_runPhysics(i);
+  int num_steps = S.get_num_steps();
+  
+  for(int step = 1; step < num_steps; step++) {
+  	S.summa_readForcing(step);
+  	S.summa_runPhysics(step);
   }
   		
 
-  bool print = true;
+  bool print = false;
   if(print) {  
   	vector<vector<double>> prog;
   	prog = S.get_progStruct();

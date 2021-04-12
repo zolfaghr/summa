@@ -99,7 +99,7 @@ extern "C" {
     				 void* h11, void* h12, void* h13, void* h14, void* h15, void* h16, void* h17, void* h18, void* h19,
     				 char const *str1, int* err);
     				 
-	void  SetupParam( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, double* upArea, int* err);
+	void  SetupParam( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, void* h7, double* upArea, int* num, int* err);
 	
 	void  Restart( void* h1, void* h2, void* h3, void* h4, void* h5, void* h6, double* upArea, int* err);
 	
@@ -461,6 +461,7 @@ private:
     	int 	computeVegFlux_; 	// flag to indicate if we are computing fluxes over vegetation
     	double  dt_init_;           // used to initialize the length of the sub-step for each HRU
     	double	upArea_;            // area upslope of each HRU
+    	int     num_steps_;         // number of time steps
    // miscellaneous variables
     	char const*         file_manager_path_;       // path/name of file defining directories and files
 
@@ -495,7 +496,8 @@ public:
     	handle_bparStruct_ = new_handle_var_d();
     	handle_bvarStruct_ = new_handle_var_dlength();
         // ancillary data structures
-    	handle_dparStruct_ = new_handle_var_d();  
+    	handle_dparStruct_ = new_handle_var_d(); 
+    	num_steps_ = 0; 
    }
    
   /*************** SET DATA **************/
@@ -676,6 +678,10 @@ public:
   	return get_var_d(handle_dparStruct_);
   }
   
+  int get_num_steps() {
+  	return num_steps_;
+  }
+  
   // others  
   int get_err() { return err_; }
  
@@ -719,6 +725,7 @@ public:
   				handle_bvarStruct_,				
   				handle_dparStruct_,
   				&upArea_,
+  				&num_steps_,
   				&err_
   				);				   
    }

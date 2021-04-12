@@ -58,31 +58,31 @@ contains
   ! calling variables
   
   ! statistics structures
-  type(c_ptr), intent(in), value    :: 	handle_forcStat !  model forcing data
-  type(c_ptr), intent(in), value    ::	handle_progStat !  model prognostic (state) variables
-  type(c_ptr), intent(in), value    ::	handle_diagStat !  model diagnostic variables
-  type(c_ptr), intent(in), value    ::	handle_fluxStat !  model fluxes
-  type(c_ptr), intent(in), value    ::	handle_indxStat !  model indices
-  type(c_ptr), intent(in), value    ::	handle_bvarStat !  basin-average variables
+  type(c_ptr), intent(in), value    		:: 	handle_forcStat !  model forcing data
+  type(c_ptr), intent(in), value    		::	handle_progStat !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    		::	handle_diagStat !  model diagnostic variables
+  type(c_ptr), intent(in), value    		::	handle_fluxStat !  model fluxes
+  type(c_ptr), intent(in), value    		::	handle_indxStat !  model indices
+  type(c_ptr), intent(in), value    		::	handle_bvarStat !  basin-average variables
   ! primary data structures (scalars)
-  type(c_ptr), intent(in), value    ::	handle_timeStruct !  model time data
-  type(c_ptr), intent(in), value    ::	handle_forcStruct !  model forcing data
-  type(c_ptr), intent(in), value    ::	handle_attrStruct !  local attributes for each HRU
-  type(c_ptr), intent(in), value    ::	handle_typeStruct !  local classification of soil veg etc. for each HRU
-  type(c_ptr), intent(in), value    ::	handle_idStruct ! 
+  type(c_ptr), intent(in), value    		::	handle_timeStruct !  model time data
+  type(c_ptr), intent(in), value    		::	handle_forcStruct !  model forcing data
+  type(c_ptr), intent(in), value    		::	handle_attrStruct !  local attributes for each HRU
+  type(c_ptr), intent(in), value    		::	handle_typeStruct !  local classification of soil veg etc. for each HRU
+  type(c_ptr), intent(in), value    		::	handle_idStruct ! 
   ! primary data structures (variable length vectors)
-  type(c_ptr), intent(in), value    ::	handle_indxStruct !  model indices
-  type(c_ptr), intent(in), value    ::	handle_mparStruct !  model parameters
-  type(c_ptr), intent(in), value    ::	handle_progStruct !  model prognostic (state) variables
-  type(c_ptr), intent(in), value    ::	handle_diagStruct !  model diagnostic variables
-  type(c_ptr), intent(in), value    ::	handle_fluxStruct !  model fluxes
+  type(c_ptr), intent(in), value    		::	handle_indxStruct !  model indices
+  type(c_ptr), intent(in), value    		::	handle_mparStruct !  model parameters
+  type(c_ptr), intent(in), value    		::	handle_progStruct !  model prognostic (state) variables
+  type(c_ptr), intent(in), value    		::	handle_diagStruct !  model diagnostic variables
+  type(c_ptr), intent(in), value    		::	handle_fluxStruct !  model fluxes
   ! basin-average structures
-  type(c_ptr), intent(in), value    ::	handle_bparStruct !  basin-average parameters
-  type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
+  type(c_ptr), intent(in), value    		::	handle_bparStruct !  basin-average parameters
+  type(c_ptr), intent(in), value    		::	handle_bvarStruct !  basin-average variables
   ! ancillary data structures
-  type(c_ptr), intent(in), value    ::	handle_dparStruct !  default model parameters
-  character(kind=c_char,len=1),intent(in)		:: file_manager_path(*)
-  integer(c_int)				    :: err
+  type(c_ptr), intent(in), value    		::	handle_dparStruct !  default model parameters
+  character(kind=c_char,len=1),intent(in)	:: file_manager_path(*)
+  integer(c_int)				    		:: err
  !---------------------------------------------------------------------------------------------------  
  ! local variables
  
@@ -137,7 +137,6 @@ contains
   
   call c_f_string(file_manager_path, summaFileManagerFile, 256)
   
-  ! define global data (parameters, metadata)
   call summa4chm_initialize(&
   								! statistics structures
   								forcStat, 				 & !  model forcing data
@@ -187,6 +186,7 @@ contains
   							handle_dparStruct, 		& !  default model parameters
   							! miscellaneous variables
   							upArea, 			    & ! area upslope of each HRU,
+  							num_steps,				& ! number of time steps
   							err)  bind(C,name='SetupParam')
   
   use summa4chm_setup,only:summa4chm_paramSetup           
@@ -201,6 +201,7 @@ contains
   type(c_ptr), intent(in), value    ::	handle_bvarStruct !  basin-average variables
   type(c_ptr), intent(in), value    ::	handle_dparStruct !  default model parameters
   real(dp),intent(inout)			:: upArea
+  integer(c_int),intent(inout)	    :: num_steps
   integer(c_int)				    :: err
  !---------------------------------------------------------------------------------------------------  
  ! local variables
@@ -235,6 +236,7 @@ contains
   							dparStruct, 		& !  default model parameters
   							! miscellaneous variables
   							upArea, 			& ! area upslope of each HRU,
+  							num_steps,          & ! number of time steps
   							err, message)
   							
   end subroutine SetupParam
