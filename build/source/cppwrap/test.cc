@@ -23,8 +23,23 @@ int main()  {
   
   int num_steps = S.get_num_steps();
   
+  vector<int> time;
+  vector<double> forc;
+  
   for(int step = 1; step < num_steps; step++) {
   	S.summa_readForcing(step);
+  	time = S.get_timeStruct();
+  	forc = S.get_forcStruct();
+  	cout << "step --- > " << step << endl;
+  	cout << "timeStruct = ";
+  	for(size_t i = 0; i<time.size(); i++)
+  		cout << time[i] << "  ";
+  	cout << endl;
+    cout << "forcStruct = ";
+  	for(size_t i = 0; i<forc.size(); i++)
+  		cout << forc[i] << "  ";
+  	cout << endl;
+  	
   	S.summa_runPhysics(step);
   }
   		
