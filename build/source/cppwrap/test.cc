@@ -8,6 +8,7 @@ using namespace std;
 
 
 int main()  {
+ 
 
   const char *path = "/home/stiff/summaTestCases_3.0/settings/syntheticTestCases/colbeck1976/summa_fileManager_colbeck1976-exp1.txt";
 
@@ -15,35 +16,28 @@ int main()  {
   
   S.set_file_manager(path);
   
+  //declare and allocate summa data structures and initialize model state to known values
   S.summa_initialize();
   
+  // initialize parameter data structures (e.g. vegetation and soil parameters)
   S.summa_paramSetup();
   
+  // read restart data and reset the model state (e.g initial conditions)
   S.summa_readRestart();
   
+  // get the number of data windows
   int num_steps = S.get_num_steps();
   
-  vector<int> time;
-  vector<double> forc;
+  // now we just try for the first step
+  int step = 1;
   
-  for(int step = 1; step < num_steps; step++) {
-  	S.summa_readForcing(step);
-  	time = S.get_timeStruct();
-  	forc = S.get_forcStruct();
-  	cout << "step --- > " << step << endl;
-  	cout << "timeStruct = ";
-  	for(size_t i = 0; i<time.size(); i++)
-  		cout << time[i] << "  ";
-  	cout << endl;
-    cout << "forcStruct = ";
-  	for(size_t i = 0; i<forc.size(); i++)
-  		cout << forc[i] << "  ";
-  	cout << endl;
-  	
-  	S.summa_runPhysics(step);
-  }
+  // read model forcing data
+  S.summa_readForcing(step);
+  
+  // run the summa physics for one time step
+  S.summa_runPhysics(step);
   		
-
+  // get and print the outputs by calling the appropriate get method of the Summa class
   bool print = false;
   if(print) {  
   	vector<vector<double>> prog;
