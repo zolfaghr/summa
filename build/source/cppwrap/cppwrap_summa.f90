@@ -7,6 +7,8 @@ module cppwrap_summa
   use, intrinsic :: iso_c_binding
   USE nrtype
   use data_types
+  ! global data: general
+  use globalData,only:forcingStep                             ! index of current time step in current forcing file
 
   ! privacy
   implicit none
@@ -456,7 +458,10 @@ contains
   						computeVegFlux, 	  & ! flag to indicate if we are computing fluxes over vegetation
   						dt_init, 			& ! used to initialize the length of the sub-step for each HRU
   						err, message)
-    
+  						
+  if(err==0)then
+  	forcingStep = forcingStep + 1
+  end if
 
  end subroutine RunPhysics
 

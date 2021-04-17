@@ -28,17 +28,17 @@ int main()  {
   // get the number of data windows
   int num_steps = S.get_num_steps();
   
-  // now we just try for the first step
-  int step = 1;
+  for(int step=1; step<=num_steps; ++step) {
+	// read model forcing data
+  	S.summa_readForcing(step);
   
-  // read model forcing data
-  S.summa_readForcing(step);
-  
-  // run the summa physics for one time step
-  S.summa_runPhysics(step);
+  	// run the summa physics for one time step
+  	S.summa_runPhysics(step);
+  	
+ }
   		
   // get and print the outputs by calling the appropriate get method of the Summa class
-  bool print = false;
+  bool print = true;
   if(print) {  
   	vector<vector<double>> prog;
   	prog = S.get_progStruct();
