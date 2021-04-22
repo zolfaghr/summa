@@ -78,8 +78,14 @@ contains
                         mLayerVolFracIcePrime,     & ! intent(in):    trial value for the volumetric ice in each snow and soil layer (-)
                         mLayerVolFracWatPrime,     &
                         mLayerVolFracLiqPrime,     &
-                        scalarCanopyEnthalpyPrime,           &
+                        scalarCanopyEnthalpyPrime, &
                         mLayerEnthalpyPrime,       & ! intent(in)
+ 	 		 			mLayerDelH,       		   & ! intent(in)
+ 			 			scalarCanopyDelH,          & ! intent(in)
+     		 			mLayerDelVolFracIce,       & ! intent(in)
+ 			 			scalarCanopyDelIce,        & ! intent(in)
+ 	 		 			mLayerDelTemp,       	   & ! intent(in)
+ 			 			scalarCanopyDelTemp,       & ! intent(in)
                         ! input: data structures
                         prog_data,                 & ! intent(in):    model prognostic variables for a local HRU
                         diag_data,                 & ! intent(in):    model diagnostic variables for a local HRU
@@ -115,6 +121,13 @@ contains
  real(dp),intent(in)            ::  mLayerVolFracWatPrime(:)
  real(qp),intent(in)            ::  scalarCanopyEnthalpyPrime
  real(qp),intent(in)            ::  mLayerEnthalpyPrime(:)
+ ! input: delta 
+ real(dp),intent(in)	 		 :: mLayerDelH(:)
+ real(dp),intent(in)			 :: scalarCanopyDelH
+ real(dp),intent(in)    		 :: mLayerDelVolFracIce(:)
+ real(dp),intent(in)			 :: scalarCanopyDelIce
+ real(dp),intent(in)	 		 :: mLayerDelTemp(:)
+ real(dp),intent(in)			 :: scalarCanopyDelTemp
  ! input: data structures
  type(var_dlength),intent(in)    :: prog_data                 ! prognostic variables for a local HRU
  type(var_dlength),intent(in)    :: diag_data                 ! diagnostic variables for a local HRU

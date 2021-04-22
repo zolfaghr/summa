@@ -254,6 +254,13 @@ contains
  real(qp)                        :: scalarCanopyEnthalpyPrime
  logical(lgt)					 :: firstFluxCall
  integer(i4b)                    :: ixSaturation              ! index of the lowest saturated layer
+ real(dp),dimension(nLayers)	 :: mLayerDelH
+ real(dp)						 :: scalarCanopyDelH
+ real(dp),dimension(nLayers)     :: mLayerDelVolFracIce
+ real(dp)						 :: scalarCanopyDelIce
+ real(dp),dimension(nLayers)	 :: mLayerDelTemp
+ real(dp)						 :: scalarCanopyDelTemp
+ 
 
 
  ! --------------------------------------------------------------------------------------------------------------------------------
@@ -557,6 +564,17 @@ contains
                   ! output: error control
                   err,cmessage)                  ! intent(out): error control
       if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
+      
+      
+   ! compute d(theta_ice)
+   scalarCanopyDelIce = scalarCanopyIceTrial - scalarCanopyIcePrev 
+   scalarCanopyDelH = scalarCanopyEnthalpyTrial - scalarCanopyEnthalpyPrev
+   scalarCanopyDelTemp = scalarCanopyTempTrial - scalarCanopyTempPrev
+   do concurrent (iLayer=1:nLayers)
+      mLayerDelVolFracIce(iLayer) = mLayerVolFracIceTrial(iLayer) - mLayerVolFracIcePrev(iLayer) 
+      mLayerDelH(iLayer) = mLayerEnthalpyTrial(iLayer) - mLayerEnthalpyPrev(iLayer)
+      mLayerDelTemp(iLayer) = mLayerTempTrial(iLayer) - mLayerTempPrev(iLayer)
+   end do
 
    ! *** compute volumetric heat capacity C_p = dH_T/dT
    call computHeatCap(&
@@ -670,6 +688,13 @@ contains
                   mLayerVolFracLiqPrime,     &
                   scalarCanopyEnthalpyPrime, & ! intent(in) derivarive of enthalpy of vegetation canopy
                   mLayerEnthalpyPrime,       & ! intent(in) derivative of enthalpy of soil and snow
+                  ! input delta
+ 	 		 	  mLayerDelH,       		 & ! intent(in)
+ 			 	  scalarCanopyDelH,          & ! intent(in)
+     		 	  mLayerDelVolFracIce,       & ! intent(in)
+ 			 	  scalarCanopyDelIce,        & ! intent(in)
+ 	 		 	  mLayerDelTemp,       	     & ! intent(in)
+ 			 	  scalarCanopyDelTemp,       & ! intent(in)
                   ! input: data structures
                   prog_data,                 & ! intent(in):    model prognostic variables for a local HRU
                   diag_data,                 & ! intent(in):    model diagnostic variables for a local HRU
