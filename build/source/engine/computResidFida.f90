@@ -57,6 +57,7 @@ contains
  ! public subroutine computResidFida: compute the residual vector
  ! **********************************************************************************************************
  subroutine computResidFida(&
+ 						dt,						   & ! intent(in)
                         ! input: model control
                         nSnow,                     & ! intent(in):    number of snow layers
                         nSoil,                     & ! intent(in):    number of soil layers
@@ -80,6 +81,7 @@ contains
                         mLayerVolFracLiqPrime,     &
                         scalarCanopyEnthalpyPrime, &
                         mLayerEnthalpyPrime,       & ! intent(in)
+                        ! input delta
  	 		 			mLayerDelH,       		   & ! intent(in)
  			 			scalarCanopyDelH,          & ! intent(in)
      		 			mLayerDelVolFracIce,       & ! intent(in)
@@ -99,6 +101,7 @@ contains
 ! use printResidFida_module,only:printResidFida
  implicit none
  ! input: model control
+ real(dp),intent(in)			 :: dt
  integer(i4b),intent(in)         :: nSnow                     ! number of snow layers
  integer(i4b),intent(in)         :: nSoil                     ! number of soil layers
  integer(i4b),intent(in)         :: nLayers                   ! total number of layers in the snow+soil domain
@@ -186,15 +189,16 @@ contains
  rAdd(:) = 0._dp
 
  ! compute energy associated with melt freeze for the vegetation canopy
- if(ixVegNrg/=integerMissing) rAdd(ixVegNrg) = rAdd(ixVegNrg) + LH_fus*scalarCanopyIcePrime/canopyDepth   ! energy associated with melt/freeze (J m-3)
+ if(ixVegNrg/=integerMissing) rAdd(ixVegNrg) = rAdd(ixVegNrg) + LH_fus*(scalarCanopyDelIce/canopyDepth)*scalarCanopyDelTemp   ! energy associated with melt/freeze (J m-3)
  ! compute energy associated with melt/freeze for snow
  ! NOTE: allow expansion of ice during melt-freeze for snow; deny expansion of ice during melt-freeze for soil
  if(nSnowSoilNrg>0)then
   do concurrent (iLayer=1:nLayers,ixSnowSoilNrg(iLayer)/=integerMissing)   ! (loop through non-missing energy state variables in the snow+soil domain)
    select case( layerType(iLayer) )
     case(iname_snow)
-     rAdd( ixSnowSoilNrg(iLayer) ) = rAdd( ixSnowSoilNrg(iLayer) ) + LH_fus*iden_ice * mLayerVolFracIcePrime(iLayer)
-    case(iname_soil); rAdd( ixSnowSoilNrg(iLayer) ) = rAdd( ixSnowSoilNrg(iLayer) ) + LH_fus*iden_water * mLayerVolFracIcePrime(iLayer)  
+     rAdd( ixSnowSoilNrg(iLayer) ) = rAdd( ixSnowSoilNrg(iLayer) ) + LH_fus*iden_ice *mLayerDelVolFracIce(iLayer) * mLayerDelTemp(iLayer)
+    case(iname_soil)
+     rAdd( ixSnowSoilNrg(iLayer) ) = rAdd( ixSnowSoilNrg(iLayer) ) + LH_fus*iden_water*mLayerDelVolFracIce(iLayer)* mLayerDelTemp(iLayer)  
    end select
   end do  ! looping through non-missing energy state variables in the snow+soil domain
  endif
@@ -219,7 +223,7 @@ contains
  ! NOTE: sMul(ixVegHyd) = 1, but include as it converts all variables to quadruple precision
  ! --> energy balance
  if(ixCasNrg/=integerMissing) rVec(ixCasNrg) = sMul(ixCasNrg)*scalarCanairTempPrime - ( fVec(ixCasNrg) + rAdd(ixCasNrg) )
- if(ixVegNrg/=integerMissing) rVec(ixVegNrg) = scalarCanopyEnthalpyPrime - fVec(ixVegNrg)
+ if(ixVegNrg/=integerMissing) rVec(ixVegNrg) = scalarCanopyDelH * dt * scalarCanopyTempPrime  - ( fVec(ixVegNrg) * dt * scalarCanopyDelTemp + rAdd(ixVegNrg) )
  ! --> mass balance
  if(ixVegHyd/=integerMissing)then    
   scalarCanopyHydPrime = merge(scalarCanopyWatPrime, scalarCanopyLiqPrime, (ixStateType( ixHydCanopy(ixVegVolume) )==iname_watCanopy) )  
@@ -229,7 +233,7 @@ contains
  ! compute the residual vector for the snow and soil sub-domains for energy
  if(nSnowSoilNrg>0)then 
   do concurrent (iLayer=1:nLayers,ixSnowSoilNrg(iLayer)/=integerMissing)   ! (loop through non-missing energy state variables in the snow+soil domain)
-   rVec( ixSnowSoilNrg(iLayer) ) = mLayerEnthalpyPrime(iLayer) -  fVec( ixSnowSoilNrg(iLayer) )
+   rVec( ixSnowSoilNrg(iLayer) ) = mLayerDelH(iLayer) * dt * mLayerTempPrime(iLayer) -  ( fVec(ixSnowSoilNrg(iLayer)) * dt * mLayerDelTemp(iLayer) + rAdd(ixSnowSoilNrg(iLayer)) )
   end do  ! looping through non-missing energy state variables in the snow+soil domain
  endif
 

@@ -665,6 +665,7 @@ contains
 
  ! compute the residual vector
  call computResidFida(&
+ 				  dt_cur,                    & ! intent(in)
                   ! input: model control
                   nSnow,                     & ! intent(in):    number of snow layers
                   nSoil,                     & ! intent(in):    number of soil layers
