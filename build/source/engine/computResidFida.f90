@@ -88,6 +88,7 @@ contains
  			 			scalarCanopyDelIce,        & ! intent(in)
  	 		 			mLayerDelTemp,       	   & ! intent(in)
  			 			scalarCanopyDelTemp,       & ! intent(in)
+ 			 			mLayerDelVolFracWat,	   & ! intent(in)
                         ! input: data structures
                         prog_data,                 & ! intent(in):    model prognostic variables for a local HRU
                         diag_data,                 & ! intent(in):    model diagnostic variables for a local HRU
@@ -131,6 +132,7 @@ contains
  real(dp),intent(in)			 :: scalarCanopyDelIce
  real(dp),intent(in)	 		 :: mLayerDelTemp(:)
  real(dp),intent(in)			 :: scalarCanopyDelTemp
+ real(dp),intent(in)    		 :: mLayerDelVolFracWat(:)
  ! input: data structures
  type(var_dlength),intent(in)    :: prog_data                 ! prognostic variables for a local HRU
  type(var_dlength),intent(in)    :: diag_data                 ! diagnostic variables for a local HRU
@@ -146,7 +148,7 @@ contains
  ! --------------------------------------------------------------------------------------------------------------------------------
  integer(i4b)                    :: iLayer                    ! index of layer within the snow+soil domain
  integer(i4b),parameter          :: ixVegVolume=1             ! index of the desired vegetation control volumne (currently only one veg layer)
- real(dp),dimension(nLayers)     :: mLayerVolFracHydPrime          ! vector of volumetric water content (-), either liquid water content or total water content
+ real(dp),dimension(nLayers)     :: mLayerDelVolFracHyd          ! vector of volumetric water content (-), either liquid water content or total water content
   real(dp)                       :: scalarCanopyHydPrime      ! trial value for canopy water (kg m-2), either liquid water content or total water content
  ! --------------------------------------------------------------------------------------------------------------------------------
  ! --------------------------------------------------------------------------------------------------------------------------------
@@ -242,9 +244,9 @@ contains
  if(nSnowSoilHyd>0)then
   do concurrent (iLayer=1:nLayers,ixSnowSoilHyd(iLayer)/=integerMissing)   ! (loop through non-missing hydrology state variables in the snow+soil domain)
    ! (get the correct state variable) 
-   mLayerVolFracHydPrime(iLayer)      = merge(mLayerVolFracWatPrime(iLayer), mLayerVolFracLiqPrime(iLayer), (ixHydType(iLayer)==iname_watLayer .or. ixHydType(iLayer)==iname_matLayer) )
+   mLayerDelVolFracHyd(iLayer)      = merge(mLayerDelVolFracWat(iLayer), mLayerVolFracLiqPrime(iLayer)*dt, (ixHydType(iLayer)==iname_watLayer .or. ixHydType(iLayer)==iname_matLayer) )
    ! (compute the residual)
- rVec( ixSnowSoilHyd(iLayer) ) = mLayerVolFracHydPrime(iLayer) - ( fVec( ixSnowSoilHyd(iLayer) ) + rAdd( ixSnowSoilHyd(iLayer) ) )
+ rVec( ixSnowSoilHyd(iLayer) ) = mLayerDelVolFracHyd(iLayer) - dt*( fVec( ixSnowSoilHyd(iLayer) ) + rAdd( ixSnowSoilHyd(iLayer) ) )
   end do  ! looping through non-missing energy state variables in the snow+soil domain
  endif
  

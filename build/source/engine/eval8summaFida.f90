@@ -646,7 +646,7 @@ contains
       mLayerVolFracIcePrime(iLayer) = ( mLayerVolFracIceTrial(iLayer) - mLayerVolFracIcePrev(iLayer) ) / dt_cur
    end do
 
-   ! H' = Cp*T'                    
+   ! H_T' = Cp*T'                    
    call computEnthalpyPrime(&
                         ! input
                         computeVegFlux,				  &
@@ -698,6 +698,7 @@ contains
  			 	  scalarCanopyDelIce,        & ! intent(in)
  	 		 	  mLayerDelTemp,       	     & ! intent(in)
  			 	  scalarCanopyDelTemp,       & ! intent(in)
+ 			 	  mLayerDelVolFracWat,		 & ! intent(in)
                   ! input: data structures
                   prog_data,                 & ! intent(in):    model prognostic variables for a local HRU
                   diag_data,                 & ! intent(in):    model diagnostic variables for a local HRU
