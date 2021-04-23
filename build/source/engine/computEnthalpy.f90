@@ -137,15 +137,15 @@ contains
  )
  
  if(computeVegFlux)then
-	scalarCanopyEnthalpyPrime = heatCapVeg * scalarCanopyTempPrime - LH_fus*scalarCanopyIcePrime/canopyDepth
+	scalarCanopyEnthalpyPrime = heatCapVeg * scalarCanopyTempPrime
  end if
   ! (loop through non-missing energy state variables in the snow+soil domain)
   do concurrent (iLayer=1:nLayers,ixSnowSoilNrg(iLayer)/=integerMissing)   
    select case( layerType(iLayer) )
     case(iname_snow)
-         mLayerEnthalpyPrime(iLayer) = mLayerHeatCap(iLayer)*mLayerTempPrime(iLayer) - LH_fus*iden_ice * mLayerVolFracIcePrime(iLayer)
+         mLayerEnthalpyPrime(iLayer) = mLayerHeatCap(iLayer)*mLayerTempPrime(iLayer)
     case(iname_soil)
-         mLayerEnthalpyPrime(iLayer) = mLayerHeatCap(iLayer)*mLayerTempPrime(iLayer) - LH_fus*iden_water * mLayerVolFracIcePrime(iLayer)  
+         mLayerEnthalpyPrime(iLayer) = mLayerHeatCap(iLayer)*mLayerTempPrime(iLayer) 
    end select
   end do  ! looping through non-missing energy state variables in the snow+soil domain
   

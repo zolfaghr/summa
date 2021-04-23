@@ -119,7 +119,7 @@ contains
                        ! input-output: baseflow
                        dBaseflow_dMatric,       & ! intent(out):   derivative in baseflow w.r.t. matric head (s-1)
                        ! output: flux and residual vectors
-                       scalarCanopyTempTrial,   & ! intent(in):  trial value of canopy temperature (K)
+                       scalarCanopyTempTrial,   & ! intent(inout):  trial value of canopy temperature (K)
                        scalarCanopyTempPrev,    & ! intent(in):  previous value of canopy temperature (K)
                        scalarCanopyIceTrial,	&
                        scalarCanopyIcePrev,		&
@@ -260,6 +260,7 @@ contains
  real(dp)						 :: scalarCanopyDelIce
  real(dp),dimension(nLayers)	 :: mLayerDelTemp
  real(dp)						 :: scalarCanopyDelTemp
+ real(dp),dimension(nLayers)	 :: mLayerDelVolFracWat
  
 
 
@@ -566,7 +567,7 @@ contains
       if(err/=0)then; message=trim(message)//trim(cmessage); return; endif
       
       
-   ! compute d(theta_ice)
+   ! compute delta of variables
    scalarCanopyDelIce = scalarCanopyIceTrial - scalarCanopyIcePrev 
    scalarCanopyDelH = scalarCanopyEnthalpyTrial - scalarCanopyEnthalpyPrev
    scalarCanopyDelTemp = scalarCanopyTempTrial - scalarCanopyTempPrev
@@ -574,6 +575,7 @@ contains
       mLayerDelVolFracIce(iLayer) = mLayerVolFracIceTrial(iLayer) - mLayerVolFracIcePrev(iLayer) 
       mLayerDelH(iLayer) = mLayerEnthalpyTrial(iLayer) - mLayerEnthalpyPrev(iLayer)
       mLayerDelTemp(iLayer) = mLayerTempTrial(iLayer) - mLayerTempPrev(iLayer)
+      mLayerDelVolFracWat(iLayer) = mLayerVolFracWatTrial(iLayer) - mLayerVolFracWatPrev(iLayer)
    end do
 
    ! *** compute volumetric heat capacity C_p = dH_T/dT
@@ -644,7 +646,7 @@ contains
       mLayerVolFracIcePrime(iLayer) = ( mLayerVolFracIceTrial(iLayer) - mLayerVolFracIcePrev(iLayer) ) / dt_cur
    end do
 
-   ! H' = Cp*T' - rho*L*(theta_ice)'                   
+   ! H' = Cp*T'                    
    call computEnthalpyPrime(&
                         ! input
                         computeVegFlux,				  &
