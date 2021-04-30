@@ -162,15 +162,6 @@ contains
  ! initialize the soil layer
  iSoil=integerMissing
 
- ! compute the bulk volumetric heat capacity of vegetation (J m-3 K-1)
- if(computeVegFlux)then
-  scalarBulkVolHeatCapVeg = specificHeatVeg*maxMassVegetation/canopyDepth + & ! vegetation component
-                            Cp_water*scalarCanopyLiquid/canopyDepth       + & ! liquid water component
-                            Cp_ice*scalarCanopyIce/canopyDepth                ! ice component
- else
-  scalarBulkVolHeatCapVeg = valueMissing
- end if
- !print*, 'computThermConduct: scalarBulkVolHeatCapVeg = ', scalarBulkVolHeatCapVeg
 
  ! loop through layers
  do iLayer=1,nLayers
@@ -193,24 +184,6 @@ contains
    case(iname_soil); mLayerVolFracAir(iLayer) = theta_sat(iSoil) - (mLayerVolFracIce(iLayer) + mLayerVolFracLiq(iLayer))
    case(iname_snow); mLayerVolFracAir(iLayer) = 1._dp - (mLayerVolFracIce(iLayer) + mLayerVolFracLiq(iLayer))
    case default; err=20; message=trim(message)//'unable to identify type of layer (snow or soil) to compute volumetric fraction of air'; return
-  end select
-
-  ! *****
-  ! * compute the volumetric heat capacity of each layer (J m-3 K-1)...
-  ! *******************************************************************
-  select case(layerType(iLayer))
-   ! * soil
-   case(iname_soil)
-    mLayerVolHtCapBulk(iLayer) = iden_soil(iSoil)  * Cp_soil  * ( 1._dp - theta_sat(iSoil) ) + & ! soil component
-                                 iden_ice          * Cp_Ice   * mLayerVolFracIce(iLayer)     + & ! ice component
-                                 iden_water        * Cp_water * mLayerVolFracLiq(iLayer)     + & ! liquid water component
-                                 iden_air          * Cp_air   * mLayerVolFracAir(iLayer)         ! air component
-   ! * snow
-   case(iname_snow)
-    mLayerVolHtCapBulk(iLayer) = iden_ice          * Cp_ice   * mLayerVolFracIce(iLayer)     + & ! ice component
-                                 iden_water        * Cp_water * mLayerVolFracLiq(iLayer)     + & ! liquid water component
-                                 iden_air          * Cp_air   * mLayerVolFracAir(iLayer)         ! air component
-   case default; err=20; message=trim(message)//'unable to identify type of layer (snow or soil) to compute olumetric heat capacity'; return
   end select
 
   ! *****
