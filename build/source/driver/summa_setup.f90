@@ -275,6 +275,8 @@ contains
      end if  ! (check there is a unique match)
     end if  ! (if identified a downslope HRU)
    end do
+   ! reza
+   typeStruct%gru(iGRU)%hru(iHRU)%var(iLookTYPE%downkHRU) = kHRU
 
    ! check that the parameters are consistent
    call paramCheck(mparStruct%gru(iGRU)%hru(iHRU),err,cmessage)

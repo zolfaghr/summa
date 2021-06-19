@@ -122,6 +122,7 @@ MODULE var_lookup
   integer(i4b)    :: soilTypeIndex = integerMissing  ! index defining soil type (-)
   integer(i4b)    :: slopeTypeIndex= integerMissing  ! index defining slope (-)
   integer(i4b)    :: downHRUindex  = integerMissing  ! index of downslope HRU (0 = basin outlet)
+  integer(i4b)    :: downkHRU  = integerMissing      ! reza index of downslope HRU (0 = basin outlet)
  end type iLook_type
 
  type, public  ::  iLook_id
@@ -773,8 +774,8 @@ MODULE var_lookup
  ! named variables: model attributes
  type(iLook_attr),    public,parameter :: iLookATTR     =iLook_attr    (  1,  2,  3,  4,  5,  6,  7,  8)
 
- ! named variables: soil and vegetation types
- type(iLook_type),    public,parameter :: iLookTYPE     =iLook_type    (  1,  2,  3,  4)
+ ! reza named variables: soil and vegetation types
+ type(iLook_type),    public,parameter :: iLookTYPE     =iLook_type    (  1,  2,  3,  4, 5)
 
  ! named variables: hru and gru IDs and associated information
  type(iLook_id),      public,parameter :: iLookID       =iLook_id      (  1)

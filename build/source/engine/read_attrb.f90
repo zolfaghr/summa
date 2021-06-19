@@ -280,7 +280,6 @@ end subroutine read_dimension
 
   ! find attribute name
   select case(trim(varName))
-
    ! ** categorical data
    case('vegTypeIndex','soilTypeIndex','slopeTypeIndex','downHRUindex')
 
@@ -363,6 +362,15 @@ end subroutine read_dimension
    end do
    checkAttr(varIndx) = .true.
  endif
+
+  ! reza
+  varIndx = get_ixType('downkHRU')
+  checkType(varIndx) = .true.
+  do iGRU=1,nGRU
+    do iHRU = 1,gru_struc(iGRU)%hruCount
+     typeStruct%gru(iGRU)%hru(iHRU)%var(varIndx) = 0
+    end do
+   end do
 
  ! **********************************************************************************************
  ! (4) check that we have all the desired varaibles
