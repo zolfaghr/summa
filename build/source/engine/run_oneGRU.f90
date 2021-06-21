@@ -213,19 +213,10 @@ contains
   ! ----- compute fluxes across HRUs --------------------------------------------------------------------------------------------------
 
   ! identify lateral connectivity
-  ! (Note:  for efficiency, this could this be done as a setup task, not every timestep)
-  kHRU = 0
-  ! identify the downslope HRU
-  dsHRU: do jHRU=1,gruInfo%hruCount
-   if(typeHRU%hru(iHRU)%var(iLookTYPE%downHRUindex) == idHRU%hru(jHRU)%var(iLookID%hruId))then
-    if(kHRU==0)then  ! check there is a unique match
-     kHRU=jHRU
-     exit dsHRU
-    end if  ! (check there is a unique match)
-   end if  ! (if identified a downslope HRU)
-  end do dsHRU
+  ! reza: deleted the block of code here
 
   ! if lateral flows are active, add inflow to the downslope HRU
+  kHRU = typeHRU%hru(iHRU)%var(iLookTYPE%downkHRU)    ! reza
   if(kHRU > 0)then  ! if there is a downslope HRU
    fluxHRU%hru(kHRU)%var(iLookFLUX%mLayerColumnInflow)%dat(:) = fluxHRU%hru(kHRU)%var(iLookFLUX%mLayerColumnInflow)%dat(:)  + fluxHRU%hru(iHRU)%var(iLookFLUX%mLayerColumnOutflow)%dat(:)
 
