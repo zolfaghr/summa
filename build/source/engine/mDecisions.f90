@@ -147,6 +147,9 @@ integer(i4b),parameter,public :: pahaut_76            = 314    ! Pahaut 1976, wi
 ! look-up values for the choice of snow unloading from the canopy
 integer(i4b),parameter,public :: meltDripUnload       = 321    ! Hedstrom and Pomeroy (1998), Storck et al 2002 (snowUnloadingCoeff & ratioDrip2Unloading)
 integer(i4b),parameter,public :: windUnload           = 322    ! Roesch et al 2001, formulate unloading based on wind and temperature
+! look-up values for the choice of energy equation
+integer(i4b),parameter,public :: enthalpy             =  323    ! enthalpy
+integer(i4b),parameter,public :: tempform             =  324    ! tempform
 ! -----------------------------------------------------------------------------------------------------------
 
 contains
@@ -403,6 +406,15 @@ contains
   case default
    err=10; message=trim(message)//"unknown numerical method [option="//trim(model_decisions(iLookDECISIONS%num_method)%cDecision)//"]"; return
  end select
+
+  ! how to compute heat capacity in energy equation
+ select case(trim(model_decisions(iLookDECISIONS%howHeatCap)%cDecision))
+ case('enthalpy'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = enthalpy        ! enthalpy
+ case('tempform'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = tempform        ! tempform
+ case default
+    model_decisions(iLookDECISIONS%howHeatCap)%iDecision = tempform
+  ! err=10; message=trim(message)//"unknown Cp computation [option="//trim(model_decisions(iLookDECISIONS%howHeatCap)%cDecision)//"]"; return
+end select
 
  ! identify the method used to calculate flux derivatives
  select case(trim(model_decisions(iLookDECISIONS%fDerivMeth)%cDecision))
