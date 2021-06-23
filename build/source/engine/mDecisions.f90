@@ -149,7 +149,7 @@ integer(i4b),parameter,public :: meltDripUnload       = 321    ! Hedstrom and Po
 integer(i4b),parameter,public :: windUnload           = 322    ! Roesch et al 2001, formulate unloading based on wind and temperature
 ! look-up values for the choice of energy equation
 integer(i4b),parameter,public :: enthalpy             =  323    ! enthalpy
-integer(i4b),parameter,public :: tempform             =  324    ! tempform
+integer(i4b),parameter,public :: closedForm           =  324    ! closedForm
 ! -----------------------------------------------------------------------------------------------------------
 
 contains
@@ -410,9 +410,9 @@ contains
   ! how to compute heat capacity in energy equation
  select case(trim(model_decisions(iLookDECISIONS%howHeatCap)%cDecision))
  case('enthalpy'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = enthalpy        ! enthalpy
- case('tempform'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = tempform        ! tempform
+ case('closedForm'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = closedForm        ! closedForm
  case default
-    model_decisions(iLookDECISIONS%howHeatCap)%iDecision = tempform
+    model_decisions(iLookDECISIONS%howHeatCap)%iDecision = closedForm
   ! err=10; message=trim(message)//"unknown Cp computation [option="//trim(model_decisions(iLookDECISIONS%howHeatCap)%cDecision)//"]"; return
 end select
 
