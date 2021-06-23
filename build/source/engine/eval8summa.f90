@@ -82,7 +82,8 @@ USE var_lookup,only:iLookDERIV                   ! named variables for structure
 ! look-up values for the choice of groundwater representation (local-column, or single-basin)
 USE mDecisions_module,only:  &
  localColumn,                & ! separate groundwater representation in each local soil column
- singleBasin                   ! single groundwater store over the entire basin
+ singleBasin,                & ! single groundwater store over the entire basin
+ enthalpyFD                    ! heat capacity using enthalpy
 
 ! look-up values for the choice of groundwater parameterization
 USE mDecisions_module,only:  &
@@ -212,8 +213,6 @@ contains
  real(rkind),dimension(nSoil)       :: mLayerMatricHeadTrial     ! trial value for total water matric potential (m)
  real(rkind),dimension(nSoil)       :: mLayerMatricHeadLiqTrial  ! trial value for liquid water matric potential (m)
  real(rkind)                        :: scalarAquiferStorageTrial ! trial value of storage of water in the aquifer (m)
- ! enthalpy
- logical(lgt),parameter             :: needEnthalpy=.true.      ! flag to compute enthalpy
  ! diagnostic variables
  real(rkind)                        :: scalarCanopyLiqTrial      ! trial value for mass of liquid water on the vegetation canopy (kg m-2)
  real(rkind)                        :: scalarCanopyIceTrial      ! trial value for mass of ice on the vegetation canopy (kg m-2)
@@ -432,7 +431,7 @@ contains
   ! *******************************************************************************************************
  ! *******************************************************************************************************
  ! ******************************************************************************************************* 
- if(needEnthalpy)then
+ if(model_decisions(iLookDECISIONS%howHeatCap)%iDecision == enthalpyFD)then
   ! compute H_T
   call t2enthalpy_T(&
                   ! input: data structures

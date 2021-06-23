@@ -148,7 +148,7 @@ integer(i4b),parameter,public :: pahaut_76            = 314    ! Pahaut 1976, wi
 integer(i4b),parameter,public :: meltDripUnload       = 321    ! Hedstrom and Pomeroy (1998), Storck et al 2002 (snowUnloadingCoeff & ratioDrip2Unloading)
 integer(i4b),parameter,public :: windUnload           = 322    ! Roesch et al 2001, formulate unloading based on wind and temperature
 ! look-up values for the choice of energy equation
-integer(i4b),parameter,public :: enthalpy             =  323    ! enthalpy
+integer(i4b),parameter,public :: enthalpyFD           =  323    ! enthalpyFD
 integer(i4b),parameter,public :: closedForm           =  324    ! closedForm
 ! -----------------------------------------------------------------------------------------------------------
 
@@ -409,10 +409,11 @@ contains
 
   ! how to compute heat capacity in energy equation
  select case(trim(model_decisions(iLookDECISIONS%howHeatCap)%cDecision))
- case('enthalpy'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = enthalpy        ! enthalpy
+ case('enthalpyFD'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = enthalpyFD        ! enthalpyFD
  case('closedForm'); model_decisions(iLookDECISIONS%howHeatCap)%iDecision = closedForm        ! closedForm
  case default
-    model_decisions(iLookDECISIONS%howHeatCap)%iDecision = closedForm
+  ! TODO: after adding howHeatCap decision in corresponding file we should delete the next line
+    model_decisions(iLookDECISIONS%howHeatCap)%iDecision = enthalpyFD
   ! err=10; message=trim(message)//"unknown Cp computation [option="//trim(model_decisions(iLookDECISIONS%howHeatCap)%cDecision)//"]"; return
 end select
 
